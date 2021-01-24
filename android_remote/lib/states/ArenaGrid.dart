@@ -30,9 +30,7 @@ class _MainPage extends State<ArenaGrid> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(
-        title: Text('Game World'),
-      ),
+
       body: _buildGameBody(),
     );
   }
@@ -42,13 +40,13 @@ class _MainPage extends State<ArenaGrid> {
 
         children: <Widget>[
           AspectRatio(
-            aspectRatio: 15/20,
+            aspectRatio: 15/21,
 
             child: LayoutBuilder(builder:(context, constraints)
             {
               if(constraints.maxWidth<600)
               {
-                return _buildWideContainers();
+                return _buildNormalContainer();
               }
               else{
                 return _buildNormalContainer();
@@ -66,6 +64,7 @@ class _MainPage extends State<ArenaGrid> {
       onTap: () => _gridItemTapped(x, y),
       child: GridTile(
         child: Container(
+
           decoration: BoxDecoration(
               border: Border.all(color: Colors.black, width: 0.5)
           ),
@@ -104,18 +103,17 @@ class _MainPage extends State<ArenaGrid> {
   Widget _buildNormalContainer() {
     return Center(
       child: Container(
-        padding: EdgeInsets.all(8.0),
+        padding: EdgeInsets.fromLTRB(0,0,0,0),
         alignment: Alignment.center,
-        margin: EdgeInsets.only(right: 270,bottom:350),
-        decoration: BoxDecoration(
+        margin: EdgeInsets.fromLTRB(0,0,0,0),
 
-            border: Border.all(color: Colors.black, width: 2.0)
-        ),
         child: GridView.builder(
 
           gridDelegate: SliverGridDelegateWithFixedCrossAxisCount (
             crossAxisCount: 15,
-            childAspectRatio: 1,
+            childAspectRatio: MediaQuery.of(context).size.width / (MediaQuery.of(context).size.height / 2),
+              crossAxisSpacing:0,
+              mainAxisSpacing:0,
           ),
           itemBuilder: _buildGridItems,
           itemCount: 15*20,
@@ -138,7 +136,7 @@ class _MainPage extends State<ArenaGrid> {
 
           gridDelegate: SliverGridDelegateWithFixedCrossAxisCount (
             crossAxisCount: 15,
-            childAspectRatio: 1,
+            childAspectRatio: 0.5,
           ),
           itemBuilder: _buildGridItems,
           itemCount: 15*20,
