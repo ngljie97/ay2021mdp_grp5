@@ -1,4 +1,7 @@
+import 'dart:io';
+
 import 'package:flutter/material.dart';
+import 'dart:developer' as developer;
 
 class ArenaGrid extends StatefulWidget {
   @override
@@ -31,24 +34,34 @@ class _MainPage extends State<ArenaGrid> {
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      body: _buildGameBody(),
+    return Container(
+      child: _buildGameBody(),
     );
   }
 
   Widget _buildGameBody() {
     int gridStateLength = gridState.length;
     return Column(children: <Widget>[
-      AspectRatio(
-        aspectRatio: 15 / 21,
-        child: LayoutBuilder(builder: (context, constraints) {
+      LayoutBuilder(builder: (context, constraints) {
           if (constraints.maxWidth < 600) {
-            return _buildNormalContainer();
+            print(constraints.maxWidth);
+            print(MediaQuery.of(context).size.width);
+            print(MediaQuery.of(context).size.height);
+            print(MediaQuery.of(context).size.aspectRatio);
+            print(MediaQuery.of(context).devicePixelRatio);
+
+            return _buildPhoneContainer();
+
           } else {
-            return _buildNormalContainer();
+            print(constraints.maxWidth);
+            print(MediaQuery.of(context).size.width);
+            print(MediaQuery.of(context).size.height);
+            print(MediaQuery.of(context).size.aspectRatio);
+            print(MediaQuery.of(context).devicePixelRatio);
+            return _buildTabletContainer();
           }
         }),
-      ),
+
     ]);
   }
 
@@ -58,14 +71,15 @@ class _MainPage extends State<ArenaGrid> {
     x = (index / 15).floor();
     y = (index % 15);
     return GestureDetector(
-      onTap: () => showDialog(
-        context: context,
-        builder: (BuildContext context) => _buildPopupDialog(context, x, y),
-      ),
+      // onTap: () => showDialog(
+      //   context: context,
+      //   builder: (BuildContext context) => _buildPopupDialog(context, x, y),
+      // ),
       child: GridTile(
         child: Container(
           decoration: BoxDecoration(
-              border: Border.all(color: Colors.black, width: 0.5)),
+
+              border: Border.all(color: Colors.blueGrey, width: 0.1)),
           child: Center(
             child: _buildGridItem(x, y),
           ),
@@ -105,8 +119,13 @@ class _MainPage extends State<ArenaGrid> {
     }
   }
 
-  Widget _buildNormalContainer() {
-    return Center(
+  Widget _buildTabletContainer() {
+    return
+      AspectRatio(
+
+        aspectRatio: MediaQuery.of(context).devicePixelRatio/(MediaQuery.of(context).devicePixelRatio+(MediaQuery.of(context).devicePixelRatio*(MediaQuery.of(context).size.aspectRatio/10))),
+
+    child:Center(
       child: Container(
         padding: EdgeInsets.fromLTRB(0, 0, 0, 0),
         alignment: Alignment.center,
@@ -123,28 +142,32 @@ class _MainPage extends State<ArenaGrid> {
           itemCount: 15 * 20,
         ),
       ),
-    );
+    ),);
+  }
+  Widget _buildPhoneContainer() {
+    return
+      AspectRatio(
+        aspectRatio: MediaQuery.of(context).devicePixelRatio/(MediaQuery.of(context).devicePixelRatio+(MediaQuery.of(context).devicePixelRatio*(MediaQuery.of(context).size.aspectRatio))),
+        child:Center(
+          child: Container(
+            padding: EdgeInsets.fromLTRB(0, 0, 0, 0),
+            alignment: Alignment.center,
+            margin: EdgeInsets.fromLTRB(0, 0, 0, 0),
+            child: GridView.builder(
+              gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
+                crossAxisCount: 15,
+                childAspectRatio: MediaQuery.of(context).size.width /
+                    (MediaQuery.of(context).size.height / 2),
+                crossAxisSpacing: 0,
+                mainAxisSpacing: 0,
+              ),
+              itemBuilder: _buildGridItems,
+              itemCount: 15 * 20,
+            ),
+          ),
+        ),);
   }
 
-  Widget _buildWideContainers() {
-    return Center(
-      child: Container(
-        padding: EdgeInsets.all(8.0),
-        alignment: Alignment.center,
-        margin: EdgeInsets.only(right: 10, left: 10, top: 20),
-        decoration:
-            BoxDecoration(border: Border.all(color: Colors.black, width: 2.0)),
-        child: GridView.builder(
-          gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
-            crossAxisCount: 15,
-            childAspectRatio: 0.5,
-          ),
-          itemBuilder: _buildGridItems,
-          itemCount: 15 * 20,
-        ),
-      ),
-    );
-  }
 }
 
 Widget _buildPopupDialog(BuildContext context, int x, int y) {
