@@ -20,11 +20,25 @@
   </component>
   <component name="ChangeListManager">
     <list default="true" id="28be24ed-ecd2-4996-a17e-b3573ad5f47d" name="Default Changelist" comment="">
-      <change afterPath="$PROJECT_DIR$/android_remote/lib/states/SettingsPage.dart" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/android_remote/assets/arrow_blue.PNG" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/android_remote/assets/arrow_green.PNG" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/android_remote/assets/arrow_red.PNG" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/android_remote/assets/arrow_white.PNG" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/android_remote/assets/circle_yellow.PNG" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/android_remote/assets/letter_a.PNG" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/android_remote/assets/letter_b.PNG" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/android_remote/assets/letter_c.PNG" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/android_remote/assets/letter_d.PNG" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/android_remote/assets/letter_e.PNG" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/android_remote/assets/number_five.PNG" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/android_remote/assets/number_four.PNG" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/android_remote/assets/number_one.PNG" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/android_remote/assets/number_three.PNG" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/android_remote/assets/number_two.PNG" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/android_remote/lib/main.dart" beforeDir="false" afterPath="$PROJECT_DIR$/android_remote/lib/main.dart" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/android_remote/lib/states/ArenaGrid.dart" beforeDir="false" afterPath="$PROJECT_DIR$/android_remote/lib/states/ArenaGrid.dart" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/android_remote/lib/states/MyHomePage.dart" beforeDir="false" afterPath="$PROJECT_DIR$/android_remote/lib/states/MyHomePage.dart" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/android_remote/pubspec.yaml" beforeDir="false" afterPath="$PROJECT_DIR$/android_remote/pubspec.yaml" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -55,6 +69,11 @@
     <property name="last_opened_file_path" value="$PROJECT_DIR$" />
     <property name="settings.editor.selected.configurable" value="flutter.settings" />
     <property name="show.migrate.to.gradle.popup" value="false" />
+  </component>
+  <component name="RecentsManager">
+    <key name="MoveFile.RECENT_KEYS">
+      <recent name="C:\Users\geral\StudioProjects\ay2021mdp_grp5\android_remote" />
+    </key>
   </component>
   <component name="RunManager">
     <configuration default="true" type="FlutterRunConfigurationType" factoryName="Flutter">
@@ -98,7 +117,14 @@
       <option name="project" value="LOCAL" />
       <updated>1611475726264</updated>
     </task>
-    <option name="localTasksCounter" value="4" />
+    <task id="LOCAL-00004" summary="updated Gui">
+      <created>1611817453533</created>
+      <option name="number" value="00004" />
+      <option name="presentableId" value="LOCAL-00004" />
+      <option name="project" value="LOCAL" />
+      <updated>1611817453533</updated>
+    </task>
+    <option name="localTasksCounter" value="5" />
     <servers />
   </component>
   <component name="Vcs.Log.Tabs.Properties">
@@ -116,7 +142,8 @@
   <component name="VcsManagerConfiguration">
     <MESSAGE value="gitignoreddd" />
     <MESSAGE value="Added ArenaGrid" />
-    <option name="LAST_COMMIT_MESSAGE" value="Added ArenaGrid" />
+    <MESSAGE value="updated Gui" />
+    <option name="LAST_COMMIT_MESSAGE" value="updated Gui" />
   </component>
   <component name="WindowStateProjectService">
     <state x="414" y="174" key="#com.intellij.execution.impl.EditConfigurationsDialog" timestamp="1611471338012">
@@ -135,38 +162,44 @@
       <screen x="0" y="0" width="1920" height="1040" />
     </state>
     <state x="779" y="266" key="AndroidProcessChooserDialog/0.0.1920.1040/-1920.0.1536.824@0.0.1920.1040" timestamp="1611602997035" />
-    <state x="587" y="88" key="CommitChangelistDialog2" timestamp="1611475725360">
+    <state x="587" y="88" key="CommitChangelistDialog2" timestamp="1611817452380">
       <screen x="0" y="0" width="1920" height="1040" />
     </state>
-    <state x="587" y="88" key="CommitChangelistDialog2/0.0.1920.1040/-1920.0.1536.824@0.0.1920.1040" timestamp="1611475725360" />
-    <state x="513" y="324" key="FileChooserDialogImpl" timestamp="1611469962095">
+    <state x="587" y="88" key="CommitChangelistDialog2/0.0.1920.1040/-1920.0.1536.824@0.0.1920.1040" timestamp="1611817452380" />
+    <state x="513" y="324" key="FileChooserDialogImpl" timestamp="1611832511492">
       <screen x="0" y="0" width="1920" height="1040" />
     </state>
+    <state x="513" y="324" key="FileChooserDialogImpl/0.0.1920.1040/-1920.0.1536.824@0.0.1920.1040" timestamp="1611832511492" />
     <state x="513" y="324" key="FileChooserDialogImpl/0.0.1920.1040/-1920.100.1920.1040@0.0.1920.1040" timestamp="1611469962095" />
-    <state width="1860" height="279" key="GridCell.Tab.0.bottom" timestamp="1611693469609">
+    <state width="1860" height="279" key="GridCell.Tab.0.bottom" timestamp="1611886773626">
       <screen x="0" y="0" width="1920" height="1040" />
     </state>
-    <state width="1860" height="279" key="GridCell.Tab.0.bottom/0.0.1920.1040/-1920.0.1536.824@0.0.1920.1040" timestamp="1611693469609" />
-    <state width="1860" height="279" key="GridCell.Tab.0.center" timestamp="1611693469609">
+    <state width="1858" height="279" key="GridCell.Tab.0.bottom/0.0.1920.1040/-1920.0.1536.824@0.0.1920.1040" timestamp="1611860586021" />
+    <state width="1860" height="279" key="GridCell.Tab.0.bottom/0.0.1920.1040@0.0.1920.1040" timestamp="1611886773626" />
+    <state width="1860" height="279" key="GridCell.Tab.0.center" timestamp="1611886773626">
       <screen x="0" y="0" width="1920" height="1040" />
     </state>
-    <state width="1860" height="279" key="GridCell.Tab.0.center/0.0.1920.1040/-1920.0.1536.824@0.0.1920.1040" timestamp="1611693469609" />
-    <state width="1860" height="279" key="GridCell.Tab.0.left" timestamp="1611693469609">
+    <state width="1858" height="279" key="GridCell.Tab.0.center/0.0.1920.1040/-1920.0.1536.824@0.0.1920.1040" timestamp="1611860586020" />
+    <state width="1860" height="279" key="GridCell.Tab.0.center/0.0.1920.1040@0.0.1920.1040" timestamp="1611886773626" />
+    <state width="1860" height="279" key="GridCell.Tab.0.left" timestamp="1611886773626">
       <screen x="0" y="0" width="1920" height="1040" />
     </state>
-    <state width="1860" height="279" key="GridCell.Tab.0.left/0.0.1920.1040/-1920.0.1536.824@0.0.1920.1040" timestamp="1611693469609" />
-    <state width="1860" height="279" key="GridCell.Tab.0.right" timestamp="1611693469609">
+    <state width="1858" height="279" key="GridCell.Tab.0.left/0.0.1920.1040/-1920.0.1536.824@0.0.1920.1040" timestamp="1611860586020" />
+    <state width="1860" height="279" key="GridCell.Tab.0.left/0.0.1920.1040@0.0.1920.1040" timestamp="1611886773626" />
+    <state width="1860" height="279" key="GridCell.Tab.0.right" timestamp="1611886773626">
       <screen x="0" y="0" width="1920" height="1040" />
     </state>
-    <state width="1860" height="279" key="GridCell.Tab.0.right/0.0.1920.1040/-1920.0.1536.824@0.0.1920.1040" timestamp="1611693469609" />
-    <state x="461" y="164" key="SettingsEditor" timestamp="1611570826575">
+    <state width="1858" height="279" key="GridCell.Tab.0.right/0.0.1920.1040/-1920.0.1536.824@0.0.1920.1040" timestamp="1611860586020" />
+    <state width="1860" height="279" key="GridCell.Tab.0.right/0.0.1920.1040@0.0.1920.1040" timestamp="1611886773626" />
+    <state x="461" y="164" key="SettingsEditor" timestamp="1611883129314">
       <screen x="0" y="0" width="1920" height="1040" />
     </state>
     <state x="461" y="164" key="SettingsEditor/0.0.1920.1040/-1920.0.1536.824@0.0.1920.1040" timestamp="1611570826575" />
-    <state x="552" y="252" key="Vcs.Push.Dialog.v2" timestamp="1611475730255">
+    <state x="461" y="164" key="SettingsEditor/0.0.1920.1040@0.0.1920.1040" timestamp="1611883129314" />
+    <state x="552" y="252" key="Vcs.Push.Dialog.v2" timestamp="1611817458190">
       <screen x="0" y="0" width="1920" height="1040" />
     </state>
-    <state x="552" y="252" key="Vcs.Push.Dialog.v2/0.0.1920.1040/-1920.0.1536.824@0.0.1920.1040" timestamp="1611475730255" />
+    <state x="552" y="252" key="Vcs.Push.Dialog.v2/0.0.1920.1040/-1920.0.1536.824@0.0.1920.1040" timestamp="1611817458190" />
     <state x="668" y="308" key="git4idea.merge.GitPullDialog" timestamp="1611476108293">
       <screen x="0" y="0" width="1920" height="1040" />
     </state>

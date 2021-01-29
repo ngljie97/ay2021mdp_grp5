@@ -25,7 +25,7 @@ class _MainPage extends State<ArenaGrid> {
     ['', '', '', '', '', '', '', '', '', '', '', '', '', '', ''],
     ['', '', '', '', '', '', '', '', '', '', '', '', '', '', ''],
     ['', '', '', '', '', '', '', '', '', '', '', '', '', '', ''],
-    ['', '', '', '', '', '', '', '', '', '', '', '', '', '', ''],
+    ['', '', 'B', '', '', '', '', '', '', '', '', '', '', '', ''],
     ['', '', '', '', '', '', '', '', '', '', '', '', '', '', ''],
     ['P1', 'P1', 'P1', '', '', '', '', '', '', '', '', '', '', '', ''],
     ['P1', 'P1', 'P1', '', '', '', '', '', '', '', '', '', '', '', ''],
@@ -111,8 +111,19 @@ class _MainPage extends State<ArenaGrid> {
         );
         break;
       case 'B':
-        return Icon(Icons.remove_red_eye, size: 40.0);
+        return
+          Container(
+            decoration: BoxDecoration(
+              image: DecorationImage(
+                image: AssetImage(
+                    'assets/letter_b.PNG'),
+                fit: BoxFit.fill,
+              ),
+              shape: BoxShape.rectangle,
+            ),
+          );
         break;
+
       default:
         return Text('');
         break;
@@ -123,23 +134,24 @@ class _MainPage extends State<ArenaGrid> {
     return
       AspectRatio(
 
-        aspectRatio: MediaQuery.of(context).devicePixelRatio/(MediaQuery.of(context).devicePixelRatio+(MediaQuery.of(context).devicePixelRatio*(MediaQuery.of(context).size.aspectRatio/10))),
+        aspectRatio: MediaQuery.of(context).devicePixelRatio/(MediaQuery.of(context).devicePixelRatio+(MediaQuery.of(context).devicePixelRatio*(MediaQuery.of(context).size.aspectRatio/4))),
 
     child:Center(
       child: Container(
-        padding: EdgeInsets.fromLTRB(0, 0, 0, 0),
-        alignment: Alignment.center,
-        margin: EdgeInsets.fromLTRB(0, 0, 0, 0),
+        padding: EdgeInsets.fromLTRB(5, 0,5,0),
         child: GridView.builder(
+
           gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
             crossAxisCount: 15,
-            childAspectRatio: MediaQuery.of(context).size.width /
-                (MediaQuery.of(context).size.height / 2),
+
+            childAspectRatio: MediaQuery.of(context).size.width / (MediaQuery.of(context).size.height / 1.8),
             crossAxisSpacing: 0,
             mainAxisSpacing: 0,
           ),
           itemBuilder: _buildGridItems,
+          shrinkWrap: true,
           itemCount: 15 * 20,
+
         ),
       ),
     ),);
@@ -151,7 +163,7 @@ class _MainPage extends State<ArenaGrid> {
         child:Center(
           child: Container(
             padding: EdgeInsets.fromLTRB(0, 0, 0, 0),
-            alignment: Alignment.center,
+            alignment: Alignment.topLeft,
             margin: EdgeInsets.fromLTRB(0, 0, 0, 0),
             child: GridView.builder(
               gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(

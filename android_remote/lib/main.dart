@@ -66,6 +66,7 @@ class _AppState extends State<App> {
       child: Stack(
         children: <Widget>[
           Container(
+
             //Arena Layout
             child: ArenaGrid(),
           ),
@@ -97,9 +98,7 @@ class _AppState extends State<App> {
         child:
         Row(
           children: [
-            Expanded(
-              /*1*/
-              child: Column(
+           Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
                   /*2*/
@@ -153,7 +152,7 @@ class _AppState extends State<App> {
                   ),
                 ],
               ),
-            ),
+
             /*3*/
             Icon(
               Icons.star,
