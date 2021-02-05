@@ -8,7 +8,6 @@ void main() {
   runApp(MyApp());
 }
 
-GlobalKey<ScaffoldState> _scaffoldKey = GlobalKey<ScaffoldState>();
 
 class MyApp extends StatelessWidget {
   // This widget is the root of your application.

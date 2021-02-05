@@ -15,12 +15,33 @@ class AppMaster extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return new Scaffold(
-      appBar: AppBar(
-        backgroundColor: Colors.transparent,
-        elevation: 0.0,
-        iconTheme: IconThemeData(color: CustomTheme.themeColor),
-      ),
-      body: this.body,
+      // extendBodyBehindAppBar: true,
+      // appBar: AppBar(
+      //   backgroundColor: Colors.green,
+      //   elevation: 0.0,
+      //   iconTheme: IconThemeData(color: CustomTheme.themeColor),
+      // ),
+      body: Stack(
+        children: <Widget>[
+
+          Container( //My container or any other widget
+            child: this.body,
+          ),
+          new Positioned( //Place it at the top, and not use the entire screen
+            top: 0.0,
+            left: 0.0,
+            right: 0.0,
+            child: AppBar(title: Text(''),
+              backgroundColor: Colors.transparent, //No more green
+
+              elevation: 0.0,
+              iconTheme: IconThemeData(color: CustomTheme.themeColor),
+
+
+            ),),
+
+        ], ),
+
       drawer: Drawer(
         child: ListView(
           padding: EdgeInsets.zero,
