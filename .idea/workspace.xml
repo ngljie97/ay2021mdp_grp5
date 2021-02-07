@@ -25,19 +25,14 @@
     </select>
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="28be24ed-ecd2-4996-a17e-b3573ad5f47d" name="Default Changelist" comment="">
-      <change afterPath="$PROJECT_DIR$/android_remote/lib/main(old).dart" afterDir="false" />
+    <list default="true" id="28be24ed-ecd2-4996-a17e-b3573ad5f47d" name="Default Changelist" comment="New feature updated.&#10;1. Function string saving and retrieving.&#10;2. Abouts page rough.">
+      <change afterPath="$PROJECT_DIR$/android_remote/assets/robot.jpg" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/android_remote/lib/main(old).dart" beforeDir="false" />
       <change beforePath="$PROJECT_DIR$/android_remote/lib/main.dart" beforeDir="false" afterPath="$PROJECT_DIR$/android_remote/lib/main.dart" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/android_remote/lib/page_master.dart" beforeDir="false" afterPath="$PROJECT_DIR$/android_remote/lib/page_master.dart" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/android_remote/lib/pages/about.dart" beforeDir="false" afterPath="$PROJECT_DIR$/android_remote/lib/pages/about.dart" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/android_remote/lib/pages/bluetooth_connection.dart" beforeDir="false" afterPath="$PROJECT_DIR$/android_remote/lib/pages/bluetooth_connection.dart" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/android_remote/lib/pages/settings.dart" beforeDir="false" afterPath="$PROJECT_DIR$/android_remote/lib/pages/settings.dart" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/android_remote/lib/router.dart" beforeDir="false" afterPath="$PROJECT_DIR$/android_remote/lib/router.dart" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/android_remote/lib/states/ArenaGrid.dart" beforeDir="false" afterPath="$PROJECT_DIR$/android_remote/lib/states/ArenaGrid.dart" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/android_remote/lib/states/MyHomePage.dart" beforeDir="false" afterPath="$PROJECT_DIR$/android_remote/lib/states/MyHomePage.dart" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/android_remote/lib/states/NewPage.dart" beforeDir="false" afterPath="$PROJECT_DIR$/android_remote/lib/states/NewPage.dart" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/android_remote/lib/states/SettingsPage.dart" beforeDir="false" afterPath="$PROJECT_DIR$/android_remote/lib/states/SettingsPage.dart" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/android_remote/pubspec.lock" beforeDir="false" afterPath="$PROJECT_DIR$/android_remote/pubspec.lock" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/android_remote/pubspec.yaml" beforeDir="false" afterPath="$PROJECT_DIR$/android_remote/pubspec.yaml" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -61,11 +56,15 @@
     <option name="RECENT_GIT_ROOT_PATH" value="$PROJECT_DIR$" />
   </component>
   <component name="ProjectId" id="1nVKGgRaJ0ATBvcPkU4Mhttn6xo" />
+  <component name="ProjectLevelVcsManager">
+    <ConfirmationsSetting value="2" id="Add" />
+  </component>
   <component name="ProjectViewState">
     <option name="hideEmptyMiddlePackages" value="true" />
     <option name="showLibraryContents" value="true" />
   </component>
   <component name="PropertiesComponent">
+    <property name="ASKED_ADD_EXTERNAL_FILES" value="true" />
     <property name="ASKED_SHARE_PROJECT_CONFIGURATION_FILES" value="true" />
     <property name="RunOnceActivity.OpenProjectViewOnStart" value="true" />
     <property name="RunOnceActivity.ShowReadmeOnStart" value="true" />
@@ -132,7 +131,14 @@
       <option name="project" value="LOCAL" />
       <updated>1611817453533</updated>
     </task>
-    <option name="localTasksCounter" value="5" />
+    <task id="LOCAL-00005" summary="updated Gui">
+      <created>1612715538554</created>
+      <option name="number" value="00005" />
+      <option name="presentableId" value="LOCAL-00005" />
+      <option name="project" value="LOCAL" />
+      <updated>1612715538554</updated>
+    </task>
+    <option name="localTasksCounter" value="6" />
     <servers />
   </component>
   <component name="Vcs.Log.Tabs.Properties">
@@ -160,10 +166,12 @@
     <option name="oldMeFiltersMigrated" value="true" />
   </component>
   <component name="VcsManagerConfiguration">
+    <option name="ADD_EXTERNAL_FILES_SILENTLY" value="true" />
     <MESSAGE value="gitignoreddd" />
     <MESSAGE value="Added ArenaGrid" />
     <MESSAGE value="updated Gui" />
-    <option name="LAST_COMMIT_MESSAGE" value="updated Gui" />
+    <MESSAGE value="New feature updated.&#10;1. Function string saving and retrieving.&#10;2. Abouts page rough." />
+    <option name="LAST_COMMIT_MESSAGE" value="New feature updated.&#10;1. Function string saving and retrieving.&#10;2. Abouts page rough." />
   </component>
   <component name="WindowStateProjectService">
     <state x="414" y="174" key="#com.intellij.execution.impl.EditConfigurationsDialog" timestamp="1612715349758">
@@ -180,6 +188,10 @@
     </state>
     <state x="689" y="309" key="#com.intellij.ide.util.TreeFileChooserDialog/0.0.1920.1040/-1920.0.1536.824@0.0.1920.1040" timestamp="1611471110731" />
     <state x="689" y="309" key="#com.intellij.ide.util.TreeFileChooserDialog/0.0.1920.1040/-1920.100.1920.1040@0.0.1920.1040" timestamp="1612715347732" />
+    <state x="540" y="274" key="AndroidCreateResourceDirectoryDialog" timestamp="1612719172021">
+      <screen x="0" y="0" width="1920" height="1040" />
+    </state>
+    <state x="540" y="274" key="AndroidCreateResourceDirectoryDialog/0.0.1920.1040/-1920.100.1920.1040@0.0.1920.1040" timestamp="1612719172021" />
     <state x="779" y="266" key="AndroidProcessChooserDialog" timestamp="1611602997035">
       <screen x="0" y="0" width="1920" height="1040" />
     </state>
@@ -194,29 +206,29 @@
     <state x="513" y="324" key="FileChooserDialogImpl/0.0.1920.1040/-1920.0.1536.824@0.0.1920.1040" timestamp="1611832511492" />
     <state x="-1407" y="424" key="FileChooserDialogImpl/0.0.1920.1040/-1920.100.1920.1040@-1920.100.1920.1040" timestamp="1612428069843" />
     <state x="513" y="324" key="FileChooserDialogImpl/0.0.1920.1040/-1920.100.1920.1040@0.0.1920.1040" timestamp="1611469962095" />
-    <state width="1877" height="281" key="GridCell.Tab.0.bottom" timestamp="1612704565021">
+    <state width="1877" height="281" key="GridCell.Tab.0.bottom" timestamp="1612719756695">
       <screen x="0" y="0" width="1920" height="1040" />
     </state>
     <state width="1858" height="279" key="GridCell.Tab.0.bottom/0.0.1920.1040/-1920.0.1536.824@0.0.1920.1040" timestamp="1611860586021" />
-    <state width="1877" height="281" key="GridCell.Tab.0.bottom/0.0.1920.1040/-1920.100.1920.1040@0.0.1920.1040" timestamp="1612704565021" />
+    <state width="1877" height="281" key="GridCell.Tab.0.bottom/0.0.1920.1040/-1920.100.1920.1040@0.0.1920.1040" timestamp="1612719756695" />
     <state width="1860" height="279" key="GridCell.Tab.0.bottom/0.0.1920.1040@0.0.1920.1040" timestamp="1611886773626" />
-    <state width="1877" height="281" key="GridCell.Tab.0.center" timestamp="1612704565020">
+    <state width="1877" height="281" key="GridCell.Tab.0.center" timestamp="1612719756694">
       <screen x="0" y="0" width="1920" height="1040" />
     </state>
     <state width="1858" height="279" key="GridCell.Tab.0.center/0.0.1920.1040/-1920.0.1536.824@0.0.1920.1040" timestamp="1611860586020" />
-    <state width="1877" height="281" key="GridCell.Tab.0.center/0.0.1920.1040/-1920.100.1920.1040@0.0.1920.1040" timestamp="1612704565020" />
+    <state width="1877" height="281" key="GridCell.Tab.0.center/0.0.1920.1040/-1920.100.1920.1040@0.0.1920.1040" timestamp="1612719756694" />
     <state width="1860" height="279" key="GridCell.Tab.0.center/0.0.1920.1040@0.0.1920.1040" timestamp="1611886773626" />
-    <state width="1877" height="281" key="GridCell.Tab.0.left" timestamp="1612704565020">
+    <state width="1877" height="281" key="GridCell.Tab.0.left" timestamp="1612719756694">
       <screen x="0" y="0" width="1920" height="1040" />
     </state>
     <state width="1858" height="279" key="GridCell.Tab.0.left/0.0.1920.1040/-1920.0.1536.824@0.0.1920.1040" timestamp="1611860586020" />
-    <state width="1877" height="281" key="GridCell.Tab.0.left/0.0.1920.1040/-1920.100.1920.1040@0.0.1920.1040" timestamp="1612704565020" />
+    <state width="1877" height="281" key="GridCell.Tab.0.left/0.0.1920.1040/-1920.100.1920.1040@0.0.1920.1040" timestamp="1612719756694" />
     <state width="1860" height="279" key="GridCell.Tab.0.left/0.0.1920.1040@0.0.1920.1040" timestamp="1611886773626" />
-    <state width="1877" height="281" key="GridCell.Tab.0.right" timestamp="1612704565020">
+    <state width="1877" height="281" key="GridCell.Tab.0.right" timestamp="1612719756695">
       <screen x="0" y="0" width="1920" height="1040" />
     </state>
     <state width="1858" height="279" key="GridCell.Tab.0.right/0.0.1920.1040/-1920.0.1536.824@0.0.1920.1040" timestamp="1611860586020" />
-    <state width="1877" height="281" key="GridCell.Tab.0.right/0.0.1920.1040/-1920.100.1920.1040@0.0.1920.1040" timestamp="1612704565020" />
+    <state width="1877" height="281" key="GridCell.Tab.0.right/0.0.1920.1040/-1920.100.1920.1040@0.0.1920.1040" timestamp="1612719756695" />
     <state width="1860" height="279" key="GridCell.Tab.0.right/0.0.1920.1040@0.0.1920.1040" timestamp="1611886773626" />
     <state x="-1459" y="264" key="SettingsEditor" timestamp="1612428074376">
       <screen x="-1920" y="100" width="1920" height="1040" />

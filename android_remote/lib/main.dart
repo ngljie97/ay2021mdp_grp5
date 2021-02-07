@@ -1,4 +1,6 @@
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 
 import 'router.dart';
 
@@ -79,6 +81,96 @@ class _MyHomePageState extends State<MyHomePage> {
   }
 }
 
+void _showEditForm(BuildContext context, int i) async {
+  final prefs = await SharedPreferences.getInstance();
+  final _formKey = GlobalKey<FormState>();
+  final myController = TextEditingController();
+
+  String key = '';
+
+  switch (i) {
+    case 1:
+      key = 'function1';
+      break;
+    case 2:
+      key = 'function2';
+      break;
+  }
+
+  final value = prefs.getString(key) ?? 0;
+
+  _save(int num, String functionStr) async {
+    String key = '';
+
+    switch (num) {
+      case 1:
+        key = 'function1';
+        break;
+      case 2:
+        key = 'function2';
+        break;
+    }
+
+    if (key.length > 0) prefs.setString(key, functionStr);
+  }
+
+  showDialog(
+      context: context,
+      builder: (BuildContext context) {
+        return AlertDialog(
+          content: Stack(
+            overflow: Overflow.visible,
+            children: <Widget>[
+              Positioned(
+                right: -40.0,
+                top: -40.0,
+                child: InkResponse(
+                  onTap: () {
+                    Navigator.of(context).pop();
+                  },
+                  child: CircleAvatar(
+                    child: Icon(Icons.close),
+                    backgroundColor: Colors.red,
+                  ),
+                ),
+              ),
+              Form(
+                key: _formKey,
+                child: Column(
+                  mainAxisSize: MainAxisSize.min,
+                  children: <Widget>[
+                    Padding(
+                      padding: EdgeInsets.all(8.0),
+                      child: Text('Edit function $i'),
+                    ),
+                    Padding(
+                      padding: EdgeInsets.all(8.0),
+                      child: TextFormField(
+                        controller: myController,
+                        decoration: InputDecoration(
+                          hintText: '$value',
+                        ),
+                      ),
+                    ),
+                    Padding(
+                      padding: const EdgeInsets.all(8.0),
+                      child: RaisedButton(
+                        child: Text('Save'),
+                        onPressed: () {
+                          _save(i, myController.text);
+                          Navigator.of(context).pop();
+                        },
+                      ),
+                    )
+                  ],
+                ),
+              )
+            ],
+          ),
+        );
+      });
+}
+
 Widget _mainDrawer(BuildContext context) {
   return new Drawer(
     child: ListView(
@@ -110,10 +202,12 @@ Widget _mainDrawer(BuildContext context) {
         ListTile(
           leading: Icon(Icons.border_color),
           title: Text('Function 1'),
+          onTap: () => _showEditForm(context, 1),
         ),
         ListTile(
           leading: Icon(Icons.border_color),
           title: Text('Function 2'),
+          onTap: () => _showEditForm(context, 2),
         ),
         Divider(),
         ListTile(
@@ -133,23 +227,4 @@ Widget _mainDrawer(BuildContext context) {
       ],
     ),
   );
-}
-
-Future<String> _onWillPop() async {
-  return (await showDialog(
-        builder: (context) => new AlertDialog(
-          title: new Text('Are you sure?'),
-          content: new Text('Do you want to exit an App'),
-          actions: <Widget>[
-            new FlatButton(
-              child: new Text('No'),
-            ),
-            new FlatButton(
-              onPressed: () => Navigator.of(context).pop(true),
-              child: new Text('Yes'),
-            ),
-          ],
-        ),
-      )) ??
-      false;
 }
