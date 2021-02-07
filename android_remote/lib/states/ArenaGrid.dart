@@ -1,6 +1,5 @@
 
 import 'package:flutter/material.dart';
-import 'dart:developer' as developer;
 
 class ArenaGrid extends StatefulWidget {
   @override
@@ -42,25 +41,23 @@ class _MainPage extends State<ArenaGrid> {
     int gridStateLength = gridState.length;
     return Column(children: <Widget>[
       LayoutBuilder(builder: (context, constraints) {
-          if (constraints.maxWidth < 600) {
-            print(constraints.maxWidth);
-            print(MediaQuery.of(context).size.width);
-            print(MediaQuery.of(context).size.height);
-            print(MediaQuery.of(context).size.aspectRatio);
-            print(MediaQuery.of(context).devicePixelRatio);
+        if (constraints.maxWidth < 600) {
+          print(constraints.maxWidth);
+          print(MediaQuery.of(context).size.width);
+          print(MediaQuery.of(context).size.height);
+          print(MediaQuery.of(context).size.aspectRatio);
+          print(MediaQuery.of(context).devicePixelRatio);
 
-            return _buildPhoneContainer();
-
-          } else {
-            print(constraints.maxWidth);
-            print(MediaQuery.of(context).size.width);
-            print(MediaQuery.of(context).size.height);
-            print(MediaQuery.of(context).size.aspectRatio);
-            print(MediaQuery.of(context).devicePixelRatio);
-            return _buildTabletContainer();
-          }
-        }),
-
+          return _buildPhoneContainer();
+        } else {
+          print(constraints.maxWidth);
+          print(MediaQuery.of(context).size.width);
+          print(MediaQuery.of(context).size.height);
+          print(MediaQuery.of(context).size.aspectRatio);
+          print(MediaQuery.of(context).devicePixelRatio);
+          return _buildTabletContainer();
+        }
+      }),
     ]);
   }
 
@@ -77,7 +74,6 @@ class _MainPage extends State<ArenaGrid> {
       child: GridTile(
         child: Container(
           decoration: BoxDecoration(
-
               border: Border.all(color: Colors.blueGrey, width: 0.1)),
           child: Center(
             child: _buildGridItem(x, y),
@@ -110,17 +106,15 @@ class _MainPage extends State<ArenaGrid> {
         );
         break;
       case 'B':
-        return
-          Container(
-            decoration: BoxDecoration(
-              image: DecorationImage(
-                image: AssetImage(
-                    'assets/letter_b.PNG'),
-                fit: BoxFit.fill,
-              ),
-              shape: BoxShape.rectangle,
+        return Container(
+          decoration: BoxDecoration(
+            image: DecorationImage(
+              image: AssetImage('assets/letter_b.PNG'),
+              fit: BoxFit.fill,
             ),
-          );
+            shape: BoxShape.rectangle,
+          ),
+        );
         break;
 
       default:
@@ -130,55 +124,57 @@ class _MainPage extends State<ArenaGrid> {
   }
 
   Widget _buildTabletContainer() {
-    return
-      AspectRatio(
-
-        aspectRatio: MediaQuery.of(context).devicePixelRatio/(MediaQuery.of(context).devicePixelRatio+(MediaQuery.of(context).devicePixelRatio*(MediaQuery.of(context).size.aspectRatio/4))),
-
-    child:Center(
-      child: Container(
-        padding: EdgeInsets.fromLTRB(5, 0,5,0),
-        child: GridView.builder(
-
-          gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
-            crossAxisCount: 15,
-
-            childAspectRatio: MediaQuery.of(context).size.width / (MediaQuery.of(context).size.height / 1.8),
-            crossAxisSpacing: 0,
-            mainAxisSpacing: 0,
+    return AspectRatio(
+      aspectRatio: MediaQuery.of(context).devicePixelRatio /
+          (MediaQuery.of(context).devicePixelRatio +
+              (MediaQuery.of(context).devicePixelRatio *
+                  (MediaQuery.of(context).size.aspectRatio / 4))),
+      child: Center(
+        child: Container(
+          padding: EdgeInsets.fromLTRB(5, 0, 5, 0),
+          child: GridView.builder(
+            gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
+              crossAxisCount: 15,
+              childAspectRatio: MediaQuery.of(context).size.width /
+                  (MediaQuery.of(context).size.height / 1.8),
+              crossAxisSpacing: 0,
+              mainAxisSpacing: 0,
+            ),
+            itemBuilder: _buildGridItems,
+            shrinkWrap: true,
+            itemCount: 15 * 20,
           ),
-          itemBuilder: _buildGridItems,
-          shrinkWrap: true,
-          itemCount: 15 * 20,
-
         ),
       ),
-    ),);
-  }
-  Widget _buildPhoneContainer() {
-    return
-      AspectRatio(
-        aspectRatio: MediaQuery.of(context).devicePixelRatio/(MediaQuery.of(context).devicePixelRatio+(MediaQuery.of(context).devicePixelRatio*(MediaQuery.of(context).size.aspectRatio))),
-        child:Center(
-          child: Container(
-            padding: EdgeInsets.fromLTRB(0, 0, 0, 0),
-            alignment: Alignment.topLeft,
-            margin: EdgeInsets.fromLTRB(0, 0, 0, 0),
-            child: GridView.builder(
-              gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
-                crossAxisCount: 15,
-                childAspectRatio: MediaQuery.of(context).size.width /
-                    (MediaQuery.of(context).size.height / 2),
-                crossAxisSpacing: 0,
-                mainAxisSpacing: 0,
-              ),
-              itemBuilder: _buildGridItems,
-              itemCount: 15 * 20,
-            ),
-          ),
-        ),);
+    );
   }
 
+  Widget _buildPhoneContainer() {
+    return AspectRatio(
+      aspectRatio: MediaQuery.of(context).devicePixelRatio /
+          (MediaQuery.of(context).devicePixelRatio +
+              (MediaQuery.of(context).devicePixelRatio *
+                  (MediaQuery.of(context).size.aspectRatio))),
+      child: Center(
+        child: Container(
+          padding: EdgeInsets.fromLTRB(0, 0, 0, 0),
+          alignment: Alignment.topLeft,
+          margin: EdgeInsets.fromLTRB(0, 0, 0, 0),
+          child: GridView.builder(
+            gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
+              crossAxisCount: 15,
+              childAspectRatio: MediaQuery.of(context).size.width /
+                  (MediaQuery.of(context).size.height / 2),
+              crossAxisSpacing: 0,
+              mainAxisSpacing: 0,
+            ),
+            itemBuilder: _buildGridItems,
+            itemCount: 15 * 20,
+          ),
+        ),
+      ),
+    );
+  }
 }
 
 Widget _buildPopupDialog(BuildContext context, int x, int y) {

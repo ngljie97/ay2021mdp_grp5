@@ -16,10 +16,7 @@ class _NewPageState extends State<NewPage> {
             child: Column(
                 mainAxisAlignment: MainAxisAlignment.center,
                 children: <Widget>[
-                  Text('This is the new page!'),
-                ]
-            )
-        )
-    );
+          Text('This is the new page!'),
+        ])));
   }
 }

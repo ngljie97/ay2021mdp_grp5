@@ -23,24 +23,25 @@ class AppMaster extends StatelessWidget {
       // ),
       body: Stack(
         children: <Widget>[
-
-          Container( //My container or any other widget
+          Container(
+            //My container or any other widget
             child: this.body,
           ),
-          new Positioned( //Place it at the top, and not use the entire screen
+          new Positioned(
+            //Place it at the top, and not use the entire screen
             top: 0.0,
             left: 0.0,
             right: 0.0,
-            child: AppBar(title: Text(''),
+            child: AppBar(
+              title: Text(''),
               backgroundColor: Colors.transparent, //No more green
 
               elevation: 0.0,
               iconTheme: IconThemeData(color: CustomTheme.themeColor),
-
-
-            ),),
-
-        ], ),
+            ),
+          ),
+        ],
+      ),
 
       drawer: Drawer(
         child: ListView(

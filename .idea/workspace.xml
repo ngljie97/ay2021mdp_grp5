@@ -16,20 +16,35 @@
         <item name="GROUP_NODE:origin" type="e8cecc67:BranchNodeDescriptor" />
       </path>
     </expand>
-    <select />
+    <select>
+      <path>
+        <item name="ROOT" type="e8cecc67:BranchNodeDescriptor" />
+        <item name="LOCAL_ROOT" type="e8cecc67:BranchNodeDescriptor" />
+        <item name="BRANCH:reset" type="e8cecc67:BranchNodeDescriptor" />
+      </path>
+    </select>
   </component>
   <component name="ChangeListManager">
     <list default="true" id="28be24ed-ecd2-4996-a17e-b3573ad5f47d" name="Default Changelist" comment="">
+      <change afterPath="$PROJECT_DIR$/android_remote/lib/main(old).dart" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/android_remote/lib/main.dart" beforeDir="false" afterPath="$PROJECT_DIR$/android_remote/lib/main.dart" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/android_remote/lib/page_master.dart" beforeDir="false" afterPath="$PROJECT_DIR$/android_remote/lib/page_master.dart" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/android_remote/pubspec.lock" beforeDir="false" afterPath="$PROJECT_DIR$/android_remote/pubspec.lock" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/android_remote/lib/pages/about.dart" beforeDir="false" afterPath="$PROJECT_DIR$/android_remote/lib/pages/about.dart" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/android_remote/lib/pages/bluetooth_connection.dart" beforeDir="false" afterPath="$PROJECT_DIR$/android_remote/lib/pages/bluetooth_connection.dart" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/android_remote/lib/pages/settings.dart" beforeDir="false" afterPath="$PROJECT_DIR$/android_remote/lib/pages/settings.dart" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/android_remote/lib/router.dart" beforeDir="false" afterPath="$PROJECT_DIR$/android_remote/lib/router.dart" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/android_remote/lib/states/ArenaGrid.dart" beforeDir="false" afterPath="$PROJECT_DIR$/android_remote/lib/states/ArenaGrid.dart" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/android_remote/lib/states/MyHomePage.dart" beforeDir="false" afterPath="$PROJECT_DIR$/android_remote/lib/states/MyHomePage.dart" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/android_remote/lib/states/NewPage.dart" beforeDir="false" afterPath="$PROJECT_DIR$/android_remote/lib/states/NewPage.dart" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/android_remote/lib/states/SettingsPage.dart" beforeDir="false" afterPath="$PROJECT_DIR$/android_remote/lib/states/SettingsPage.dart" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
     <option name="HIGHLIGHT_NON_ACTIVE_CHANGELIST" value="false" />
     <option name="LAST_RESOLUTION" value="IGNORE" />
   </component>
+  <component name="ExecutionTargetManager" SELECTED_TARGET="device_and_snapshot_combo_box_target[Pixel_3a_API_30_x86]" />
   <component name="FileTemplateManagerImpl">
     <option name="RECENT_TEMPLATES">
       <list>
@@ -38,6 +53,11 @@
     </option>
   </component>
   <component name="Git.Settings">
+    <option name="RECENT_BRANCH_BY_REPOSITORY">
+      <map>
+        <entry key="$PROJECT_DIR$" value="main" />
+      </map>
+    </option>
     <option name="RECENT_GIT_ROOT_PATH" value="$PROJECT_DIR$" />
   </component>
   <component name="ProjectId" id="1nVKGgRaJ0ATBvcPkU4Mhttn6xo" />
@@ -51,16 +71,16 @@
     <property name="RunOnceActivity.ShowReadmeOnStart" value="true" />
     <property name="dart.analysis.tool.window.visible" value="false" />
     <property name="io.flutter.reload.alreadyRun" value="true" />
-    <property name="last_opened_file_path" value="$USER_HOME$/MDP5Android/FlutterWorkingBlue" />
+    <property name="last_opened_file_path" value="$PROJECT_DIR$/android_remote/lib" />
     <property name="settings.editor.selected.configurable" value="flutter.settings" />
     <property name="show.migrate.to.gradle.popup" value="false" />
   </component>
   <component name="RecentsManager">
-    <key name="CopyFile.RECENT_KEYS">
-      <recent name="D:\workspace\ay2021mdp_grp5\android_remote\lib" />
-    </key>
     <key name="MoveFile.RECENT_KEYS">
       <recent name="C:\Users\geral\StudioProjects\ay2021mdp_grp5\android_remote" />
+    </key>
+    <key name="CopyFile.RECENT_KEYS">
+      <recent name="D:\workspace\ay2021mdp_grp5\android_remote\lib" />
     </key>
   </component>
   <component name="RunManager">
@@ -120,7 +140,19 @@
       <map>
         <entry key="MAIN">
           <value>
-            <State />
+            <State>
+              <option name="FILTERS">
+                <map>
+                  <entry key="branch">
+                    <value>
+                      <list>
+                        <option value="reset" />
+                      </list>
+                    </value>
+                  </entry>
+                </map>
+              </option>
+            </State>
           </value>
         </entry>
       </map>
@@ -134,18 +166,20 @@
     <option name="LAST_COMMIT_MESSAGE" value="updated Gui" />
   </component>
   <component name="WindowStateProjectService">
-    <state x="414" y="174" key="#com.intellij.execution.impl.EditConfigurationsDialog" timestamp="1611471338012">
+    <state x="414" y="174" key="#com.intellij.execution.impl.EditConfigurationsDialog" timestamp="1612715349758">
       <screen x="0" y="0" width="1920" height="1040" />
     </state>
     <state x="414" y="174" key="#com.intellij.execution.impl.EditConfigurationsDialog/0.0.1920.1040/-1920.0.1536.824@0.0.1920.1040" timestamp="1611471338012" />
+    <state x="414" y="174" key="#com.intellij.execution.impl.EditConfigurationsDialog/0.0.1920.1040/-1920.100.1920.1040@0.0.1920.1040" timestamp="1612715349758" />
     <state x="711" y="321" key="#com.intellij.fileTypes.FileTypeChooser" timestamp="1611570517035">
       <screen x="0" y="0" width="1920" height="1040" />
     </state>
     <state x="711" y="321" key="#com.intellij.fileTypes.FileTypeChooser/0.0.1920.1040/-1920.0.1536.824@0.0.1920.1040" timestamp="1611570517035" />
-    <state x="689" y="309" key="#com.intellij.ide.util.TreeFileChooserDialog" timestamp="1611471110731">
+    <state x="689" y="309" key="#com.intellij.ide.util.TreeFileChooserDialog" timestamp="1612715347732">
       <screen x="0" y="0" width="1920" height="1040" />
     </state>
     <state x="689" y="309" key="#com.intellij.ide.util.TreeFileChooserDialog/0.0.1920.1040/-1920.0.1536.824@0.0.1920.1040" timestamp="1611471110731" />
+    <state x="689" y="309" key="#com.intellij.ide.util.TreeFileChooserDialog/0.0.1920.1040/-1920.100.1920.1040@0.0.1920.1040" timestamp="1612715347732" />
     <state x="779" y="266" key="AndroidProcessChooserDialog" timestamp="1611602997035">
       <screen x="0" y="0" width="1920" height="1040" />
     </state>
@@ -154,36 +188,35 @@
       <screen x="0" y="0" width="1920" height="1040" />
     </state>
     <state x="587" y="88" key="CommitChangelistDialog2/0.0.1920.1040/-1920.0.1536.824@0.0.1920.1040" timestamp="1611817452380" />
-    <state x="513" y="324" key="FileChooserDialogImpl" timestamp="1612486213548">
-      <screen x="0" y="0" width="1920" height="1040" />
+    <state x="-1407" y="424" key="FileChooserDialogImpl" timestamp="1612428069843">
+      <screen x="-1920" y="100" width="1920" height="1040" />
     </state>
     <state x="513" y="324" key="FileChooserDialogImpl/0.0.1920.1040/-1920.0.1536.824@0.0.1920.1040" timestamp="1611832511492" />
     <state x="-1407" y="424" key="FileChooserDialogImpl/0.0.1920.1040/-1920.100.1920.1040@-1920.100.1920.1040" timestamp="1612428069843" />
     <state x="513" y="324" key="FileChooserDialogImpl/0.0.1920.1040/-1920.100.1920.1040@0.0.1920.1040" timestamp="1611469962095" />
-    <state x="513" y="324" key="FileChooserDialogImpl/0.0.1920.1040@0.0.1920.1040" timestamp="1612486213548" />
-    <state width="1875" height="281" key="GridCell.Tab.0.bottom" timestamp="1612448898439">
+    <state width="1877" height="281" key="GridCell.Tab.0.bottom" timestamp="1612704565021">
       <screen x="0" y="0" width="1920" height="1040" />
     </state>
-    <state width="1875" height="281" key="GridCell.Tab.0.bottom/0.0.1920.1040/-1920.0.1536.824@0.0.1920.1040" timestamp="1612448898439" />
-    <state width="1877" height="281" key="GridCell.Tab.0.bottom/0.0.1920.1040/-1920.100.1920.1040@0.0.1920.1040" timestamp="1612428398921" />
+    <state width="1858" height="279" key="GridCell.Tab.0.bottom/0.0.1920.1040/-1920.0.1536.824@0.0.1920.1040" timestamp="1611860586021" />
+    <state width="1877" height="281" key="GridCell.Tab.0.bottom/0.0.1920.1040/-1920.100.1920.1040@0.0.1920.1040" timestamp="1612704565021" />
     <state width="1860" height="279" key="GridCell.Tab.0.bottom/0.0.1920.1040@0.0.1920.1040" timestamp="1611886773626" />
-    <state width="1875" height="281" key="GridCell.Tab.0.center" timestamp="1612448898438">
+    <state width="1877" height="281" key="GridCell.Tab.0.center" timestamp="1612704565020">
       <screen x="0" y="0" width="1920" height="1040" />
     </state>
-    <state width="1875" height="281" key="GridCell.Tab.0.center/0.0.1920.1040/-1920.0.1536.824@0.0.1920.1040" timestamp="1612448898438" />
-    <state width="1877" height="281" key="GridCell.Tab.0.center/0.0.1920.1040/-1920.100.1920.1040@0.0.1920.1040" timestamp="1612428398920" />
+    <state width="1858" height="279" key="GridCell.Tab.0.center/0.0.1920.1040/-1920.0.1536.824@0.0.1920.1040" timestamp="1611860586020" />
+    <state width="1877" height="281" key="GridCell.Tab.0.center/0.0.1920.1040/-1920.100.1920.1040@0.0.1920.1040" timestamp="1612704565020" />
     <state width="1860" height="279" key="GridCell.Tab.0.center/0.0.1920.1040@0.0.1920.1040" timestamp="1611886773626" />
-    <state width="1875" height="281" key="GridCell.Tab.0.left" timestamp="1612448898438">
+    <state width="1877" height="281" key="GridCell.Tab.0.left" timestamp="1612704565020">
       <screen x="0" y="0" width="1920" height="1040" />
     </state>
-    <state width="1875" height="281" key="GridCell.Tab.0.left/0.0.1920.1040/-1920.0.1536.824@0.0.1920.1040" timestamp="1612448898438" />
-    <state width="1877" height="281" key="GridCell.Tab.0.left/0.0.1920.1040/-1920.100.1920.1040@0.0.1920.1040" timestamp="1612428398920" />
+    <state width="1858" height="279" key="GridCell.Tab.0.left/0.0.1920.1040/-1920.0.1536.824@0.0.1920.1040" timestamp="1611860586020" />
+    <state width="1877" height="281" key="GridCell.Tab.0.left/0.0.1920.1040/-1920.100.1920.1040@0.0.1920.1040" timestamp="1612704565020" />
     <state width="1860" height="279" key="GridCell.Tab.0.left/0.0.1920.1040@0.0.1920.1040" timestamp="1611886773626" />
-    <state width="1875" height="281" key="GridCell.Tab.0.right" timestamp="1612448898439">
+    <state width="1877" height="281" key="GridCell.Tab.0.right" timestamp="1612704565020">
       <screen x="0" y="0" width="1920" height="1040" />
     </state>
-    <state width="1875" height="281" key="GridCell.Tab.0.right/0.0.1920.1040/-1920.0.1536.824@0.0.1920.1040" timestamp="1612448898439" />
-    <state width="1877" height="281" key="GridCell.Tab.0.right/0.0.1920.1040/-1920.100.1920.1040@0.0.1920.1040" timestamp="1612428398920" />
+    <state width="1858" height="279" key="GridCell.Tab.0.right/0.0.1920.1040/-1920.0.1536.824@0.0.1920.1040" timestamp="1611860586020" />
+    <state width="1877" height="281" key="GridCell.Tab.0.right/0.0.1920.1040/-1920.100.1920.1040@0.0.1920.1040" timestamp="1612704565020" />
     <state width="1860" height="279" key="GridCell.Tab.0.right/0.0.1920.1040@0.0.1920.1040" timestamp="1611886773626" />
     <state x="-1459" y="264" key="SettingsEditor" timestamp="1612428074376">
       <screen x="-1920" y="100" width="1920" height="1040" />
@@ -209,12 +242,12 @@
       <breakpoints>
         <line-breakpoint enabled="true" suspend="THREAD" type="Dart">
           <url>file://$PROJECT_DIR$/android_remote/lib/states/ArenaGrid.dart</url>
-          <line>44</line>
+          <line>43</line>
           <option name="timeStamp" value="2" />
         </line-breakpoint>
         <line-breakpoint enabled="true" suspend="THREAD" type="Dart">
           <url>file://$PROJECT_DIR$/android_remote/lib/states/ArenaGrid.dart</url>
-          <line>59</line>
+          <line>57</line>
           <option name="timeStamp" value="3" />
         </line-breakpoint>
       </breakpoints>
