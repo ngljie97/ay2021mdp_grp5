@@ -1,7 +1,7 @@
-import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
+import 'globals.dart' as globals;
 import 'router.dart';
 
 void main() {
@@ -65,20 +65,121 @@ class _MyHomePageState extends State<MyHomePage> {
           backgroundColor: Colors.transparent,
           elevation: 0.0,
         ),
-        drawer: _mainDrawer(context),
-        body: Center(
-          child: Column(
-            mainAxisAlignment: MainAxisAlignment.center,
+        drawer: Drawer(
+          child: ListView(
+            padding: EdgeInsets.zero,
             children: <Widget>[
-              Text(
-                'This is the home page.',
+              DrawerHeader(
+                  margin: EdgeInsets.zero,
+                  padding: EdgeInsets.zero,
+                  decoration: BoxDecoration(color: Colors.black45),
+                  child: Stack(children: <Widget>[
+                    Positioned(
+                        bottom: 12.0,
+                        left: 16.0,
+                        child: Text('Remote Controller Module',
+                            style: TextStyle(
+                                fontSize: 20.0, fontWeight: FontWeight.w500))),
+                  ])),
+              ListTile(
+                leading: Icon(Icons.bluetooth),
+                title: Text('Connect / Disconnect'),
+                onTap: () {
+                  Navigator.popAndPushNamed(context, connectionRoute);
+                },
+              ),
+              Divider(),
+              ListTile(
+                title: Text('Edit persistent strings'),
+              ),
+              ListTile(
+                leading: Icon(Icons.border_color),
+                title: Text('Function 1'),
+                onTap: () => _showEditForm(context, 1),
+              ),
+              ListTile(
+                leading: Icon(Icons.border_color),
+                title: Text('Function 2'),
+                onTap: () => _showEditForm(context, 2),
+              ),
+              Divider(),
+              ListTile(
+                leading: Icon(Icons.update_outlined),
+                title: Text('Update Mode'),
+                subtitle: Text(() {
+                  if (!globals.updateMode) {
+                    return 'Auto';
+                  } else {
+                    return 'Manual';
+                  }
+                }()),
+                trailing: Switch(
+                  value: globals.updateMode,
+                  onChanged: (value) {
+                    setState(() {
+                      globals.updateMode = value;
+                    });
+                  },
+                ),
+              ),
+              ListTile(
+                leading: Icon(Icons.info_outline),
+                title: Text('About'),
+                onTap: () {
+                  Navigator.popAndPushNamed(context, aboutRoute);
+                },
               ),
             ],
           ),
         ),
+        body: Center(child: _buildBody(context)),
       ),
     );
   }
+}
+
+Widget _buildBody(BuildContext context) {
+  return Column(
+    mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+    children: <Widget>[
+      Expanded(
+        flex: 7,
+        child: Center(
+          child: Text(() {
+            if (globals.updateMode) {
+              return 'This is the home page. Manual update is on.';
+            } else {
+              return 'This is the home page. Manual update is off.';
+            }
+          }()),
+        ),
+      ),
+      Expanded(
+        flex: 3,
+        child: Container(
+          child: Center(
+            child: Row(
+              children: <Widget>[
+                Expanded(
+                  flex: 6,
+                  child: Container(
+                    color: Colors.white60,
+                  ),
+                ),
+                Expanded(
+                  flex: 4,
+                  child: Container(
+                    color: Colors.green,
+                  ),
+                ),
+              ],
+            ),
+          ),
+          color: Colors.white60,
+        ),
+      ),
+    ],
+  );
 }
 
 void _showEditForm(BuildContext context, int i) async {
@@ -169,62 +270,4 @@ void _showEditForm(BuildContext context, int i) async {
           ),
         );
       });
-}
-
-Widget _mainDrawer(BuildContext context) {
-  return new Drawer(
-    child: ListView(
-      padding: EdgeInsets.zero,
-      children: <Widget>[
-        DrawerHeader(
-            margin: EdgeInsets.zero,
-            padding: EdgeInsets.zero,
-            decoration: BoxDecoration(color: Colors.black45),
-            child: Stack(children: <Widget>[
-              Positioned(
-                  bottom: 12.0,
-                  left: 16.0,
-                  child: Text('Remote Controller Module',
-                      style: TextStyle(
-                          fontSize: 20.0, fontWeight: FontWeight.w500))),
-            ])),
-        ListTile(
-          leading: Icon(Icons.bluetooth),
-          title: Text('Connect / Disconnect'),
-          onTap: () {
-            Navigator.popAndPushNamed(context, connectionRoute);
-          },
-        ),
-        Divider(),
-        ListTile(
-          title: Text('Edit persistent strings'),
-        ),
-        ListTile(
-          leading: Icon(Icons.border_color),
-          title: Text('Function 1'),
-          onTap: () => _showEditForm(context, 1),
-        ),
-        ListTile(
-          leading: Icon(Icons.border_color),
-          title: Text('Function 2'),
-          onTap: () => _showEditForm(context, 2),
-        ),
-        Divider(),
-        ListTile(
-          leading: Icon(Icons.settings),
-          title: Text('Settings'),
-          onTap: () {
-            Navigator.popAndPushNamed(context, settingsRoute);
-          },
-        ),
-        ListTile(
-          leading: Icon(Icons.info_outline),
-          title: Text('About'),
-          onTap: () {
-            Navigator.popAndPushNamed(context, aboutRoute);
-          },
-        ),
-      ],
-    ),
-  );
 }
