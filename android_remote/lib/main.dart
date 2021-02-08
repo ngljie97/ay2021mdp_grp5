@@ -101,8 +101,10 @@ class _MyHomePageState extends State<MyHomePage> {
         globals.connection.input.listen(_onDataReceived).onDone(() {
           if (globals.isDisconnecting) {
             print('Disconnecting locally!');
+            globals.strArr.add('Disconnecting locally!');
           } else {
             print('Disconnected remotely!');
+            globals.strArr.add('Disconnecting remotely!');
           }
           if (this.mounted) {
             setState(() {});

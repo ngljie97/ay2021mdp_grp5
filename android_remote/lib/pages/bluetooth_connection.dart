@@ -162,19 +162,10 @@ class _ConnectionPage extends State<ConnectionPage> {
       rssi: _device.rssi,
       enabled: _device.availability == _DeviceAvailability.yes,
       onTap: () {
-        print("fku");
-        print(_device.device);
-        //Navigator.of(context).pop(_device.device);
-        // Navigator.of(context).pop(
-        //   MaterialPageRoute(
-        //     builder: (context) {
-        //       return MyHomePage(server: _device.device);
-        //     },
-        //   ),
-        // );
 
         if (_device.device != null) {
           print('Connect -> selected ' + _device.device.address);
+          strArr.add('Successfully connected to '+_device.device.name);
           isConnected=true;
           _startChat(context, _device.device);
         } else {
