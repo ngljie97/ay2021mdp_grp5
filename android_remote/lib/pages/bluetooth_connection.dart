@@ -6,6 +6,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bluetooth_serial/flutter_bluetooth_serial.dart';
 
 import '../globals.dart';
+import '../main.dart';
 import 'ChatPage.dart';
 
 class ConnectionPage extends StatefulWidget {
@@ -161,8 +162,38 @@ class _ConnectionPage extends State<ConnectionPage> {
       rssi: _device.rssi,
       enabled: _device.availability == _DeviceAvailability.yes,
       onTap: () {
+        print("fku");
+        print(_device.device);
+        //Navigator.of(context).pop(_device.device);
+        // Navigator.of(context).pop(
+        //   MaterialPageRoute(
+        //     builder: (context) {
+        //       return MyHomePage(server: _device.device);
+        //     },
+        //   ),
+        // );
 
-        Navigator.of(context).pop(_device.device);
+        if (_device.device != null) {
+          print('Connect -> selected ' + _device.device.address);
+          isConnected=true;
+          _startChat(context, _device.device);
+        } else {
+          print('Connect -> no device selected');
+        }
+
+
+        // if(connection!=null && connection.isConnected)
+        // {
+        //   isConnected=true;
+        //   print('Connect -> selected ' + selectedDevice.address);
+        //   print(isConnected);
+        // }
+        // if (selectedDevice != null) {
+        //   print('Connect -> selected ' + selectedDevice.address);
+        //   startChat(context, _device.device);
+        // } else {
+        //   print('Connect -> no device selected');
+        // }
       },
     ))
         .toList();
@@ -232,7 +263,7 @@ void _startChat(BuildContext context, BluetoothDevice server) {
   Navigator.of(context).push(
     MaterialPageRoute(
       builder: (context) {
-        return ChatPage(server: server);
+        return MyHomePage(server: server);
       },
     ),
   );
