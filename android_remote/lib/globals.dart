@@ -11,3 +11,6 @@ bool isConnecting=true;
 bool isDisconnecting=false;
 BluetoothDevice server;
 bool isConnected=false;
+
+String strStartExplore = '';
+String strFastestPath = '';

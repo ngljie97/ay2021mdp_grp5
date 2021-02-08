@@ -1,9 +1,7 @@
-import 'dart:ui';
-
 import 'dart:convert';
 import 'dart:typed_data';
+import 'dart:ui';
 
-import 'package:android_remote/pages/ChatPage.dart';
 import 'package:android_remote/pages/bluetooth_connection.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bluetooth_serial/flutter_bluetooth_serial.dart';
@@ -14,6 +12,7 @@ import 'router.dart';
 
 final TextEditingController textEditingController = new TextEditingController();
 final ScrollController listScrollController = new ScrollController();
+
 void main() {
   runApp(MyApp());
 }
@@ -37,6 +36,7 @@ class MyApp extends StatelessWidget {
 
 class MyHomePage extends StatefulWidget {
   final BluetoothDevice server;
+
   const MyHomePage({this.server});
 
   @override
@@ -48,8 +48,6 @@ class _MyHomePageState extends State<MyHomePage> {
 
   List<_Message> messages = List<_Message>();
   String _messageBuffer = '';
-
-  //get isConnected => connection != null && connection.isConnected;
 
   Future<bool> _onWillPop() async {
     return (await showDialog(
@@ -202,13 +200,7 @@ class _MyHomePageState extends State<MyHomePage> {
           mainAxisAlignment: MainAxisAlignment.spaceEvenly,
           children: <Widget>[
             _buildArena(),
-            () {
-              if (globals.controlMode) {
-                return _buildDefaultPanel();
-              } else {
-                return _buildControllerPanel();
-              }
-            }(),
+            _buildBottomPanel(),
           ],
         ),
       ),
@@ -305,69 +297,64 @@ class _MyHomePageState extends State<MyHomePage> {
     }
   }
 
-  Widget _buildControllerPanel() {
-    return new Expanded(
+  Widget _buildBottomPanel() {
+    return Expanded(
       flex: 3,
-      child: Row(
-        children: <Widget>[
-          Expanded(
-            flex: 6,
-            child: null,
-          ),
-          Expanded(
-            flex: 4,
-            child: Container(
-              padding: EdgeInsets.fromLTRB(7.5, 0, 7.5, 0),
-              child: Column(
-                mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                crossAxisAlignment: CrossAxisAlignment.stretch,
-                children: <Widget>[
-                  RaisedButton(
-                    onPressed: () {},
-                    child: Container(
-                      child: const Text(
-                        'Function 1',
-                        overflow: TextOverflow.ellipsis,
-                      ),
-                    ),
-                  ),
-                  RaisedButton(
-                    onPressed: () {},
-                    child: Container(
-                      child: const Text(
-                        'Function 2',
-                        overflow: TextOverflow.ellipsis,
-                      ),
-                    ),
-                  ),
-                  RaisedButton(
-                    onPressed: () {
-                      setState(() {
-                        globals.controlMode = false;
-                      });
-                    },
-                    child: Container(
-                      child: const Text(
-                        'Hide controls',
-                        overflow: TextOverflow.ellipsis,
-                      ),
-                    ),
-                  ),
-                ],
+      child: () {
+        if (globals.controlMode) {
+          return Row(
+            children: <Widget>[
+              Expanded(
+                flex: 6,
+                child: Text(''),
               ),
-            ),
-          ),
-        ],
-      ),
-    );
-  }
-
-  Widget _buildDefaultPanel() {
-    return new Expanded(
-      flex: 3,
-      child: Container(
-        child: Center(
-          child: Row(
+              Expanded(
+                flex: 4,
+                child: Container(
+                  padding: EdgeInsets.fromLTRB(7.5, 0, 7.5, 0),
+                  child: Column(
+                    mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                    crossAxisAlignment: CrossAxisAlignment.stretch,
+                    children: <Widget>[
+                      RaisedButton(
+                        onPressed: () {},
+                        child: Container(
+                          child: const Text(
+                            'Function 1',
+                            overflow: TextOverflow.ellipsis,
+                          ),
+                        ),
+                      ),
+                      RaisedButton(
+                        onPressed: () {},
+                        child: Container(
+                          child: const Text(
+                            'Function 2',
+                            overflow: TextOverflow.ellipsis,
+                          ),
+                        ),
+                      ),
+                      RaisedButton(
+                        onPressed: () {
+                          setState(() {
+                            globals.controlMode = false;
+                          });
+                        },
+                        child: Container(
+                          child: const Text(
+                            'Hide controls',
+                            overflow: TextOverflow.ellipsis,
+                          ),
+                        ),
+                      ),
+                    ],
+                  ),
+                ),
+              ),
+            ],
+          );
+        } else {
+          return Row(
             children: <Widget>[
               Expanded(
                 flex: 6,
@@ -403,7 +390,6 @@ class _MyHomePageState extends State<MyHomePage> {
                           ],
                         ),
                       ),
-
                     ],
                   ),
                 ),
@@ -417,12 +403,11 @@ class _MyHomePageState extends State<MyHomePage> {
                     crossAxisAlignment: CrossAxisAlignment.stretch,
                     children: <Widget>[
                       RaisedButton(
-                      onPressed:() {
-                        if(globals.isConnected)
-                          {
+                        onPressed: () {
+                          if (globals.isConnected) {
                             _sendMessage('uolo');
                           }
-                      },
+                        },
                         child: Container(
                           child: const Text(
                             'Start Exploration',
@@ -467,9 +452,9 @@ class _MyHomePageState extends State<MyHomePage> {
                 ),
               ),
             ],
-          ),
-        ),
-      ),
+          );
+        }
+      }(),
     );
   }
 }
