@@ -1,7 +1,11 @@
+import 'package:android_remote/pages/ChatPage.dart';
+import 'package:android_remote/pages/bluetooth_connection.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_bluetooth_serial/flutter_bluetooth_serial.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
 import 'globals.dart' as globals;
+import 'globals.dart';
 import 'router.dart';
 
 void main() {
@@ -84,8 +88,22 @@ class _MyHomePageState extends State<MyHomePage> {
               ListTile(
                 leading: Icon(Icons.bluetooth),
                 title: Text('Connect / Disconnect'),
-                onTap: () {
-                  Navigator.popAndPushNamed(context, connectionRoute);
+                onTap: () async {
+                  //Navigator.popAndPushNamed(context, connectionRoute);
+                  selectedDevice = await Navigator.of(context).push(
+                    MaterialPageRoute(
+                      builder: (context) {
+                        return ConnectionPage(checkAvailability: false);
+                      },
+                    ),
+                  );
+
+                  if (selectedDevice != null) {
+                    print('Connect -> selected ' + selectedDevice.address);
+                    startChat(context, selectedDevice);
+                  } else {
+                    print('Connect -> no device selected');
+                  }
                 },
               ),
               Divider(),
@@ -270,4 +288,14 @@ void _showEditForm(BuildContext context, int i) async {
           ),
         );
       });
+}
+
+void startChat(BuildContext context, BluetoothDevice server) {
+  Navigator.of(context).push(
+    MaterialPageRoute(
+      builder: (context) {
+        return ChatPage(server: server);
+      },
+    ),
+  );
 }
