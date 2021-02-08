@@ -36,9 +36,6 @@ class MyApp extends StatelessWidget {
 }
 
 class MyHomePage extends StatefulWidget {
-
-
-
   final BluetoothDevice server;
   const MyHomePage({this.server});
 
@@ -47,14 +44,12 @@ class MyHomePage extends StatefulWidget {
 }
 
 class _MyHomePageState extends State<MyHomePage> {
-
   static final clientID = 0;
 
   List<_Message> messages = List<_Message>();
   String _messageBuffer = '';
 
   //get isConnected => connection != null && connection.isConnected;
-
 
   Future<bool> _onWillPop() async {
     return (await showDialog(
@@ -76,6 +71,7 @@ class _MyHomePageState extends State<MyHomePage> {
         )) ??
         false;
   }
+
   @override
   void dispose() {
     // Avoid memory leak (`setState` after dispose) and disconnect
@@ -87,12 +83,13 @@ class _MyHomePageState extends State<MyHomePage> {
 
     super.dispose();
   }
+
   @override
   void initState() {
     super.initState();
     print("fkgerald");
     print(globals.isConnected);
-    if(globals.isConnected) {
+    if (globals.isConnected) {
       BluetoothConnection.toAddress(widget.server.address).then((_connection) {
         print('Connected to the device');
         globals.connection = _connection;
@@ -155,8 +152,6 @@ class _MyHomePageState extends State<MyHomePage> {
                       },
                     ),
                   );
-
-
                 },
               ),
               Divider(),
@@ -213,7 +208,7 @@ class _MyHomePageState extends State<MyHomePage> {
               } else {
                 return _buildControllerPanel();
               }
-            } (),
+            }(),
           ],
         ),
       ),
@@ -231,7 +226,6 @@ class _MyHomePageState extends State<MyHomePage> {
             return 'This is the home page. Manual update is off.';
           }
         }()),
-        body: Center(child: _buildBody(context)),
       ),
     );
   }
@@ -271,7 +265,7 @@ class _MyHomePageState extends State<MyHomePage> {
             1,
             backspacesCounter > 0
                 ? _messageBuffer.substring(
-                0, _messageBuffer.length - backspacesCounter)
+                    0, _messageBuffer.length - backspacesCounter)
                 : _messageBuffer + dataString.substring(0, index),
           ),
         );
@@ -280,17 +274,18 @@ class _MyHomePageState extends State<MyHomePage> {
     } else {
       _messageBuffer = (backspacesCounter > 0
           ? _messageBuffer.substring(
-          0, _messageBuffer.length - backspacesCounter)
+              0, _messageBuffer.length - backspacesCounter)
           : _messageBuffer + dataString);
     }
   }
+
   void _sendMessage(String text) async {
     text = text.trim();
     textEditingController.clear();
 
     if (text.length > 0) {
       try {
-        globals.connection.output.add(utf8.encode(text+"fku"));
+        globals.connection.output.add(utf8.encode(text + "fku"));
         await globals.connection.output.allSent;
 
         setState(() {
@@ -308,26 +303,6 @@ class _MyHomePageState extends State<MyHomePage> {
         setState(() {});
       }
     }
-  }
-}
-
-Widget _buildBody(BuildContext context) {
-  return Column(
-    mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-    children: <Widget>[
-      Expanded(
-        flex: 7,
-        child: Center(
-          child: Text(() {
-            if (globals.updateMode) {
-              return 'This is the home page. Manual update is on.';
-            } else {
-              return 'This is the home page. Manual update is off.';
-            }
-          }()),
-        ),
-      ),
-    );
   }
 
   Widget _buildControllerPanel() {
@@ -428,6 +403,7 @@ Widget _buildBody(BuildContext context) {
                           ],
                         ),
                       ),
+
                     ],
                   ),
                 ),
@@ -441,7 +417,12 @@ Widget _buildBody(BuildContext context) {
                     crossAxisAlignment: CrossAxisAlignment.stretch,
                     children: <Widget>[
                       RaisedButton(
-                        onPressed: () {},
+                      onPressed:() {
+                        if(globals.isConnected)
+                          {
+                            _sendMessage('uolo');
+                          }
+                      },
                         child: Container(
                           child: const Text(
                             'Start Exploration',
@@ -482,58 +463,16 @@ Widget _buildBody(BuildContext context) {
                         ),
                       ),
                     ],
-      Expanded(
-        flex: 3,
-        child: Container(
-          child: Center(
-            child: Row(
-              children: <Widget>[
-                Expanded(
-                  flex: 6,
-                  child: Container(
-                    color: Colors.white60,
-                    child: Column(
-                      children:[
-                      TextField(
-                      style: const TextStyle(fontSize: 15.0),
-                      controller: textEditingController,
-                      decoration: InputDecoration.collapsed(
-                        hintText: globals.isConnecting
-                            ? 'Wait until connected...'
-                            : globals.isConnected
-                            ? 'Type your message...'
-                            : 'Chat got disconnected',
-                        hintStyle: const TextStyle(color: Colors.grey),
-                      ),
-                      enabled: globals.isConnected,
-                    ),Container(
-                          margin: const EdgeInsets.all(8.0),
-                          child: IconButton(
-                              icon: const Icon(Icons.send),
-                              onPressed: globals.isConnected
-                                  ? () => _sendMessage(textEditingController.text)
-                                  : null),
-                        ),]
-                  ),
-                  ),
-                ),
-                Expanded(
-                  flex: 4,
-                  child: Container(
-                    color: Colors.green,
                   ),
                 ),
               ),
             ],
           ),
         ),
-        color: Colors.white60,
       ),
-    ],
-  );
-
+    );
+  }
 }
-
 
 void _showEditForm(BuildContext context, int i) async {
   final prefs = await SharedPreferences.getInstance();
@@ -624,6 +563,7 @@ void _showEditForm(BuildContext context, int i) async {
         );
       });
 }
+
 class _Message {
   int whom;
   String text;
