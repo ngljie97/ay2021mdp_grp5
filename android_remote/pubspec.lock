@@ -79,9 +79,9 @@ packages:
   flutter_bluetooth_serial:
     dependency: "direct main"
     description:
-      path: "../flutter_bluetooth_serial"
-      relative: true
-    source: path
+      name: flutter_bluetooth_serial
+      url: "https://pub.dartlang.org"
+    source: hosted
     version: "0.2.2"
   flutter_test:
     dependency: "direct dev"
