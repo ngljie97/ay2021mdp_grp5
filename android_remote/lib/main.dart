@@ -1,3 +1,5 @@
+import 'dart:ui';
+
 import 'dart:convert';
 import 'dart:typed_data';
 
@@ -201,6 +203,34 @@ class _MyHomePageState extends State<MyHomePage> {
             ],
           ),
         ),
+        body: Column(
+          mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+          children: <Widget>[
+            _buildArena(),
+            () {
+              if (globals.controlMode) {
+                return _buildDefaultPanel();
+              } else {
+                return _buildControllerPanel();
+              }
+            } (),
+          ],
+        ),
+      ),
+    );
+  }
+
+  Widget _buildArena() {
+    return new Expanded(
+      flex: 7,
+      child: Center(
+        child: Text(() {
+          if (globals.updateMode) {
+            return 'This is the home page. Manual update is on.';
+          } else {
+            return 'This is the home page. Manual update is off.';
+          }
+        }()),
         body: Center(child: _buildBody(context)),
       ),
     );
@@ -297,6 +327,161 @@ Widget _buildBody(BuildContext context) {
           }()),
         ),
       ),
+    );
+  }
+
+  Widget _buildControllerPanel() {
+    return new Expanded(
+      flex: 3,
+      child: Row(
+        children: <Widget>[
+          Expanded(
+            flex: 6,
+            child: null,
+          ),
+          Expanded(
+            flex: 4,
+            child: Container(
+              padding: EdgeInsets.fromLTRB(7.5, 0, 7.5, 0),
+              child: Column(
+                mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                crossAxisAlignment: CrossAxisAlignment.stretch,
+                children: <Widget>[
+                  RaisedButton(
+                    onPressed: () {},
+                    child: Container(
+                      child: const Text(
+                        'Function 1',
+                        overflow: TextOverflow.ellipsis,
+                      ),
+                    ),
+                  ),
+                  RaisedButton(
+                    onPressed: () {},
+                    child: Container(
+                      child: const Text(
+                        'Function 2',
+                        overflow: TextOverflow.ellipsis,
+                      ),
+                    ),
+                  ),
+                  RaisedButton(
+                    onPressed: () {
+                      setState(() {
+                        globals.controlMode = false;
+                      });
+                    },
+                    child: Container(
+                      child: const Text(
+                        'Hide controls',
+                        overflow: TextOverflow.ellipsis,
+                      ),
+                    ),
+                  ),
+                ],
+              ),
+            ),
+          ),
+        ],
+      ),
+    );
+  }
+
+  Widget _buildDefaultPanel() {
+    return new Expanded(
+      flex: 3,
+      child: Container(
+        child: Center(
+          child: Row(
+            children: <Widget>[
+              Expanded(
+                flex: 6,
+                child: Container(
+                  padding: EdgeInsets.fromLTRB(3, 1, 3, 1),
+                  child: Column(
+                    mainAxisAlignment: MainAxisAlignment.start,
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: <Widget>[
+                      Text(
+                        'Console output:',
+                        textAlign: TextAlign.left,
+                      ),
+                      Expanded(
+                        child: Flex(
+                          direction: Axis.horizontal,
+                          children: [
+                            Expanded(
+                              child: Container(
+                                padding: EdgeInsets.fromLTRB(3, 1, 3, 1),
+                                decoration: BoxDecoration(
+                                  border: Border.all(color: Colors.black),
+                                ),
+                                child: new ListView.builder(
+                                  itemCount: globals.strArr.length,
+                                  itemBuilder:
+                                      (BuildContext context, int index) {
+                                    return new Text(globals.strArr[index]);
+                                  },
+                                ),
+                              ),
+                            ),
+                          ],
+                        ),
+                      ),
+                    ],
+                  ),
+                ),
+              ),
+              Expanded(
+                flex: 4,
+                child: Container(
+                  padding: EdgeInsets.fromLTRB(7.5, 0, 7.5, 0),
+                  child: Column(
+                    mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                    crossAxisAlignment: CrossAxisAlignment.stretch,
+                    children: <Widget>[
+                      RaisedButton(
+                        onPressed: () {},
+                        child: Container(
+                          child: const Text(
+                            'Start Exploration',
+                            overflow: TextOverflow.ellipsis,
+                          ),
+                        ),
+                      ),
+                      RaisedButton(
+                        onPressed: () {},
+                        child: Container(
+                          child: const Text(
+                            'Run Fastest Path',
+                            overflow: TextOverflow.ellipsis,
+                          ),
+                        ),
+                      ),
+                      RaisedButton(
+                        onPressed: () {},
+                        child: Container(
+                          child: const Text(
+                            'Set Waypoint',
+                            overflow: TextOverflow.ellipsis,
+                          ),
+                        ),
+                      ),
+                      RaisedButton(
+                        onPressed: () {
+                          setState(() {
+                            globals.controlMode = true;
+                          });
+                          globals.strArr.add('Show controls pressed.');
+                        },
+                        child: Container(
+                          child: const Text(
+                            'Show controls',
+                            overflow: TextOverflow.ellipsis,
+                          ),
+                        ),
+                      ),
+                    ],
       Expanded(
         flex: 3,
         child: Container(
@@ -338,11 +523,11 @@ Widget _buildBody(BuildContext context) {
                     color: Colors.green,
                   ),
                 ),
-              ],
-            ),
+              ),
+            ],
           ),
-          color: Colors.white60,
         ),
+        color: Colors.white60,
       ),
     ],
   );
@@ -438,7 +623,6 @@ void _showEditForm(BuildContext context, int i) async {
           ),
         );
       });
-
 }
 class _Message {
   int whom;
@@ -446,5 +630,3 @@ class _Message {
 
   _Message(this.whom, this.text);
 }
-
-
