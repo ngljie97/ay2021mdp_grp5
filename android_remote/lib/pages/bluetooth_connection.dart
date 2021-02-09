@@ -1,4 +1,3 @@
-
 import 'dart:async';
 
 import 'package:android_remote/states/BluetoothDeviceListEntry.dart';
@@ -7,7 +6,6 @@ import 'package:flutter_bluetooth_serial/flutter_bluetooth_serial.dart';
 
 import '../globals.dart';
 import '../main.dart';
-import 'ChatPage.dart';
 
 class ConnectionPage extends StatefulWidget {
   /// If true, on page start there is performed discovery upon the bonded devices.
@@ -93,15 +91,11 @@ class _ConnectionPage extends State<ConnectionPage> {
       });
     });
 
-
     //end
-
 
     _isDiscovering = widget.checkAvailability;
 
-    if (_isDiscovering) {
-
-    }
+    if (_isDiscovering) {}
 
     // Setup a list of the bonded devices
     FlutterBluetoothSerial.instance
@@ -111,27 +105,25 @@ class _ConnectionPage extends State<ConnectionPage> {
         devices = bondedDevices
             .map(
               (device) => _DeviceWithAvailability(
-            device,
-            widget.checkAvailability
-                ? _DeviceAvailability.maybe
-                : _DeviceAvailability.yes,
-          ),
-        )
+                device,
+                widget.checkAvailability
+                    ? _DeviceAvailability.maybe
+                    : _DeviceAvailability.yes,
+              ),
+            )
             .toList();
       });
     });
   }
 
-  void _restartDiscovery() async{
-
+  void _restartDiscovery() async {
     Navigator.pop(context);
     // Navigator.of(context).push(
     //   PageRouteBuilder(pageBuilder: (_, __, ___) => SelectBondedDevicePage(checkAvailability: false),
     //     transitionDuration: Duration(seconds: 0),),
     //
     // );
-    selectedDevice =
-    await Navigator.of(context).push(
+    selectedDevice = await Navigator.of(context).push(
       MaterialPageRoute(
         builder: (context) {
           return ConnectionPage(checkAvailability: false);
@@ -139,11 +131,9 @@ class _ConnectionPage extends State<ConnectionPage> {
       ),
     );
 
-
     setState(() {
       _isDiscovering = false;
     });
-
   }
 
   @override
@@ -156,100 +146,92 @@ class _ConnectionPage extends State<ConnectionPage> {
 
   @override
   Widget build(BuildContext context) {
+    List<BluetoothDeviceListEntry> list = devices
+        .map((_device) => BluetoothDeviceListEntry(
+              device: _device.device,
+              rssi: _device.rssi,
+              enabled: _device.availability == _DeviceAvailability.yes,
+              onTap: () {
+                if (_device.device != null) {
+                  print('Connect -> selected ' + _device.device.address);
+                  strArr
+                      .add('Successfully connected to ' + _device.device.name);
+                  isConnected = true;
+                  _startChat(context, _device.device);
+                } else {
+                  print('Connect -> no device selected');
+                }
 
-    List<BluetoothDeviceListEntry> list = devices.map((_device) => BluetoothDeviceListEntry(
-      device: _device.device,
-      rssi: _device.rssi,
-      enabled: _device.availability == _DeviceAvailability.yes,
-      onTap: () {
-
-        if (_device.device != null) {
-          print('Connect -> selected ' + _device.device.address);
-          strArr.add('Successfully connected to '+_device.device.name);
-          isConnected=true;
-          _startChat(context, _device.device);
-        } else {
-          print('Connect -> no device selected');
-        }
-
-
-        // if(connection!=null && connection.isConnected)
-        // {
-        //   isConnected=true;
-        //   print('Connect -> selected ' + selectedDevice.address);
-        //   print(isConnected);
-        // }
-        // if (selectedDevice != null) {
-        //   print('Connect -> selected ' + selectedDevice.address);
-        //   startChat(context, _device.device);
-        // } else {
-        //   print('Connect -> no device selected');
-        // }
-      },
-    ))
+                // if(connection!=null && connection.isConnected)
+                // {
+                //   isConnected=true;
+                //   print('Connect -> selected ' + selectedDevice.address);
+                //   print(isConnected);
+                // }
+                // if (selectedDevice != null) {
+                //   print('Connect -> selected ' + selectedDevice.address);
+                //   startChat(context, _device.device);
+                // } else {
+                //   print('Connect -> no device selected');
+                // }
+              },
+            ))
         .toList();
     return Scaffold(
         appBar: AppBar(
           title: Text('Select device'),
-
           actions: <Widget>[
             _isDiscovering
                 ? FittedBox(
-              child: Container(
-                margin: new EdgeInsets.all(16.0),
-                child: CircularProgressIndicator(
-                  valueColor: AlwaysStoppedAnimation<Color>(
-                    Colors.white,
-                  ),
-                ),
-              ),
-            )
+                    child: Container(
+                      margin: new EdgeInsets.all(16.0),
+                      child: CircularProgressIndicator(
+                        valueColor: AlwaysStoppedAnimation<Color>(
+                          Colors.white,
+                        ),
+                      ),
+                    ),
+                  )
                 : IconButton(
-              icon: Icon(Icons.replay),
-              onPressed: _restartDiscovery,
-            )
+                    icon: Icon(Icons.replay),
+                    onPressed: _restartDiscovery,
+                  )
           ],
         ),
-        body:
-        Container(
-            child:
-            Column(
+        body: Container(
+            child: Column(children: <Widget>[
+          SwitchListTile(
+            title: const Text('Bluetooth Status'),
+            value: _bluetoothState.isEnabled,
+            onChanged: (bool value) {
+              // Do the request and update with the true value then
+              future() async {
+                // async lambda seems to not working
+                if (value)
+                  await FlutterBluetoothSerial.instance.requestEnable();
+                else {
+                  await FlutterBluetoothSerial.instance.requestDisable();
+                }
+              }
 
-                children:<Widget>[
-                  SwitchListTile(
-                    title: const Text('Bluetooth Status'),
-                    value: _bluetoothState.isEnabled,
-                    onChanged: (bool value) {
-                      // Do the request and update with the true value then
-                      future() async {
-                        // async lambda seems to not working
-                        if (value)
-                          await FlutterBluetoothSerial.instance.requestEnable();
-                        else{
-                          await FlutterBluetoothSerial.instance.requestDisable();
-                        }
-                      }
+              future().then((_) {
+                setState(() {
+                  _restartDiscovery();
+                });
+              });
+            },
+          ),
+          Expanded(
+            // wrap in Expanded
+            child: ListView(children: list),
+          ),
+        ]))
+        // This trailing comma makes auto-formatting nicer for build methods.
 
-                      future().then((_) {
-                        setState(() {
-                          _restartDiscovery();
-                        });
-                      });
-                    },
-                  ),
-                  Expanded( // wrap in Expanded
-                    child:
-
-                    ListView(children: list),
-                  ),
-                ]
-            )
-        )
-      // This trailing comma makes auto-formatting nicer for build methods.
-
-    );
+        );
   }
 }
+
 void _startChat(BuildContext context, BluetoothDevice server) {
   Navigator.of(context).push(
     MaterialPageRoute(

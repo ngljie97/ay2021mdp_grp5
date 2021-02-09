@@ -129,22 +129,24 @@ class _MyHomePageState extends State<MyHomePage> {
             padding: EdgeInsets.zero,
             children: <Widget>[
               DrawerHeader(
-                  margin: EdgeInsets.zero,
-                  padding: EdgeInsets.zero,
-                  decoration: BoxDecoration(color: Colors.black45),
-                  child: Stack(children: <Widget>[
+                margin: EdgeInsets.zero,
+                padding: EdgeInsets.zero,
+                decoration: BoxDecoration(color: Colors.black45),
+                child: Stack(
+                  children: <Widget>[
                     Positioned(
                         bottom: 12.0,
                         left: 16.0,
                         child: Text('Remote Controller Module',
                             style: TextStyle(
                                 fontSize: 20.0, fontWeight: FontWeight.w500))),
-                  ])),
+                  ],
+                ),
+              ),
               ListTile(
                 leading: Icon(Icons.bluetooth),
                 title: Text('Connect / Disconnect'),
                 onTap: () async {
-                  //Navigator.popAndPushNamed(context, connectionRoute);
                   globals.selectedDevice = await Navigator.of(context).push(
                     MaterialPageRoute(
                       builder: (context) {
@@ -292,8 +294,11 @@ class _MyHomePageState extends State<MyHomePage> {
               duration: Duration(milliseconds: 333),
               curve: Curves.easeOut);
         });
+
+        globals.strArr.add('Message sent to Bluetooth device. [$text]');
       } catch (e) {
         // Ignore error, but notify state
+        globals.strArr.add('Message was not sent to Bluetooth device. [$text]');
         setState(() {});
       }
     }
@@ -302,15 +307,48 @@ class _MyHomePageState extends State<MyHomePage> {
   Widget _buildBottomPanel() {
     return Expanded(
       flex: 3,
-      child: () {
-        if (globals.controlMode) {
-          return Row(
-            children: <Widget>[
-              Expanded(
-                flex: 6,
-                child: Text(''),
+      child: Row(
+        children: <Widget>[
+          Expanded(
+            flex: 6,
+            child: Container(
+              padding: EdgeInsets.fromLTRB(3, 1, 3, 1),
+              child: Column(
+                mainAxisAlignment: MainAxisAlignment.start,
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: <Widget>[
+                  Text(
+                    'Console output:',
+                    textAlign: TextAlign.left,
+                  ),
+                  Expanded(
+                    child: Flex(
+                      direction: Axis.horizontal,
+                      children: [
+                        Expanded(
+                          child: Container(
+                            padding: EdgeInsets.fromLTRB(3, 1, 3, 1),
+                            decoration: BoxDecoration(
+                              border: Border.all(color: Colors.black),
+                            ),
+                            child: new ListView.builder(
+                              itemCount: globals.strArr.length,
+                              itemBuilder: (BuildContext context, int index) {
+                                return new Text(globals.strArr[index]);
+                              },
+                            ),
+                          ),
+                        ),
+                      ],
+                    ),
+                  ),
+                ],
               ),
-              Expanded(
+            ),
+          ),
+          () {
+            if (globals.controlMode) {
+              return Expanded(
                 flex: 4,
                 child: Container(
                   padding: EdgeInsets.fromLTRB(7.5, 0, 7.5, 0),
@@ -318,22 +356,98 @@ class _MyHomePageState extends State<MyHomePage> {
                     mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                     crossAxisAlignment: CrossAxisAlignment.stretch,
                     children: <Widget>[
-                      RaisedButton(
-                        onPressed: () {},
-                        child: Container(
-                          child: const Text(
-                            'Function 1',
-                            overflow: TextOverflow.ellipsis,
+                      Row(
+                        mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                        mainAxisSize: MainAxisSize.max,
+                        children: [
+                          Expanded(
+                            flex: 1,
+                            child: RaisedButton(
+                              onPressed: () async {
+                                if (globals.isConnected) {
+                                  _sendMessage(await _getFunctionString(1));
+                                }
+                              },
+                              child: Container(
+                                child: const Text(
+                                  'F1',
+                                  overflow: TextOverflow.ellipsis,
+                                ),
+                              ),
+                            ),
                           ),
-                        ),
+                          Expanded(
+                            flex: 1,
+                            child: RaisedButton(
+                              onPressed: () async {
+                                if (globals.isConnected) {
+                                  _sendMessage(await _getFunctionString(2));
+                                }
+                              },
+                              child: Container(
+                                child: const Text(
+                                  'F2',
+                                  overflow: TextOverflow.ellipsis,
+                                ),
+                              ),
+                            ),
+                          ),
+                        ],
                       ),
-                      RaisedButton(
-                        onPressed: () {},
-                        child: Container(
-                          child: const Text(
-                            'Function 2',
-                            overflow: TextOverflow.ellipsis,
-                          ),
+                      Expanded(
+                        child: Column(
+                          children: [
+                            Row(
+                              mainAxisAlignment: MainAxisAlignment.center,
+                              children: [
+                                Expanded(
+                                  child: IconButton(
+                                    icon: Icon(Icons.arrow_circle_up),
+                                    onPressed: () {
+                                      if (globals.isConnected) {
+                                        _sendMessage(globals.strForward);
+                                      }
+                                    },
+                                  ),
+                                ),
+                              ],
+                            ),
+                            Row(
+                              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                              children: [
+                                Expanded(
+                                  child: IconButton(
+                                    icon: Icon(Icons.rotate_left),
+                                    onPressed: () {
+                                      if (globals.isConnected) {
+                                        _sendMessage(globals.strRotateLeft);
+                                      }
+                                    },
+                                  ),
+                                ),
+                                Expanded(
+                                  child: IconButton(
+                                    icon: Icon(Icons.arrow_circle_down),
+                                    onPressed: () {
+                                      if (globals.isConnected) {
+                                        _sendMessage(globals.strReverse);
+                                      }
+                                    },
+                                  ),
+                                ),
+                                Expanded(
+                                  child: IconButton(
+                                    icon: Icon(Icons.rotate_right),
+                                    onPressed: () {
+                                      if (globals.isConnected) {
+                                        _sendMessage(globals.strRotateRight);
+                                      }
+                                    },
+                                  ),
+                                ),
+                              ],
+                            ),
+                          ],
                         ),
                       ),
                       RaisedButton(
@@ -352,51 +466,9 @@ class _MyHomePageState extends State<MyHomePage> {
                     ],
                   ),
                 ),
-              ),
-            ],
-          );
-        } else {
-          return Row(
-            children: <Widget>[
-              Expanded(
-                flex: 6,
-                child: Container(
-                  padding: EdgeInsets.fromLTRB(3, 1, 3, 1),
-                  child: Column(
-                    mainAxisAlignment: MainAxisAlignment.start,
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    children: <Widget>[
-                      Text(
-                        'Console output:',
-                        textAlign: TextAlign.left,
-                      ),
-                      Expanded(
-                        child: Flex(
-                          direction: Axis.horizontal,
-                          children: [
-                            Expanded(
-                              child: Container(
-                                padding: EdgeInsets.fromLTRB(3, 1, 3, 1),
-                                decoration: BoxDecoration(
-                                  border: Border.all(color: Colors.black),
-                                ),
-                                child: new ListView.builder(
-                                  itemCount: globals.strArr.length,
-                                  itemBuilder:
-                                      (BuildContext context, int index) {
-                                    return new Text(globals.strArr[index]);
-                                  },
-                                ),
-                              ),
-                            ),
-                          ],
-                        ),
-                      ),
-                    ],
-                  ),
-                ),
-              ),
-              Expanded(
+              );
+            } else {
+              return Expanded(
                 flex: 4,
                 child: Container(
                   padding: EdgeInsets.fromLTRB(7.5, 0, 7.5, 0),
@@ -407,7 +479,7 @@ class _MyHomePageState extends State<MyHomePage> {
                       RaisedButton(
                         onPressed: () {
                           if (globals.isConnected) {
-                            _sendMessage('uolo');
+                            _sendMessage(globals.strStartExplore);
                           }
                         },
                         child: Container(
@@ -418,7 +490,11 @@ class _MyHomePageState extends State<MyHomePage> {
                         ),
                       ),
                       RaisedButton(
-                        onPressed: () {},
+                        onPressed: () {
+                          if (globals.isConnected) {
+                            _sendMessage(globals.strFastestPath);
+                          }
+                        },
                         child: Container(
                           child: const Text(
                             'Run Fastest Path',
@@ -440,7 +516,6 @@ class _MyHomePageState extends State<MyHomePage> {
                           setState(() {
                             globals.controlMode = true;
                           });
-                          globals.strArr.add('Show controls pressed.');
                         },
                         child: Container(
                           child: const Text(
@@ -452,12 +527,19 @@ class _MyHomePageState extends State<MyHomePage> {
                     ],
                   ),
                 ),
-              ),
-            ],
-          );
-        }
-      }(),
+              );
+            }
+          }(),
+        ],
+      ),
     );
+  }
+
+  Future<String> _getFunctionString(int i) async {
+    final prefs = await SharedPreferences.getInstance();
+    final value = prefs.getString('function$i') ?? 0;
+
+    return value;
   }
 }
 
