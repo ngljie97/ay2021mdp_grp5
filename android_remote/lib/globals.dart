@@ -7,10 +7,11 @@ BluetoothDevice selectedDevice;
 List<String> strArr = [];
 bool controlMode = true;
 BluetoothConnection connection;
-bool isConnecting = true;
+bool isConnecting = false;
 bool isDisconnecting = false;
 BluetoothDevice server;
 bool isConnected = false;
+
 
 final String strStartExplore = 'startExplore:151';
 final String strFastestPath = 'fastestPath:234';

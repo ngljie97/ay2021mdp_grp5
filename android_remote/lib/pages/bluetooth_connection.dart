@@ -153,10 +153,10 @@ class _ConnectionPage extends State<ConnectionPage> {
               enabled: _device.availability == _DeviceAvailability.yes,
               onTap: () {
                 if (_device.device != null) {
+                  String name = _device.device.name;
+                  strArr.add('Trying to connect to Device: [$name]....');
                   print('Connect -> selected ' + _device.device.address);
-                  strArr
-                      .add('Successfully connected to ' + _device.device.name);
-                  isConnected = true;
+                  isConnecting=true;
                   _startChat(context, _device.device);
                 } else {
                   print('Connect -> no device selected');
