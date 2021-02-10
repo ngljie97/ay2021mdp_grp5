@@ -17,6 +17,7 @@ void main() {
 }
 
 ItemScrollController consoleController;
+
 final TextEditingController textEditingController = new TextEditingController();
 
 void _showEditForm(BuildContext context, int i) async {
@@ -276,9 +277,11 @@ class _MyHomePageState extends State<MyHomePage> {
     super.initState();
     print("Checking is connected...");
     print(globals.isConnected);
+
     if (globals.isConnecting) {
+
       BluetoothConnection.toAddress(widget.server.address).then((_connection) {
-        globals.strArr.add('Successfully connected to ' + widget.server.name);
+        addConsoleAndScroll('Successfully connected to ' + widget.server.name);
         globals.isConnected = true;
         print('Connected to the device');
         globals.connection = _connection;
@@ -296,10 +299,10 @@ class _MyHomePageState extends State<MyHomePage> {
           // If we didn't except this (no flag set), it means closing by remote.
           if (globals.isDisconnecting) {
             print('Disconnecting locally!');
-            globals.strArr.add('Disconnecting locally!');
+            addConsoleAndScroll('Disconnecting locally!');
           } else {
             print('Disconnected remotely!');
-            globals.strArr.add('Disconnecting remotely!');
+            addConsoleAndScroll('Disconnecting remotely!');
           }
           if (this.mounted) {
             setState(() {});
@@ -309,7 +312,7 @@ class _MyHomePageState extends State<MyHomePage> {
         print('Cannot connect, exception occureds');
 
         setState(() {
-          globals.strArr.add('Cannot connect, Socket not opened!');
+          addConsoleAndScroll('Cannot connect, Socket not opened!');
         });
         print(error);
       });
@@ -359,6 +362,7 @@ class _MyHomePageState extends State<MyHomePage> {
                               border: Border.all(color: Colors.black),
                             ),
                             child: new ScrollablePositionedList.builder(
+
                               itemScrollController: consoleController,
                               itemCount: globals.strArr.length,
                               itemBuilder: (context, index) {
@@ -661,11 +665,12 @@ class _MyHomePageState extends State<MyHomePage> {
         // Future.delayed(Duration(milliseconds: 333)).then((_) {
         //
         // });
-        globals.strArr.add('Message sent to Bluetooth device. [$text]');
+
+        addConsoleAndScroll('Message sent to Bluetooth device. [$text]');
       } catch (e) {
         // Ignore error, but notify state
-        globals.strArr.add('Disconnected remotely!');
-        globals.strArr.add('Message was not sent to Bluetooth device. [$text]');
+        addConsoleAndScroll('Disconnected remotely!');
+        addConsoleAndScroll('Message was not sent to Bluetooth device. [$text]');
         globals.isDisconnecting = true;
         globals.isConnected = false;
         if (globals.connection != null) {
@@ -676,4 +681,11 @@ class _MyHomePageState extends State<MyHomePage> {
       }
     }
   }
+}
+void addConsoleAndScroll(String message)
+{
+  globals.strArr.add(message);
+  consoleController.scrollTo(
+      index: globals.strArr.length,
+      duration: Duration(milliseconds: 333));
 }
