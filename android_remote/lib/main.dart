@@ -4,7 +4,6 @@ import 'dart:ui';
 
 import 'package:android_remote/pages/bluetooth_connection.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter/scheduler.dart';
 import 'package:flutter_bluetooth_serial/flutter_bluetooth_serial.dart';
 import 'package:scrollable_positioned_list/scrollable_positioned_list.dart';
 import 'package:shared_preferences/shared_preferences.dart';
@@ -158,6 +157,7 @@ class _MyHomePageState extends State<MyHomePage> {
           backgroundColor: Colors.transparent,
           elevation: 0.0,
         ),
+        extendBodyBehindAppBar: true,
         drawer: Drawer(
           child: ListView(
             padding: EdgeInsets.zero,
@@ -249,7 +249,6 @@ class _MyHomePageState extends State<MyHomePage> {
           ),
         ),
         body: Column(
-          mainAxisAlignment: MainAxisAlignment.spaceEvenly,
           children: <Widget>[
             _buildArena(),
             _buildBottomPanel(),
@@ -279,7 +278,6 @@ class _MyHomePageState extends State<MyHomePage> {
     print(globals.isConnected);
 
     if (globals.isConnecting) {
-
       BluetoothConnection.toAddress(widget.server.address).then((_connection) {
         addConsoleAndScroll('Successfully connected to ' + widget.server.name);
         globals.isConnected = true;
@@ -309,7 +307,7 @@ class _MyHomePageState extends State<MyHomePage> {
           }
         });
       }).catchError((error) {
-        print('Cannot connect, exception occureds');
+        print('Cannot connect, exception occurred');
 
         setState(() {
           addConsoleAndScroll('Cannot connect, Socket not opened!');
@@ -321,18 +319,60 @@ class _MyHomePageState extends State<MyHomePage> {
 
   Widget _buildArena() {
     return new Expanded(
-      flex: 7,
-      child: Center(
-        child: Text(() {
-          if (globals.updateMode) {
-            return 'This is the home page. Manual update is on.';
-          } else {
-            return 'This is the home page. Manual update is off.';
-          }
-        }()),
+      flex: 8,
+      child: Container(
+        child: GridView.builder(
+            itemCount: 15 * 20,
+            gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
+              crossAxisCount: 15,
+            ),
+            itemBuilder: (BuildContext context, int index) {
+              return Padding(
+                  padding: const EdgeInsets.all(1.0),
+                  child: Container(
+                    color: Colors.grey,
+                    child: _resolveGridItem(context, index),
+                  ));
+            }),
       ),
     );
   }
+
+  Widget _resolveGridItem(BuildContext context, int index) {
+    int x, y = 0;
+    x = (index / 15).floor();
+    y = (index % 15);
+
+    switch (globals.arenaState[x][y]) {
+      case '':
+        return Text('');
+        break;
+      case 'P1':
+        return Container(
+          color: Colors.blue,
+        );
+        break;
+      case 'P2':
+        return Container(
+          color: Colors.yellow,
+        );
+        break;
+      case 'T':
+        return Icon(
+          Icons.terrain,
+          size: 40.0,
+          color: Colors.red,
+        );
+        break;
+      case 'B':
+        return Icon(Icons.remove_red_eye);
+        break;
+      default:
+        return Text(globals.arenaState[x][y].toString());
+    }
+  }
+
+
 
   Widget _buildBottomPanel() {
     return Expanded(
@@ -362,7 +402,6 @@ class _MyHomePageState extends State<MyHomePage> {
                               border: Border.all(color: Colors.black),
                             ),
                             child: new ScrollablePositionedList.builder(
-
                               itemScrollController: consoleController,
                               itemCount: globals.strArr.length,
                               itemBuilder: (context, index) {
@@ -670,7 +709,8 @@ class _MyHomePageState extends State<MyHomePage> {
       } catch (e) {
         // Ignore error, but notify state
         addConsoleAndScroll('Disconnected remotely!');
-        addConsoleAndScroll('Message was not sent to Bluetooth device. [$text]');
+        addConsoleAndScroll(
+            'Message was not sent to Bluetooth device. [$text]');
         globals.isDisconnecting = true;
         globals.isConnected = false;
         if (globals.connection != null) {
@@ -682,10 +722,9 @@ class _MyHomePageState extends State<MyHomePage> {
     }
   }
 }
-void addConsoleAndScroll(String message)
-{
+
+void addConsoleAndScroll(String message) {
   globals.strArr.add(message);
   consoleController.scrollTo(
-      index: globals.strArr.length,
-      duration: Duration(milliseconds: 333));
+      index: globals.strArr.length, duration: Duration(milliseconds: 333));
 }

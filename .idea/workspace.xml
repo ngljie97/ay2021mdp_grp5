@@ -22,24 +22,24 @@
     <select>
       <path>
         <item name="ROOT" type="e8cecc67:BranchNodeDescriptor" />
-        <item name="REMOTE_ROOT" type="e8cecc67:BranchNodeDescriptor" />
-        <item name="GROUP_NODE:origin" type="e8cecc67:BranchNodeDescriptor" />
-        <item name="BRANCH:origin/reset" type="e8cecc67:BranchNodeDescriptor" />
+        <item name="LOCAL_ROOT" type="e8cecc67:BranchNodeDescriptor" />
+        <item name="BRANCH:v2.0" type="e8cecc67:BranchNodeDescriptor" />
       </path>
     </select>
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="28be24ed-ecd2-4996-a17e-b3573ad5f47d" name="Default Changelist" comment="">
+    <list default="true" id="28be24ed-ecd2-4996-a17e-b3573ad5f47d" name="Default Changelist" comment="1. Added more global variables for the robot command strings.&#10;2. Switching widget in home screen working.">
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/android_remote/lib/globals.dart" beforeDir="false" afterPath="$PROJECT_DIR$/android_remote/lib/globals.dart" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/android_remote/lib/main.dart" beforeDir="false" afterPath="$PROJECT_DIR$/android_remote/lib/main.dart" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/android_remote/pubspec.lock" beforeDir="false" afterPath="$PROJECT_DIR$/android_remote/pubspec.lock" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
     <option name="HIGHLIGHT_NON_ACTIVE_CHANGELIST" value="false" />
     <option name="LAST_RESOLUTION" value="IGNORE" />
   </component>
-  <component name="ExecutionTargetManager" SELECTED_TARGET="device_and_snapshot_combo_box_target[R52M903HEFX]" />
+  <component name="ExecutionTargetManager" SELECTED_TARGET="device_and_snapshot_combo_box_target[]" />
   <component name="FileTemplateManagerImpl">
     <option name="RECENT_TEMPLATES">
       <list>
@@ -48,9 +48,22 @@
     </option>
   </component>
   <component name="Git.Settings">
+    <favorite-branches>
+      <branch-storage>
+        <map>
+          <entry type="LOCAL">
+            <value>
+              <list>
+                <branch-info repo="$PROJECT_DIR$" source="v2.0" />
+              </list>
+            </value>
+          </entry>
+        </map>
+      </branch-storage>
+    </favorite-branches>
     <option name="RECENT_BRANCH_BY_REPOSITORY">
       <map>
-        <entry key="$PROJECT_DIR$" value="main" />
+        <entry key="$PROJECT_DIR$" value="reset" />
       </map>
     </option>
     <option name="RECENT_GIT_ROOT_PATH" value="$PROJECT_DIR$" />
@@ -75,11 +88,11 @@
     <property name="show.migrate.to.gradle.popup" value="false" />
   </component>
   <component name="RecentsManager">
-    <key name="CopyFile.RECENT_KEYS">
-      <recent name="D:\workspace\ay2021mdp_grp5\android_remote\lib" />
-    </key>
     <key name="MoveFile.RECENT_KEYS">
       <recent name="C:\Users\geral\StudioProjects\ay2021mdp_grp5\android_remote" />
+    </key>
+    <key name="CopyFile.RECENT_KEYS">
+      <recent name="D:\workspace\ay2021mdp_grp5\android_remote\lib" />
     </key>
   </component>
   <component name="RunManager">
@@ -145,21 +158,7 @@
       <option name="project" value="LOCAL" />
       <updated>1612804350566</updated>
     </task>
-    <task id="LOCAL-00007" summary="added some console log">
-      <created>1612805106772</created>
-      <option name="number" value="00007" />
-      <option name="presentableId" value="LOCAL-00007" />
-      <option name="project" value="LOCAL" />
-      <updated>1612805106772</updated>
-    </task>
-    <task id="LOCAL-00008" summary="1)Fixed bluetooth not disconnecting bug&#10;2)Added auto scroll for console log(New Dependencies needed)">
-      <created>1612970646418</created>
-      <option name="number" value="00008" />
-      <option name="presentableId" value="LOCAL-00008" />
-      <option name="project" value="LOCAL" />
-      <updated>1612970646418</updated>
-    </task>
-    <option name="localTasksCounter" value="9" />
+    <option name="localTasksCounter" value="7" />
     <servers />
   </component>
   <component name="Vcs.Log.Tabs.Properties">
@@ -173,7 +172,7 @@
                   <entry key="branch">
                     <value>
                       <list>
-                        <option value="reset" />
+                        <option value="v2.0" />
                       </list>
                     </value>
                   </entry>
@@ -193,9 +192,7 @@
     <MESSAGE value="updated Gui" />
     <MESSAGE value="New feature updated.&#10;1. Function string saving and retrieving.&#10;2. Abouts page rough." />
     <MESSAGE value="merged Lijie together!" />
-    <MESSAGE value="added some console log" />
-    <MESSAGE value="1)Fixed bluetooth not disconnecting bug&#10;2)Added auto scroll for console log(New Dependencies needed)" />
-    <option name="LAST_COMMIT_MESSAGE" value="1)Fixed bluetooth not disconnecting bug&#10;2)Added auto scroll for console log(New Dependencies needed)" />
+    <option name="LAST_COMMIT_MESSAGE" value="merged Lijie together!" />
   </component>
   <component name="WindowStateProjectService">
     <state x="414" y="174" key="#com.intellij.execution.impl.EditConfigurationsDialog" timestamp="1612715349758">
@@ -235,49 +232,50 @@
     <state x="513" y="324" key="FileChooserDialogImpl/0.0.1920.1040/-1920.0.1536.824@0.0.1920.1040" timestamp="1611832511492" />
     <state x="-1407" y="424" key="FileChooserDialogImpl/0.0.1920.1040/-1920.100.1920.1040@-1920.100.1920.1040" timestamp="1612428069843" />
     <state x="513" y="324" key="FileChooserDialogImpl/0.0.1920.1040/-1920.100.1920.1040@0.0.1920.1040" timestamp="1611469962095" />
-    <state width="1875" height="275" key="GridCell.Tab.0.bottom" timestamp="1612972437394">
+    <state width="1877" height="281" key="GridCell.Tab.0.bottom" timestamp="1613018414794">
       <screen x="0" y="0" width="1920" height="1040" />
     </state>
-    <state width="1875" height="275" key="GridCell.Tab.0.bottom/0.0.1920.1040/-1920.0.1536.824@0.0.1920.1040" timestamp="1612972437394" />
+    <state width="1875" height="278" key="GridCell.Tab.0.bottom/0.0.1920.1040/-1920.0.1536.824@0.0.1920.1040" timestamp="1612804398378" />
     <state width="1877" height="281" key="GridCell.Tab.0.bottom/0.0.1920.1040/-1920.100.1920.1040@0.0.1920.1040" timestamp="1612801530176" />
-    <state width="1860" height="279" key="GridCell.Tab.0.bottom/0.0.1920.1040@0.0.1920.1040" timestamp="1611886773626" />
-    <state width="1875" height="275" key="GridCell.Tab.0.center" timestamp="1612972437394">
+    <state width="1877" height="281" key="GridCell.Tab.0.bottom/0.0.1920.1040@0.0.1920.1040" timestamp="1613018414794" />
+    <state width="1877" height="281" key="GridCell.Tab.0.center" timestamp="1613018414793">
       <screen x="0" y="0" width="1920" height="1040" />
     </state>
-    <state width="1875" height="275" key="GridCell.Tab.0.center/0.0.1920.1040/-1920.0.1536.824@0.0.1920.1040" timestamp="1612972437394" />
+    <state width="1875" height="278" key="GridCell.Tab.0.center/0.0.1920.1040/-1920.0.1536.824@0.0.1920.1040" timestamp="1612804398378" />
     <state width="1877" height="281" key="GridCell.Tab.0.center/0.0.1920.1040/-1920.100.1920.1040@0.0.1920.1040" timestamp="1612801530176" />
-    <state width="1860" height="279" key="GridCell.Tab.0.center/0.0.1920.1040@0.0.1920.1040" timestamp="1611886773626" />
-    <state width="1875" height="275" key="GridCell.Tab.0.left" timestamp="1612972437394">
+    <state width="1877" height="281" key="GridCell.Tab.0.center/0.0.1920.1040@0.0.1920.1040" timestamp="1613018414793" />
+    <state width="1877" height="281" key="GridCell.Tab.0.left" timestamp="1613018414793">
       <screen x="0" y="0" width="1920" height="1040" />
     </state>
-    <state width="1875" height="275" key="GridCell.Tab.0.left/0.0.1920.1040/-1920.0.1536.824@0.0.1920.1040" timestamp="1612972437394" />
+    <state width="1875" height="278" key="GridCell.Tab.0.left/0.0.1920.1040/-1920.0.1536.824@0.0.1920.1040" timestamp="1612804398378" />
     <state width="1877" height="281" key="GridCell.Tab.0.left/0.0.1920.1040/-1920.100.1920.1040@0.0.1920.1040" timestamp="1612801530176" />
-    <state width="1860" height="279" key="GridCell.Tab.0.left/0.0.1920.1040@0.0.1920.1040" timestamp="1611886773626" />
-    <state width="1875" height="275" key="GridCell.Tab.0.right" timestamp="1612972437394">
+    <state width="1877" height="281" key="GridCell.Tab.0.left/0.0.1920.1040@0.0.1920.1040" timestamp="1613018414793" />
+    <state width="1877" height="281" key="GridCell.Tab.0.right" timestamp="1613018414793">
       <screen x="0" y="0" width="1920" height="1040" />
     </state>
-    <state width="1875" height="275" key="GridCell.Tab.0.right/0.0.1920.1040/-1920.0.1536.824@0.0.1920.1040" timestamp="1612972437394" />
+    <state width="1875" height="278" key="GridCell.Tab.0.right/0.0.1920.1040/-1920.0.1536.824@0.0.1920.1040" timestamp="1612804398378" />
     <state width="1877" height="281" key="GridCell.Tab.0.right/0.0.1920.1040/-1920.100.1920.1040@0.0.1920.1040" timestamp="1612801530176" />
-    <state width="1860" height="279" key="GridCell.Tab.0.right/0.0.1920.1040@0.0.1920.1040" timestamp="1611886773626" />
+    <state width="1877" height="281" key="GridCell.Tab.0.right/0.0.1920.1040@0.0.1920.1040" timestamp="1613018414793" />
     <state x="-1459" y="264" key="SettingsEditor" timestamp="1612428074376">
       <screen x="-1920" y="100" width="1920" height="1040" />
     </state>
     <state x="461" y="164" key="SettingsEditor/0.0.1920.1040/-1920.0.1536.824@0.0.1920.1040" timestamp="1611570826575" />
     <state x="-1459" y="264" key="SettingsEditor/0.0.1920.1040/-1920.100.1920.1040@-1920.100.1920.1040" timestamp="1612428074376" />
     <state x="461" y="164" key="SettingsEditor/0.0.1920.1040@0.0.1920.1040" timestamp="1611883129314" />
-    <state x="552" y="252" key="Vcs.Push.Dialog.v2" timestamp="1612970663595">
+    <state x="552" y="252" key="Vcs.Push.Dialog.v2" timestamp="1612804368222">
       <screen x="0" y="0" width="1920" height="1040" />
     </state>
-    <state x="552" y="252" key="Vcs.Push.Dialog.v2/0.0.1920.1040/-1920.0.1536.824@0.0.1920.1040" timestamp="1612970663595" />
-    <state x="668" y="308" key="git4idea.merge.GitPullDialog" timestamp="1612958071341">
+    <state x="552" y="252" key="Vcs.Push.Dialog.v2/0.0.1920.1040/-1920.0.1536.824@0.0.1920.1040" timestamp="1612804368222" />
+    <state x="668" y="308" key="git4idea.merge.GitPullDialog" timestamp="1611476108293">
       <screen x="0" y="0" width="1920" height="1040" />
     </state>
     <state x="668" y="308" key="git4idea.merge.GitPullDialog/0.0.1920.1040/-1920.0.1536.824@0.0.1920.1040" timestamp="1612958071341" />
-    <state x="616" y="242" key="run.anything.popup" timestamp="1612795901511">
+    <state x="616" y="242" key="run.anything.popup" timestamp="1613146539734">
       <screen x="0" y="0" width="1920" height="1040" />
     </state>
     <state x="616" y="242" key="run.anything.popup/0.0.1920.1040/-1920.0.1536.824@0.0.1920.1040" timestamp="1611603218896" />
     <state x="616" y="242" key="run.anything.popup/0.0.1920.1040/-1920.100.1920.1040@0.0.1920.1040" timestamp="1612795901511" />
+    <state x="616" y="242" key="run.anything.popup/0.0.1920.1040@0.0.1920.1040" timestamp="1613146539734" />
   </component>
   <component name="XDebuggerManager">
     <breakpoint-manager>

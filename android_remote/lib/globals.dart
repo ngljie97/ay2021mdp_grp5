@@ -5,18 +5,41 @@ import 'package:flutter_bluetooth_serial/flutter_bluetooth_serial.dart';
 bool updateMode = false;
 BluetoothDevice selectedDevice;
 List<String> strArr = [];
-bool controlMode = true;
+bool controlMode = false;
 BluetoothConnection connection;
 bool isConnecting = false;
 bool isDisconnecting = false;
 BluetoothDevice server;
 bool isConnected = false;
 
+// Command strings: [SRC][DST][OP] 2 CHARACTERS EA
+final String strStartExplore = 'ANADSE';
+final String strFastestPath = 'ANADFP';
+final String strForward = 'ANADFW';
+final String strRotateLeft = 'ANADRL';
+final String strRotateRight = 'ANADRR';
+final String strReverse = 'ANADRV';
 
-final String strStartExplore = 'startExplore:151';
-final String strFastestPath = 'fastestPath:234';
-final String strForward = 'forward:123';
-final String strRotateLeft = 'rotateLeft:321';
-final String strRotateRight = 'rotateRight:654';
-final String strReverse = 'reverse:345';
-
+// Arena
+List<List<String>> arenaState = [
+  ['', '', '', '', '', '', '', '', '', '', '', '', '', '', ''],
+  ['', '', '', '', '', '', '', '', '', '', '', '', '', '', ''],
+  ['', '', '', '', '', '', '', '', '', '', '', '', '', '', ''],
+  ['', '', '', '', '', '', '', '', '', '', '', '', '', '', ''],
+  ['', '', '', '', '', '', '', '', '', '', '', '', '', '', ''],
+  ['', '', '', '', '', '', '', '', '', '', '', '', '', '', ''],
+  ['', '', '', '', '', '', '', '', '', '', '', '', '', '', ''],
+  ['', '', '', '', '', '', '', '', '', '', '', '', '', '', ''],
+  ['', '', '', '', '', '', '', '', '', '', '', '', '', '', ''],
+  ['', '', '', '', '', '', '', '', '', '', '', '', '', '', ''],
+  ['', '', '', '', '', '', '', '', '', '', '', '', '', '', ''],
+  ['', '', '', '', '', '', '', '', '', '', '', '', '', '', ''],
+  ['', '', '', '', '', '', '', '', '', '', '', '', '', '', ''],
+  ['', '', '', '', '', '', 'B', '', '', '', '', '', '', '', ''],
+  ['', '', '', '', '', '', '', '', '', '', '', '', '', '', ''],
+  ['', '', '', '', '', '', '', '', '', '', '', '', '', '', ''],
+  ['', 'P1', '', '', '', '', '', '', '', '', '', '', '', '', ''],
+  ['', '', '', '', '', '', '', '', '', '', '', '', '', '', ''],
+  ['', '', '', '', '', '', '', '', '', '', '', '', '', '', ''],
+  ['A', '', '', '', '', '', '', '', '', '', '', '', '', '', '']
+];
