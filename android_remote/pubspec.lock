@@ -84,11 +84,13 @@ packages:
     source: sdk
     version: "0.0.0"
   flutter_bluetooth_serial:
-    dependency: "direct dev"
+    dependency: "direct main"
     description:
-      path: flutter_bluetooth_serial
-      relative: true
-    source: path
+      path: "."
+      ref: HEAD
+      resolved-ref: "96549f710920ad5f2d3fa591ad3674e9c75980cd"
+      url: "git://github.com/glws967/flutter_bluetooth_serial.git"
+    source: git
     version: "0.2.2"
   flutter_test:
     dependency: "direct dev"
