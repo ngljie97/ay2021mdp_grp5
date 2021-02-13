@@ -28,18 +28,99 @@
     </select>
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="28be24ed-ecd2-4996-a17e-b3573ad5f47d" name="Default Changelist" comment="1. Added more global variables for the robot command strings.&#10;2. Switching widget in home screen working.">
+    <list default="true" id="28be24ed-ecd2-4996-a17e-b3573ad5f47d" name="Default Changelist" comment="1. Changed FlutterBluetoothserial to Local folder&#10;2. Fix bluetooth scanning to work with android 10 devices&#10;3. Fix arena sizing and icons layout&#10;4. Changed appbar to stack on top of arena, and added robot and bluetooth status&#10;5. Changed F1 and F2 buttons to smaller size\&#10;6. Console now able to display bluetooth received message">
+      <change afterPath="$PROJECT_DIR$/android_remote/lib/pages/DiscoveryPage.dart" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/android_remote/assets/number_one.PNG" beforeDir="false" afterPath="$PROJECT_DIR$/android_remote/assets/number_one.PNG" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/android_remote/assets/number_two.PNG" beforeDir="false" afterPath="$PROJECT_DIR$/android_remote/assets/number_two.PNG" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/android_remote/flutter_bluetooth_serial/android/build.gradle" beforeDir="false" afterPath="$PROJECT_DIR$/android_remote/flutter_bluetooth_serial/android/build.gradle" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/android_remote/flutter_bluetooth_serial/android/src/main/AndroidManifest.xml" beforeDir="false" afterPath="$PROJECT_DIR$/android_remote/flutter_bluetooth_serial/android/src/main/AndroidManifest.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/android_remote/flutter_bluetooth_serial/android/src/main/java/io/github/edufolly/flutterbluetoothserial/FlutterBluetoothSerialPlugin.java" beforeDir="false" afterPath="$PROJECT_DIR$/android_remote/flutter_bluetooth_serial/android/src/main/java/io/github/edufolly/flutterbluetoothserial/FlutterBluetoothSerialPlugin.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/android_remote/flutter_bluetooth_serial/example/.gitignore" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/android_remote/flutter_bluetooth_serial/example/.metadata" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/android_remote/flutter_bluetooth_serial/example/README.md" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/android_remote/flutter_bluetooth_serial/example/android/.gitignore" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/android_remote/flutter_bluetooth_serial/example/android/app/build.gradle" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/android_remote/flutter_bluetooth_serial/example/android/app/src/main/AndroidManifest.xml" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/android_remote/flutter_bluetooth_serial/example/android/app/src/main/java/io/github/edufolly/flutterbluetoothserialexample/MainActivity.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/android_remote/flutter_bluetooth_serial/example/android/app/src/main/res/drawable/launch_background.xml" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/android_remote/flutter_bluetooth_serial/example/android/app/src/main/res/mipmap-hdpi/ic_launcher.png" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/android_remote/flutter_bluetooth_serial/example/android/app/src/main/res/mipmap-mdpi/ic_launcher.png" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/android_remote/flutter_bluetooth_serial/example/android/app/src/main/res/mipmap-xhdpi/ic_launcher.png" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/android_remote/flutter_bluetooth_serial/example/android/app/src/main/res/mipmap-xxhdpi/ic_launcher.png" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/android_remote/flutter_bluetooth_serial/example/android/app/src/main/res/mipmap-xxxhdpi/ic_launcher.png" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/android_remote/flutter_bluetooth_serial/example/android/app/src/main/res/values/styles.xml" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/android_remote/flutter_bluetooth_serial/example/android/build.gradle" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/android_remote/flutter_bluetooth_serial/example/android/gradle.properties" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/android_remote/flutter_bluetooth_serial/example/android/gradle/wrapper/gradle-wrapper.jar" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/android_remote/flutter_bluetooth_serial/example/android/gradle/wrapper/gradle-wrapper.properties" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/android_remote/flutter_bluetooth_serial/example/android/gradlew" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/android_remote/flutter_bluetooth_serial/example/android/gradlew.bat" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/android_remote/flutter_bluetooth_serial/example/android/settings.gradle" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/android_remote/flutter_bluetooth_serial/example/arduino/Monitor.ino" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/android_remote/flutter_bluetooth_serial/example/arduino/Termometer.hpp" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/android_remote/flutter_bluetooth_serial/example/arduino/phSensor.hpp" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/android_remote/flutter_bluetooth_serial/example/flutter_bluetooth_serial_example.iml" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/android_remote/flutter_bluetooth_serial/example/flutter_bluetooth_serial_example_android.iml" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/android_remote/flutter_bluetooth_serial/example/ios/.gitignore" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/android_remote/flutter_bluetooth_serial/example/ios/Flutter/AppFrameworkInfo.plist" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/android_remote/flutter_bluetooth_serial/example/ios/Flutter/Debug.xcconfig" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/android_remote/flutter_bluetooth_serial/example/ios/Flutter/Release.xcconfig" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/android_remote/flutter_bluetooth_serial/example/ios/Podfile" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/android_remote/flutter_bluetooth_serial/example/ios/Runner.xcodeproj/project.pbxproj" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/android_remote/flutter_bluetooth_serial/example/ios/Runner.xcodeproj/project.xcworkspace/contents.xcworkspacedata" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/android_remote/flutter_bluetooth_serial/example/ios/Runner.xcodeproj/xcshareddata/xcschemes/Runner.xcscheme" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/android_remote/flutter_bluetooth_serial/example/ios/Runner.xcworkspace/contents.xcworkspacedata" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/android_remote/flutter_bluetooth_serial/example/ios/Runner/AppDelegate.h" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/android_remote/flutter_bluetooth_serial/example/ios/Runner/AppDelegate.m" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/android_remote/flutter_bluetooth_serial/example/ios/Runner/Assets.xcassets/AppIcon.appiconset/Contents.json" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/android_remote/flutter_bluetooth_serial/example/ios/Runner/Assets.xcassets/AppIcon.appiconset/Icon-App-1024x1024@1x.png" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/android_remote/flutter_bluetooth_serial/example/ios/Runner/Assets.xcassets/AppIcon.appiconset/Icon-App-20x20@1x.png" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/android_remote/flutter_bluetooth_serial/example/ios/Runner/Assets.xcassets/AppIcon.appiconset/Icon-App-20x20@2x.png" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/android_remote/flutter_bluetooth_serial/example/ios/Runner/Assets.xcassets/AppIcon.appiconset/Icon-App-20x20@3x.png" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/android_remote/flutter_bluetooth_serial/example/ios/Runner/Assets.xcassets/AppIcon.appiconset/Icon-App-29x29@1x.png" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/android_remote/flutter_bluetooth_serial/example/ios/Runner/Assets.xcassets/AppIcon.appiconset/Icon-App-29x29@2x.png" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/android_remote/flutter_bluetooth_serial/example/ios/Runner/Assets.xcassets/AppIcon.appiconset/Icon-App-29x29@3x.png" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/android_remote/flutter_bluetooth_serial/example/ios/Runner/Assets.xcassets/AppIcon.appiconset/Icon-App-40x40@1x.png" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/android_remote/flutter_bluetooth_serial/example/ios/Runner/Assets.xcassets/AppIcon.appiconset/Icon-App-40x40@2x.png" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/android_remote/flutter_bluetooth_serial/example/ios/Runner/Assets.xcassets/AppIcon.appiconset/Icon-App-40x40@3x.png" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/android_remote/flutter_bluetooth_serial/example/ios/Runner/Assets.xcassets/AppIcon.appiconset/Icon-App-60x60@2x.png" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/android_remote/flutter_bluetooth_serial/example/ios/Runner/Assets.xcassets/AppIcon.appiconset/Icon-App-60x60@3x.png" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/android_remote/flutter_bluetooth_serial/example/ios/Runner/Assets.xcassets/AppIcon.appiconset/Icon-App-76x76@1x.png" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/android_remote/flutter_bluetooth_serial/example/ios/Runner/Assets.xcassets/AppIcon.appiconset/Icon-App-76x76@2x.png" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/android_remote/flutter_bluetooth_serial/example/ios/Runner/Assets.xcassets/AppIcon.appiconset/Icon-App-83.5x83.5@2x.png" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/android_remote/flutter_bluetooth_serial/example/ios/Runner/Assets.xcassets/LaunchImage.imageset/Contents.json" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/android_remote/flutter_bluetooth_serial/example/ios/Runner/Assets.xcassets/LaunchImage.imageset/LaunchImage.png" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/android_remote/flutter_bluetooth_serial/example/ios/Runner/Assets.xcassets/LaunchImage.imageset/LaunchImage@2x.png" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/android_remote/flutter_bluetooth_serial/example/ios/Runner/Assets.xcassets/LaunchImage.imageset/LaunchImage@3x.png" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/android_remote/flutter_bluetooth_serial/example/ios/Runner/Assets.xcassets/LaunchImage.imageset/README.md" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/android_remote/flutter_bluetooth_serial/example/ios/Runner/Base.lproj/LaunchScreen.storyboard" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/android_remote/flutter_bluetooth_serial/example/ios/Runner/Base.lproj/Main.storyboard" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/android_remote/flutter_bluetooth_serial/example/ios/Runner/Info.plist" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/android_remote/flutter_bluetooth_serial/example/ios/Runner/main.m" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/android_remote/flutter_bluetooth_serial/example/lib/BackgroundCollectedPage.dart" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/android_remote/flutter_bluetooth_serial/example/lib/BackgroundCollectingTask.dart" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/android_remote/flutter_bluetooth_serial/example/lib/BluetoothDeviceListEntry.dart" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/android_remote/flutter_bluetooth_serial/example/lib/ChatPage.dart" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/android_remote/flutter_bluetooth_serial/example/lib/DiscoveryPage.dart" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/android_remote/flutter_bluetooth_serial/example/lib/MainPage.dart" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/android_remote/flutter_bluetooth_serial/example/lib/SelectBondedDevicePage.dart" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/android_remote/flutter_bluetooth_serial/example/lib/helpers/LineChart.dart" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/android_remote/flutter_bluetooth_serial/example/lib/helpers/PaintStyle.dart" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/android_remote/flutter_bluetooth_serial/example/lib/main.dart" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/android_remote/flutter_bluetooth_serial/example/pubspec.yaml" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/android_remote/flutter_bluetooth_serial/pubspec.yaml" beforeDir="false" afterPath="$PROJECT_DIR$/android_remote/flutter_bluetooth_serial/pubspec.yaml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/android_remote/lib/globals.dart" beforeDir="false" afterPath="$PROJECT_DIR$/android_remote/lib/globals.dart" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/android_remote/lib/main.dart" beforeDir="false" afterPath="$PROJECT_DIR$/android_remote/lib/main.dart" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/android_remote/lib/pages/bluetooth_connection.dart" beforeDir="false" afterPath="$PROJECT_DIR$/android_remote/lib/pages/bluetooth_connection.dart" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/android_remote/pubspec.lock" beforeDir="false" afterPath="$PROJECT_DIR$/android_remote/pubspec.lock" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/android_remote/pubspec.yaml" beforeDir="false" afterPath="$PROJECT_DIR$/android_remote/pubspec.yaml" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
     <option name="HIGHLIGHT_NON_ACTIVE_CHANGELIST" value="false" />
     <option name="LAST_RESOLUTION" value="IGNORE" />
   </component>
-  <component name="ExecutionTargetManager" SELECTED_TARGET="device_and_snapshot_combo_box_target[]" />
   <component name="FileTemplateManagerImpl">
     <option name="RECENT_TEMPLATES">
       <list>
@@ -83,16 +164,16 @@
     <property name="RunOnceActivity.ShowReadmeOnStart" value="true" />
     <property name="dart.analysis.tool.window.visible" value="false" />
     <property name="io.flutter.reload.alreadyRun" value="true" />
-    <property name="last_opened_file_path" value="$PROJECT_DIR$" />
+    <property name="last_opened_file_path" value="$USER_HOME$/MDP5Android/FlutterWorkingBlue" />
     <property name="settings.editor.selected.configurable" value="flutter.settings" />
     <property name="show.migrate.to.gradle.popup" value="false" />
   </component>
   <component name="RecentsManager">
-    <key name="MoveFile.RECENT_KEYS">
-      <recent name="C:\Users\geral\StudioProjects\ay2021mdp_grp5\android_remote" />
-    </key>
     <key name="CopyFile.RECENT_KEYS">
       <recent name="D:\workspace\ay2021mdp_grp5\android_remote\lib" />
+    </key>
+    <key name="MoveFile.RECENT_KEYS">
+      <recent name="C:\Users\geral\StudioProjects\ay2021mdp_grp5\android_remote" />
     </key>
   </component>
   <component name="RunManager">
@@ -192,7 +273,8 @@
     <MESSAGE value="updated Gui" />
     <MESSAGE value="New feature updated.&#10;1. Function string saving and retrieving.&#10;2. Abouts page rough." />
     <MESSAGE value="merged Lijie together!" />
-    <option name="LAST_COMMIT_MESSAGE" value="merged Lijie together!" />
+    <MESSAGE value="1. Changed FlutterBluetoothserial to Local folder&#10;2. Fix bluetooth scanning to work with android 10 devices&#10;3. Fix arena sizing and icons layout&#10;4. Changed appbar to stack on top of arena, and added robot and bluetooth status&#10;5. Changed F1 and F2 buttons to smaller size\&#10;6. Console now able to display bluetooth received message" />
+    <option name="LAST_COMMIT_MESSAGE" value="1. Changed FlutterBluetoothserial to Local folder&#10;2. Fix bluetooth scanning to work with android 10 devices&#10;3. Fix arena sizing and icons layout&#10;4. Changed appbar to stack on top of arena, and added robot and bluetooth status&#10;5. Changed F1 and F2 buttons to smaller size\&#10;6. Console now able to display bluetooth received message" />
   </component>
   <component name="WindowStateProjectService">
     <state x="414" y="174" key="#com.intellij.execution.impl.EditConfigurationsDialog" timestamp="1612715349758">
@@ -209,9 +291,10 @@
     </state>
     <state x="689" y="309" key="#com.intellij.ide.util.TreeFileChooserDialog/0.0.1920.1040/-1920.0.1536.824@0.0.1920.1040" timestamp="1611471110731" />
     <state x="689" y="309" key="#com.intellij.ide.util.TreeFileChooserDialog/0.0.1920.1040/-1920.100.1920.1040@0.0.1920.1040" timestamp="1612715347732" />
-    <state x="411" y="270" key="#com.intellij.refactoring.safeDelete.UnsafeUsagesDialog" timestamp="1612768908439">
+    <state x="411" y="270" key="#com.intellij.refactoring.safeDelete.UnsafeUsagesDialog" timestamp="1613218206020">
       <screen x="0" y="0" width="1920" height="1040" />
     </state>
+    <state x="411" y="270" key="#com.intellij.refactoring.safeDelete.UnsafeUsagesDialog/0.0.1920.1040/-1920.0.1536.824@0.0.1920.1040" timestamp="1613218206019" />
     <state x="411" y="270" key="#com.intellij.refactoring.safeDelete.UnsafeUsagesDialog/0.0.1920.1040/-1920.100.1920.1040@0.0.1920.1040" timestamp="1612768908439" />
     <state x="540" y="274" key="AndroidCreateResourceDirectoryDialog" timestamp="1612719172021">
       <screen x="0" y="0" width="1920" height="1040" />
@@ -222,38 +305,38 @@
     </state>
     <state x="779" y="266" key="AndroidProcessChooserDialog/0.0.1920.1040/-1920.0.1536.824@0.0.1920.1040" timestamp="1612961973428" />
     <state x="763" y="261" key="AndroidProcessChooserDialog/0.0.1920.1040/-1920.100.1920.1040@0.0.1920.1040" timestamp="1612801033951" />
-    <state x="587" y="88" key="CommitChangelistDialog2" timestamp="1612970645852">
+    <state x="587" y="77" key="CommitChangelistDialog2" timestamp="1613224119886">
       <screen x="0" y="0" width="1920" height="1040" />
     </state>
-    <state x="587" y="88" key="CommitChangelistDialog2/0.0.1920.1040/-1920.0.1536.824@0.0.1920.1040" timestamp="1612970645852" />
-    <state x="-1407" y="424" key="FileChooserDialogImpl" timestamp="1612428069843">
-      <screen x="-1920" y="100" width="1920" height="1040" />
+    <state x="587" y="77" key="CommitChangelistDialog2/0.0.1920.1040/-1920.0.1536.824@0.0.1920.1040" timestamp="1613224119886" />
+    <state x="513" y="324" key="FileChooserDialogImpl" timestamp="1613210627062">
+      <screen x="0" y="0" width="1920" height="1040" />
     </state>
-    <state x="513" y="324" key="FileChooserDialogImpl/0.0.1920.1040/-1920.0.1536.824@0.0.1920.1040" timestamp="1611832511492" />
+    <state x="513" y="324" key="FileChooserDialogImpl/0.0.1920.1040/-1920.0.1536.824@0.0.1920.1040" timestamp="1613210627062" />
     <state x="-1407" y="424" key="FileChooserDialogImpl/0.0.1920.1040/-1920.100.1920.1040@-1920.100.1920.1040" timestamp="1612428069843" />
     <state x="513" y="324" key="FileChooserDialogImpl/0.0.1920.1040/-1920.100.1920.1040@0.0.1920.1040" timestamp="1611469962095" />
-    <state width="1877" height="281" key="GridCell.Tab.0.bottom" timestamp="1613018414794">
+    <state width="1877" height="273" key="GridCell.Tab.0.bottom" timestamp="1613223755291">
       <screen x="0" y="0" width="1920" height="1040" />
     </state>
-    <state width="1875" height="278" key="GridCell.Tab.0.bottom/0.0.1920.1040/-1920.0.1536.824@0.0.1920.1040" timestamp="1612804398378" />
+    <state width="1877" height="273" key="GridCell.Tab.0.bottom/0.0.1920.1040/-1920.0.1536.824@0.0.1920.1040" timestamp="1613223755291" />
     <state width="1877" height="281" key="GridCell.Tab.0.bottom/0.0.1920.1040/-1920.100.1920.1040@0.0.1920.1040" timestamp="1612801530176" />
     <state width="1877" height="281" key="GridCell.Tab.0.bottom/0.0.1920.1040@0.0.1920.1040" timestamp="1613018414794" />
-    <state width="1877" height="281" key="GridCell.Tab.0.center" timestamp="1613018414793">
+    <state width="1877" height="273" key="GridCell.Tab.0.center" timestamp="1613223755291">
       <screen x="0" y="0" width="1920" height="1040" />
     </state>
-    <state width="1875" height="278" key="GridCell.Tab.0.center/0.0.1920.1040/-1920.0.1536.824@0.0.1920.1040" timestamp="1612804398378" />
+    <state width="1877" height="273" key="GridCell.Tab.0.center/0.0.1920.1040/-1920.0.1536.824@0.0.1920.1040" timestamp="1613223755291" />
     <state width="1877" height="281" key="GridCell.Tab.0.center/0.0.1920.1040/-1920.100.1920.1040@0.0.1920.1040" timestamp="1612801530176" />
     <state width="1877" height="281" key="GridCell.Tab.0.center/0.0.1920.1040@0.0.1920.1040" timestamp="1613018414793" />
-    <state width="1877" height="281" key="GridCell.Tab.0.left" timestamp="1613018414793">
+    <state width="1877" height="273" key="GridCell.Tab.0.left" timestamp="1613223755291">
       <screen x="0" y="0" width="1920" height="1040" />
     </state>
-    <state width="1875" height="278" key="GridCell.Tab.0.left/0.0.1920.1040/-1920.0.1536.824@0.0.1920.1040" timestamp="1612804398378" />
+    <state width="1877" height="273" key="GridCell.Tab.0.left/0.0.1920.1040/-1920.0.1536.824@0.0.1920.1040" timestamp="1613223755291" />
     <state width="1877" height="281" key="GridCell.Tab.0.left/0.0.1920.1040/-1920.100.1920.1040@0.0.1920.1040" timestamp="1612801530176" />
     <state width="1877" height="281" key="GridCell.Tab.0.left/0.0.1920.1040@0.0.1920.1040" timestamp="1613018414793" />
-    <state width="1877" height="281" key="GridCell.Tab.0.right" timestamp="1613018414793">
+    <state width="1877" height="273" key="GridCell.Tab.0.right" timestamp="1613223755291">
       <screen x="0" y="0" width="1920" height="1040" />
     </state>
-    <state width="1875" height="278" key="GridCell.Tab.0.right/0.0.1920.1040/-1920.0.1536.824@0.0.1920.1040" timestamp="1612804398378" />
+    <state width="1877" height="273" key="GridCell.Tab.0.right/0.0.1920.1040/-1920.0.1536.824@0.0.1920.1040" timestamp="1613223755291" />
     <state width="1877" height="281" key="GridCell.Tab.0.right/0.0.1920.1040/-1920.100.1920.1040@0.0.1920.1040" timestamp="1612801530176" />
     <state width="1877" height="281" key="GridCell.Tab.0.right/0.0.1920.1040@0.0.1920.1040" timestamp="1613018414793" />
     <state x="-1459" y="264" key="SettingsEditor" timestamp="1612428074376">
@@ -266,6 +349,14 @@
       <screen x="0" y="0" width="1920" height="1040" />
     </state>
     <state x="552" y="252" key="Vcs.Push.Dialog.v2/0.0.1920.1040/-1920.0.1536.824@0.0.1920.1040" timestamp="1612804368222" />
+    <state x="-1419" y="78" width="1419" height="723" key="dock-window-1" timestamp="1613212111475">
+      <screen x="-1920" y="0" width="1536" height="824" />
+    </state>
+    <state x="-1419" y="78" width="1419" height="723" key="dock-window-1/0.0.1920.1040/-1920.0.1536.824@0.0.1920.1040" timestamp="1613212111475" />
+    <state x="667" y="119" width="585" height="801" key="find.popup" timestamp="1613218783470">
+      <screen x="0" y="0" width="1920" height="1040" />
+    </state>
+    <state x="667" y="119" width="585" height="801" key="find.popup/0.0.1920.1040/-1920.0.1536.824@0.0.1920.1040" timestamp="1613218783470" />
     <state x="668" y="308" key="git4idea.merge.GitPullDialog" timestamp="1611476108293">
       <screen x="0" y="0" width="1920" height="1040" />
     </state>
@@ -276,6 +367,10 @@
     <state x="616" y="242" key="run.anything.popup/0.0.1920.1040/-1920.0.1536.824@0.0.1920.1040" timestamp="1611603218896" />
     <state x="616" y="242" key="run.anything.popup/0.0.1920.1040/-1920.100.1920.1040@0.0.1920.1040" timestamp="1612795901511" />
     <state x="616" y="242" key="run.anything.popup/0.0.1920.1040@0.0.1920.1040" timestamp="1613146539734" />
+    <state x="623" y="225" width="672" height="678" key="search.everywhere.popup" timestamp="1613218806808">
+      <screen x="0" y="0" width="1920" height="1040" />
+    </state>
+    <state x="623" y="225" width="672" height="678" key="search.everywhere.popup/0.0.1920.1040/-1920.0.1536.824@0.0.1920.1040" timestamp="1613218806808" />
   </component>
   <component name="XDebuggerManager">
     <breakpoint-manager>
@@ -289,6 +384,25 @@
           <url>file://$PROJECT_DIR$/android_remote/lib/states/ArenaGrid.dart</url>
           <line>57</line>
           <option name="timeStamp" value="3" />
+        </line-breakpoint>
+        <line-breakpoint enabled="true" suspend="THREAD" type="Dart">
+          <url>file://$PROJECT_DIR$/android_remote/lib/pages/DiscoveryPage.dart</url>
+          <line>55</line>
+          <option name="timeStamp" value="4" />
+        </line-breakpoint>
+        <line-breakpoint enabled="true" suspend="THREAD" type="Dart">
+          <url>file://$PROJECT_DIR$/android_remote/lib/pages/DiscoveryPage.dart</url>
+          <line>45</line>
+          <option name="timeStamp" value="5" />
+        </line-breakpoint>
+        <line-breakpoint enabled="true" suspend="THREAD" type="Dart">
+          <url>file://$PROJECT_DIR$/../../../../src/flutter/.pub-cache/hosted/pub.dartlang.org/flutter_bluetooth_serial-0.2.2/lib/FlutterBluetoothSerial.dart</url>
+          <line>206</line>
+          <option name="timeStamp" value="7" />
+        </line-breakpoint>
+        <line-breakpoint enabled="true" suspend="THREAD" type="Dart">
+          <url>file://$PROJECT_DIR$/android_remote/lib/main.dart</url>
+          <option name="timeStamp" value="8" />
         </line-breakpoint>
       </breakpoints>
     </breakpoint-manager>

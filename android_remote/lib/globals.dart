@@ -1,5 +1,6 @@
 library android_remote.globals;
 
+import 'package:flutter/material.dart';
 import 'package:flutter_bluetooth_serial/flutter_bluetooth_serial.dart';
 
 bool updateMode = false;
@@ -11,7 +12,8 @@ bool isConnecting = false;
 bool isDisconnecting = false;
 BluetoothDevice server;
 bool isConnected = false;
-
+Color robotStatus = Colors.red;
+Color bluetoothStatus = Colors.red;
 // Command strings: [SRC][DST][OP] 2 CHARACTERS EA
 final String strStartExplore = 'ANADSE';
 final String strFastestPath = 'ANADFP';
@@ -35,11 +37,11 @@ List<List<String>> arenaState = [
   ['', '', '', '', '', '', '', '', '', '', '', '', '', '', ''],
   ['', '', '', '', '', '', '', '', '', '', '', '', '', '', ''],
   ['', '', '', '', '', '', '', '', '', '', '', '', '', '', ''],
-  ['', '', '', '', '', '', 'B', '', '', '', '', '', '', '', ''],
-  ['', '', '', '', '', '', '', '', '', '', '', '', '', '', ''],
-  ['', '', '', '', '', '', '', '', '', '', '', '', '', '', ''],
+  ['aB', 'aG', 'aR', 'aW', '', 'A', 'B', 'C', 'D', 'E', '', '', '', '', ''],
+  ['cY', '', '1', '2', '3', '4', '5', '', '', '', '', '', '', '', ''],
+  ['', '', '', 'T', '', '', '', '', '', '', '', '', '', '', ''],
   ['', 'P1', '', '', '', '', '', '', '', '', '', '', '', '', ''],
-  ['', '', '', '', '', '', '', '', '', '', '', '', '', '', ''],
-  ['', '', '', '', '', '', '', '', '', '', '', '', '', '', ''],
-  ['A', '', '', '', '', '', '', '', '', '', '', '', '', '', '']
+  ['R', 'R', 'R', '', '', '', '', '', '', '', '', '', '', '', ''],
+  ['R', 'R', 'R', '', '', '', '', '', '', '', '', '', '', '', ''],
+  ['R', 'R', 'R', '', '', '', '', '', '', '', '', '', '', '', '']
 ];

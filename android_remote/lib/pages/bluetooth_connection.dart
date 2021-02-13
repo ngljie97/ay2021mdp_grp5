@@ -1,5 +1,7 @@
 import 'dart:async';
 
+import 'package:android_remote/pages/ChatPage.dart';
+import 'package:android_remote/pages/DiscoveryPage.dart';
 import 'package:android_remote/states/BluetoothDeviceListEntry.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bluetooth_serial/flutter_bluetooth_serial.dart';
@@ -95,7 +97,9 @@ class _ConnectionPage extends State<ConnectionPage> {
 
     _isDiscovering = widget.checkAvailability;
 
-    if (_isDiscovering) {}
+    if (_isDiscovering) {
+
+    }
 
     // Setup a list of the bonded devices
     FlutterBluetoothSerial.instance
@@ -221,6 +225,27 @@ class _ConnectionPage extends State<ConnectionPage> {
               });
             },
           ),
+              ListTile(
+                title: RaisedButton(
+                    child: const Text('Pair devices'),
+                    onPressed: () async {
+
+                      final BluetoothDevice selectedDevice =
+                      await Navigator.of(context).push(
+                        MaterialPageRoute(
+                          builder: (context) {
+                            return DiscoveryPage();
+                          },
+                        ),
+                      );
+
+                      if (selectedDevice != null) {
+                        print('Discovery -> selected ' + selectedDevice.address);
+                      } else {
+                        print('Discovery -> no device selected');
+                      }
+                    }),
+              ),
           Expanded(
             // wrap in Expanded
             child: ListView(children: list),
@@ -233,6 +258,7 @@ class _ConnectionPage extends State<ConnectionPage> {
 }
 
 void _startChat(BuildContext context, BluetoothDevice server) {
+
   Navigator.of(context).push(
     MaterialPageRoute(
       builder: (context) {

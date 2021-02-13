@@ -153,11 +153,50 @@ class _MyHomePageState extends State<MyHomePage> {
     return new WillPopScope(
       onWillPop: _onWillPop,
       child: new Scaffold(
-        appBar: AppBar(
-          backgroundColor: Colors.transparent,
-          elevation: 0.0,
+        body: Stack(children: <Widget>[
+          Column(
+          children: <Widget>[
+            _buildArena(),
+            _buildBottomPanel(),
+
+          ],
         ),
-        extendBodyBehindAppBar: true,
+          new Positioned( //Place it at the top, and not use the entire screen
+            top: 15.0,
+            left: 0.0,
+            right: 0.0,
+            child: AppBar(title: Text(''),
+              backgroundColor: Colors.transparent, //No more green
+
+              elevation: 0.0,
+              iconTheme: IconThemeData(color: Colors.white),
+
+
+            ),
+
+          ),
+          new Positioned( //Place it at the top, and not use the entire screen
+            top: 55.0,
+            left: 425.0,
+            right: 0.0,
+            child: Icon(
+              Icons.adb_outlined,
+              color: globals.robotStatus,
+            )
+
+          ),
+          new Positioned( //Place it at the top, and not use the entire screen
+              top:55.0,
+              left: 525.0,
+              right: 0.0,
+              child: Icon(
+                Icons.bluetooth,
+                color: globals.bluetoothStatus,
+              )
+
+          ),
+        ],),
+
         drawer: Drawer(
           child: ListView(
             padding: EdgeInsets.zero,
@@ -245,16 +284,12 @@ class _MyHomePageState extends State<MyHomePage> {
                   Navigator.popAndPushNamed(context, aboutRoute);
                 },
               ),
+
             ],
           ),
         ),
-        body: Column(
-          children: <Widget>[
-            _buildArena(),
-            _buildBottomPanel(),
-          ],
-        ),
       ),
+
     );
   }
 
@@ -280,6 +315,7 @@ class _MyHomePageState extends State<MyHomePage> {
     if (globals.isConnecting) {
       BluetoothConnection.toAddress(widget.server.address).then((_connection) {
         addConsoleAndScroll('Successfully connected to ' + widget.server.name);
+        globals.bluetoothStatus=Colors.green;
         globals.isConnected = true;
         print('Connected to the device');
         globals.connection = _connection;
@@ -319,22 +355,33 @@ class _MyHomePageState extends State<MyHomePage> {
 
   Widget _buildArena() {
     return new Expanded(
-      flex: 8,
-      child: Container(
-        child: GridView.builder(
-            itemCount: 15 * 20,
-            gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
-              crossAxisCount: 15,
-            ),
-            itemBuilder: (BuildContext context, int index) {
-              return Padding(
-                  padding: const EdgeInsets.all(1.0),
-                  child: Container(
-                    color: Colors.grey,
-                    child: _resolveGridItem(context, index),
-                  ));
-            }),
+      flex: 10,
+      child: AspectRatio(
+        aspectRatio: MediaQuery.of(context).devicePixelRatio /
+            (MediaQuery.of(context).devicePixelRatio +
+                (MediaQuery.of(context).devicePixelRatio *
+                    (MediaQuery.of(context).size.aspectRatio / 4))),
+        child: Center(
+          child: Container(
+            padding: EdgeInsets.fromLTRB(0, 0, 0, 0),
+            child: GridView.builder(
+                gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
+                  crossAxisCount: 15,
+                  childAspectRatio: MediaQuery.of(context).size.width /
+                      (MediaQuery.of(context).size.height / 1.8),
+                  crossAxisSpacing: 0,
+                  mainAxisSpacing: 0,
+                ),
+                shrinkWrap: true,
+                itemCount: 15 * 20,
+                itemBuilder: (BuildContext context, int index) {
+                  return _resolveGridItem(context, index);
+
+                }),
+          ),
+        ),
       ),
+
     );
   }
 
@@ -345,27 +392,230 @@ class _MyHomePageState extends State<MyHomePage> {
 
     switch (globals.arenaState[x][y]) {
       case '':
-        return Text('');
+        return Padding(
+            padding: const EdgeInsets.all(1.0),
+            child: Container(
+              color: Colors.grey,
+              child: Text(''),
+            ));
         break;
+
       case 'P1':
-        return Container(
-          color: Colors.blue,
-        );
+        return
+          Padding(
+              padding: const EdgeInsets.all(1.0),
+              child: Container(
+                color: Colors.grey,
+                child: Container(
+                  color: Colors.blue,
+                ),
+              ));
         break;
       case 'P2':
+        return
+          Padding(
+              padding: const EdgeInsets.all(1.0),
+              child: Container(
+                color: Colors.grey,
+                child:Container(
+                  color: Colors.yellow,
+                ),
+              ));
+        break;
+      case 'R':
         return Container(
-          color: Colors.yellow,
-        );
+              color: Colors.grey,
+              child: Container(
+                color: Colors.blueGrey,
+              ),
+            );
         break;
       case 'T':
-        return Icon(
-          Icons.terrain,
-          size: 40.0,
-          color: Colors.red,
+        return
+          Padding(
+              padding: const EdgeInsets.all(1.0),
+              child: Container(
+                color: Colors.black,
+                child: Icon(
+                  Icons.terrain,
+                  size: 40.0,
+                  color: Colors.red,
+                ),
+              ));
+
+        break;
+      case 'E':
+        return
+          Padding(
+              padding: const EdgeInsets.all(1.0),
+              child: Container(
+                color: Colors.grey,
+                child: Icon(Icons.remove_red_eye),
+              ));
+
+        break;
+      case 'A':
+        return Container(
+          decoration: BoxDecoration(
+            image: DecorationImage(
+              image: AssetImage(
+                  'assets/letter_a.PNG'),
+              fit: BoxFit.fill,
+            ),
+            shape: BoxShape.rectangle,
+          ),
         );
         break;
       case 'B':
-        return Icon(Icons.remove_red_eye);
+        return Container(
+          decoration: BoxDecoration(
+            image: DecorationImage(
+              image: AssetImage(
+                  'assets/letter_b.PNG'),
+              fit: BoxFit.fill,
+            ),
+            shape: BoxShape.rectangle,
+          ),
+        );
+        break;
+      case 'C':
+        return Container(
+          decoration: BoxDecoration(
+            image: DecorationImage(
+              image: AssetImage(
+                  'assets/letter_c.PNG'),
+              fit: BoxFit.fill,
+            ),
+            shape: BoxShape.rectangle,
+          ),
+        );
+        break;
+      case 'D':
+        return Container(
+          decoration: BoxDecoration(
+            image: DecorationImage(
+              image: AssetImage(
+                  'assets/letter_d.PNG'),
+              fit: BoxFit.fill,
+            ),
+            shape: BoxShape.rectangle,
+          ),
+        );
+        break;
+      case 'aB':
+        return Container(
+          decoration: BoxDecoration(
+            image: DecorationImage(
+              image: AssetImage(
+                  'assets/arrow_blue.PNG'),
+              fit: BoxFit.fill,
+            ),
+            shape: BoxShape.rectangle,
+          ),
+        );
+        break;
+      case 'aG':
+        return Container(
+          decoration: BoxDecoration(
+            image: DecorationImage(
+              image: AssetImage(
+                  'assets/arrow_green.PNG'),
+              fit: BoxFit.fill,
+            ),
+            shape: BoxShape.rectangle,
+          ),
+        );
+        break;
+      case 'aR':
+        return Container(
+          decoration: BoxDecoration(
+            image: DecorationImage(
+              image: AssetImage(
+                  'assets/arrow_red.PNG'),
+              fit: BoxFit.fill,
+            ),
+            shape: BoxShape.rectangle,
+          ),
+        );
+        break;
+      case 'aW':
+        return Container(
+          decoration: BoxDecoration(
+            image: DecorationImage(
+              image: AssetImage(
+                  'assets/arrow_white.PNG'),
+              fit: BoxFit.fill,
+            ),
+            shape: BoxShape.rectangle,
+          ),
+        );
+        break;
+      case 'cY':
+        return Container(
+          decoration: BoxDecoration(
+            image: DecorationImage(
+              image: AssetImage(
+                  'assets/circle_yellow.PNG'),
+              fit: BoxFit.fill,
+            ),
+            shape: BoxShape.rectangle,
+          ),
+        );
+      case '1':
+        return Container(
+          decoration: BoxDecoration(
+            image: DecorationImage(
+              image: AssetImage(
+                  'assets/number_one.PNG'),
+              fit: BoxFit.fill,
+            ),
+            shape: BoxShape.rectangle,
+          ),
+        );
+      case '2':
+        return Container(
+          decoration: BoxDecoration(
+            image: DecorationImage(
+              image: AssetImage(
+                  'assets/number_two.PNG'),
+              fit: BoxFit.fill,
+            ),
+            shape: BoxShape.rectangle,
+          ),
+        );
+      case '3':
+        return Container(
+          decoration: BoxDecoration(
+            image: DecorationImage(
+              image: AssetImage(
+                  'assets/number_three.PNG'),
+              fit: BoxFit.fill,
+            ),
+            shape: BoxShape.rectangle,
+          ),
+        );
+      case '4':
+        return Container(
+          decoration: BoxDecoration(
+            image: DecorationImage(
+              image: AssetImage(
+                  'assets/number_four.PNG'),
+              fit: BoxFit.fill,
+            ),
+            shape: BoxShape.rectangle,
+          ),
+        );
+      case '5':
+        return Container(
+          decoration: BoxDecoration(
+            image: DecorationImage(
+              image: AssetImage(
+                  'assets/number_five.PNG'),
+              fit: BoxFit.fill,
+            ),
+            shape: BoxShape.rectangle,
+          ),
+        );
         break;
       default:
         return Text(globals.arenaState[x][y].toString());
@@ -431,8 +681,10 @@ class _MyHomePageState extends State<MyHomePage> {
                         mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                         mainAxisSize: MainAxisSize.max,
                         children: [
-                          Expanded(
-                            flex: 1,
+
+                          Padding(
+                            padding: EdgeInsets.fromLTRB(7.5, 0, 7.5, 0),
+
                             child: RaisedButton(
                               onPressed: () async {
                                 if (globals.isConnected) {
@@ -447,8 +699,10 @@ class _MyHomePageState extends State<MyHomePage> {
                               ),
                             ),
                           ),
-                          Expanded(
-                            flex: 1,
+
+                          Padding(
+                            padding: EdgeInsets.fromLTRB(7.5, 0, 7.5, 0),
+
                             child: RaisedButton(
                               onPressed: () async {
                                 if (globals.isConnected) {
@@ -463,6 +717,7 @@ class _MyHomePageState extends State<MyHomePage> {
                               ),
                             ),
                           ),
+
                         ],
                       ),
                       Expanded(
@@ -643,6 +898,10 @@ class _MyHomePageState extends State<MyHomePage> {
     int index = buffer.indexOf(13);
     if (~index != 0) {
       setState(() {
+        String name = widget.server.name;
+        addConsoleAndScroll('Message Received from [$name] : \n'
+            '[$dataString]');
+        print(dataString);
         messages.add(
           _Message(
             1,
@@ -705,7 +964,7 @@ class _MyHomePageState extends State<MyHomePage> {
         //
         // });
 
-        addConsoleAndScroll('Message sent to Bluetooth device. [$text]');
+        addConsoleAndScroll('Message sent to Bluetooth device:\n[$text]');
       } catch (e) {
         // Ignore error, but notify state
         addConsoleAndScroll('Disconnected remotely!');
