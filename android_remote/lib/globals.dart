@@ -4,6 +4,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bluetooth_serial/flutter_bluetooth_serial.dart';
 
 bool updateMode = false;
+bool debugMode = false;
 BluetoothDevice selectedDevice;
 List<String> strArr = [];
 bool controlMode = false;

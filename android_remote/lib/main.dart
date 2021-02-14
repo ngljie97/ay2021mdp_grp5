@@ -172,6 +172,7 @@ class _MyHomePageState extends State<MyHomePage> {
     consoleController = ItemScrollController();
     super.initState();
     _arena.setRobotPos();
+
     print("Checking is connected...");
     print(globals.isConnected);
 
@@ -227,47 +228,46 @@ class _MyHomePageState extends State<MyHomePage> {
                 _buildBottomPanel(),
               ],
             ),
-            Positioned(
-              //Place it at the top, and not use the entire screen
-              top: 15.0,
-              left: 0.0,
-              right: 0.0,
-              child: AppBar(
-                title: Text(''),
-                backgroundColor: Colors.transparent, //No more green
-                elevation: 0.0,
-                iconTheme: IconThemeData(color: Colors.white),
+            Container(
+
+              child: Positioned(
+                //Place it at the top, and not use the entire screen
+                top: 5.0,
+                left: 0.0,
+                right: 0.0,
+                child: AppBar(
+                  title: Text(''),
+                  backgroundColor: Colors.transparent, //No more green
+                  elevation: 0.0,
+                  iconTheme: IconThemeData(color: Colors.white),
+                ),
               ),
             ),
-            Positioned(
-              //Place it at the top, and not use the entire screen
-              top: 55.0,
-              left: 520.0,
-              right: 0.0,
-              child: Icon(
+      Container(
+        padding: EdgeInsets.fromLTRB(MediaQuery.of(context).size.width - 110, 50, 0, 0),
+        child:Icon(
                 Icons.adb_outlined,
                 color: globals.robotStatus,
                 size: 30.0,
               ),
             ),
-            Positioned(
-              //Place it at the top, and not use the entire screen
-              top: 55.0,
-              left: 615.0,
-              right: 0.0,
+      Container(
+        padding: EdgeInsets.fromLTRB(MediaQuery.of(context).size.width - 55, 50, 0, 0),
+
               child: Icon(
                 Icons.bluetooth,
                 color: globals.bluetoothStatus,
                 size: 30.0,
               ),
             ),
-            Positioned(
-              //Place it at the top, and not use the entire screen
-              top: 55.0,
-              left: 200.0,
-              right: 10.0,
-              child: IconButton(
-                  icon: Icon(Icons.refresh),
+      Container(
+        padding: EdgeInsets.fromLTRB(MediaQuery.of(context).size.width - 175, 43, 0, 0),
+        child:
+            IconButton(
+                  icon: Icon(
+                    Icons.refresh,
+                    size: 30.0,
+                  ),
                   onPressed: () {
                     setState(() => _arena.setRobotPos());
                   }),
@@ -359,16 +359,20 @@ class _MyHomePageState extends State<MyHomePage> {
                 ),
               ),
               ListTile(
-                leading: Icon(Icons.update_outlined),
+                leading: Icon(Icons.android_sharp),
                 title: Text('Debug Mode'),
                 subtitle: Text(() {
-                  return "";
+                  if (!globals.debugMode) {
+                    return 'Off';
+                  } else {
+                    return 'On';
+                  }
                 }()),
                 trailing: Switch(
-                  value: globals.updateMode,
+                  value: globals.debugMode,
                   onChanged: (value) {
                     setState(() {
-                      globals.updateMode = value;
+                      globals.debugMode = value;
                     });
                   },
                 ),
@@ -532,8 +536,12 @@ class _MyHomePageState extends State<MyHomePage> {
                                     onPressed: () {
                                       if (globals.isConnected) {
                                         _sendMessage(globals.strForward);
+                                        _arena.robot.moveForward();
                                       }
-                                      _arena.robot.moveForward();
+                                      if (globals.debugMode &&
+                                          !globals.isConnected) {
+                                        _arena.robot.moveForward();
+                                      }
                                       if (!globals.updateMode) {
                                         setState(() {
                                           _arena.setRobotPos();
@@ -554,8 +562,13 @@ class _MyHomePageState extends State<MyHomePage> {
                                     onPressed: () {
                                       if (globals.isConnected) {
                                         _sendMessage(globals.strRotateLeft);
+                                        _arena.robot.rotateLeft();
                                       }
-                                      _arena.robot.rotateLeft();
+                                      if (globals.debugMode &&
+                                          !globals.isConnected) {
+                                        _arena.robot.rotateLeft();
+                                      }
+
                                       if (!globals.updateMode) {
                                         setState(() {
                                           _arena.setRobotPos();
@@ -581,8 +594,12 @@ class _MyHomePageState extends State<MyHomePage> {
                                     onPressed: () {
                                       if (globals.isConnected) {
                                         _sendMessage(globals.strRotateRight);
+                                        _arena.robot.rotateRight();
                                       }
-                                      _arena.robot.rotateRight();
+                                      if (globals.debugMode &&
+                                          !globals.isConnected) {
+                                        _arena.robot.rotateRight();
+                                      }
                                       if (!globals.updateMode) {
                                         setState(() {
                                           _arena.setRobotPos();
@@ -730,38 +747,12 @@ class _MyHomePageState extends State<MyHomePage> {
 
     // Create message if there is new line character
     String dataString = String.fromCharCodes(buffer);
-    int index = buffer.indexOf(13);
     String name = widget.server.name;
 
-    if (~index != 0) {
-      setState(() {
-        _Message sdataString = _Message(
-          1,
-          backspacesCounter > 0
-              ? _messageBuffer.substring(
-                  0, _messageBuffer.length - backspacesCounter)
-              : _messageBuffer + dataString.substring(0, index),
-        );
-        String tdataString = sdataString.getText();
-        addConsoleAndScroll(
-            'Message Received from [$name] : ' '[$tdataString]');
-        // messages.add(
-        //   _Message(
-        //     1,
-        //     backspacesCounter > 0
-        //         ? _messageBuffer.substring(
-        //         0, _messageBuffer.length - backspacesCounter)
-        //         : _messageBuffer + dataString.substring(0, index),
-        //   ),
-        // );
-        _messageBuffer = dataString.substring(index);
-      });
-    } else {
-      _messageBuffer = (backspacesCounter > 0
-          ? _messageBuffer.substring(
-              0, _messageBuffer.length - backspacesCounter)
-          : _messageBuffer + dataString);
-    }
+    setState(() {
+      String sdataString = dataString.trim();
+      addConsoleAndScroll('Message Received from [$name]:\n[$sdataString]');
+    });
   }
 
   Future<bool> _onWillPop() async {

@@ -318,21 +318,21 @@ class Arena {
         break;
 
       case '0':
-        return Container(
-          color: Colors.grey,
-          child: Container(
-            color: Colors.black54,
-          ),
-        );
+        return Padding(
+            padding: const EdgeInsets.all(1),
+            child: Container(
+              color: Colors.black54,
+              child: Text(''),
+            ));
         break;
 
       case '1':
-        return Container(
-          color: Colors.grey,
-          child: Container(
-            color: Colors.grey,
-          ),
-        );
+        return Padding(
+            padding: const EdgeInsets.all(1),
+            child: Container(
+              color: Colors.white24,
+              child: Text(''),
+            ));
         break;
 
       default:
