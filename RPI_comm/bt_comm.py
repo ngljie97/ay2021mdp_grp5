@@ -1,0 +1,85 @@
+##Android BLuetooth Communication Script
+
+
+from config import *
+from bluetooth import *
+
+import subprocess
+import threading
+import time
+
+class AndroidBT(object):
+    
+    #Andorid Initialisation
+    def __init__(self):
+        subprocess.call(["sudo", "hciconfig", "hci0", "piscan"]) #Make RPI Discoverable
+        self.client_soc = None
+        self.server_soc = None
+        self.bt_is_connected = False
+        
+    #Start and Create Server Socket to Connect to Bluetooth Port
+    def connect_bt(self):
+        bt_port = 4
+        try:
+            self.server_soc = BluetoothSocket(RFCOMM)
+            self.server_soc.bind(("", bt_port))
+            print("\nCreating Socket Connection....")
+            self.server_soc.listen(2)
+            port = self.server_soc.getsockname()[1]
+            uuid = unique_id
+            
+#            advertise_service(self.server_soc, "Dora",
+#                              service_id = uuid,
+#                              service_classes = [ uuid, SERIAL_PORT_CLASS ],
+#                              profiles = [ SERIAL_PORT_PROFILE ],
+#                              )
+            
+            print("Waiting for Bluetooth Connection on RFCOMM Channel %d" % port)
+            self.client_soc, client_address = self.server_soc.accept()
+            print("Connection accepted from: ", client_address)
+            self.bt_is_connected = True
+            
+        except Exception as e:
+            print("Error encountered: %s" % str(e))
+    
+    #Close Android Bluetooth Connection
+    def close_all(self):
+        self.server_soc.close() #Close Server Connection
+        self.client_soc.close() #Close Client Connection
+            
+    #Disconnect and Close Bluetooth Socket
+    def disconnect_bt(self):
+        try:
+            self.close_all()
+            self.bt_is_connected = False
+        
+        except Exception as e:
+            print("Error encountered: %s" % str(e))
+            
+    #Reconnect Android Bluetooth Connection
+    def reconnect_bt(self):
+        self.disconnect_bt()
+        self.connect_bt()
+        
+    #Return Android BT Connectivity
+    def is_connected(self):
+        return self.bt_is_connected
+    
+    #Write to Android via Bluetooth
+    def write_bt(self, bt_message):
+        try:
+            self.client_soc.send(str(bt_message))
+        
+        except BluetoothError:
+            print("Error in Writing. Attempting to Reconnect...")
+            self.reconnect_bt()
+            
+    #Read from Android via Bluetooth
+    def read_bt(self):
+        try:
+            bt_message_read = self.client_soc.recv(2048)
+            return bt_message_read.decode("UTF-8")
+        
+        except Exception as e:
+            print("Read Error: %s,\n Data Unreadable... Attempting to Reconnect" % str(e))
+            self.reconnect_bt()
