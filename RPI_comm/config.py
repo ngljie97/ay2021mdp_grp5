@@ -1,7 +1,7 @@
 #Device Configuration Script
 
 #PC - WIFI Settings
-wifi_ip_address = '192.168.16.16'
+wifi_ip_address = '192.168.5.5'
 wifi_port = 5555
 
 #Android Settings
