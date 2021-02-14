@@ -140,6 +140,10 @@ class _Message {
   String text;
 
   _Message(this.whom, this.text);
+  String gettext()
+  {
+    return this.text;
+  }
 }
 
 class _MyHomePageState extends State<MyHomePage> {
@@ -177,21 +181,24 @@ class _MyHomePageState extends State<MyHomePage> {
           ),
           new Positioned( //Place it at the top, and not use the entire screen
             top: 55.0,
-            left: 425.0,
+            left: 520.0,
             right: 0.0,
             child: Icon(
+
               Icons.adb_outlined,
               color: globals.robotStatus,
+              size: 30.0,
             )
 
           ),
           new Positioned( //Place it at the top, and not use the entire screen
               top:55.0,
-              left: 525.0,
+              left: 615.0,
               right: 0.0,
               child: Icon(
                 Icons.bluetooth,
                 color: globals.bluetoothStatus,
+                size: 30.0,
               )
 
           ),
@@ -223,12 +230,16 @@ class _MyHomePageState extends State<MyHomePage> {
                   if (globals.isConnected) {
                     try {
                       globals.isDisconnecting = true;
+                      globals.isConnecting= false;
+                      _sendMessage("quitting");
                       globals.connection.dispose();
                       globals.connection = null;
                       globals.isConnected = false;
                     } catch (e) {
                       globals.isDisconnecting = true;
+                      globals.isConnecting= false;
                       if (globals.connection != null) {
+                        _sendMessage("quitting");
                         globals.connection.dispose();
                         globals.connection = null;
                       }
@@ -278,6 +289,21 @@ class _MyHomePageState extends State<MyHomePage> {
                 ),
               ),
               ListTile(
+                leading: Icon(Icons.update_outlined),
+                title: Text('Debug Mode'),
+                subtitle: Text(() {
+                  return "";
+                }()),
+                trailing: Switch(
+                  value: globals.updateMode,
+                  onChanged: (value) {
+                    setState(() {
+                      globals.updateMode = value;
+                    });
+                  },
+                ),
+              ),
+              ListTile(
                 leading: Icon(Icons.info_outline),
                 title: Text('About'),
                 onTap: () {
@@ -315,7 +341,7 @@ class _MyHomePageState extends State<MyHomePage> {
     if (globals.isConnecting) {
       BluetoothConnection.toAddress(widget.server.address).then((_connection) {
         addConsoleAndScroll('Successfully connected to ' + widget.server.name);
-        globals.bluetoothStatus=Colors.green;
+        globals.bluetoothStatus=Colors.greenAccent;
         globals.isConnected = true;
         print('Connected to the device');
         globals.connection = _connection;
@@ -331,12 +357,17 @@ class _MyHomePageState extends State<MyHomePage> {
           // `dispose`, `finish` or `close`, which all causes to disconnect.
           // If we except the disconnection, `onDone` should be fired as result.
           // If we didn't except this (no flag set), it means closing by remote.
+
           if (globals.isDisconnecting) {
             print('Disconnecting locally!');
             addConsoleAndScroll('Disconnecting locally!');
+            globals.bluetoothStatus = Colors.red;
+            globals.connection.dispose();
           } else {
             print('Disconnected remotely!');
             addConsoleAndScroll('Disconnecting remotely!');
+            globals.bluetoothStatus = Colors.red;
+            globals.connection.dispose();
           }
           if (this.mounted) {
             setState(() {});
@@ -429,6 +460,14 @@ class _MyHomePageState extends State<MyHomePage> {
                 color: Colors.blueGrey,
               ),
             );
+        break;
+      case 'RH':
+        return Container(
+          color: Colors.grey,
+          child: Container(
+            color: Colors.redAccent,
+          ),
+        );
         break;
       case 'T':
         return
@@ -869,6 +908,7 @@ class _MyHomePageState extends State<MyHomePage> {
   }
 
   void _onDataReceived(Uint8List data) {
+
     // Allocate buffer for parsed data
     int backspacesCounter = 0;
     data.forEach((byte) {
@@ -896,27 +936,35 @@ class _MyHomePageState extends State<MyHomePage> {
     // Create message if there is new line character
     String dataString = String.fromCharCodes(buffer);
     int index = buffer.indexOf(13);
+    String name = widget.server.name;
+
     if (~index != 0) {
       setState(() {
-        String name = widget.server.name;
-        addConsoleAndScroll('Message Received from [$name] : \n'
-            '[$dataString]');
-        print(dataString);
-        messages.add(
-          _Message(
-            1,
-            backspacesCounter > 0
-                ? _messageBuffer.substring(
-                    0, _messageBuffer.length - backspacesCounter)
-                : _messageBuffer + dataString.substring(0, index),
-          ),
+        _Message sdataString = _Message(
+          1,
+          backspacesCounter > 0
+              ? _messageBuffer.substring(
+              0, _messageBuffer.length - backspacesCounter)
+              : _messageBuffer + dataString.substring(0, index),
         );
+        String tdataString = sdataString.gettext();
+        addConsoleAndScroll('Message Received from [$name] : ''[$tdataString]');
+        // messages.add(
+        //   _Message(
+        //     1,
+        //     backspacesCounter > 0
+        //         ? _messageBuffer.substring(
+        //         0, _messageBuffer.length - backspacesCounter)
+        //         : _messageBuffer + dataString.substring(0, index),
+        //   ),
+        // );
         _messageBuffer = dataString.substring(index);
       });
     } else {
+
       _messageBuffer = (backspacesCounter > 0
           ? _messageBuffer.substring(
-              0, _messageBuffer.length - backspacesCounter)
+          0, _messageBuffer.length - backspacesCounter)
           : _messageBuffer + dataString);
     }
   }
@@ -956,20 +1004,21 @@ class _MyHomePageState extends State<MyHomePage> {
 
         setState(() {
           messages.add(_Message(clientID, text));
+          addConsoleAndScroll('Message sent to Bluetooth device:\n[$text]');
+          consoleController.scrollTo(
+              index: globals.strArr.length,
+              duration: Duration(milliseconds: 333));
         });
-        consoleController.scrollTo(
-            index: globals.strArr.length,
-            duration: Duration(milliseconds: 333));
+
         // Future.delayed(Duration(milliseconds: 333)).then((_) {
         //
         // });
 
-        addConsoleAndScroll('Message sent to Bluetooth device:\n[$text]');
+
       } catch (e) {
         // Ignore error, but notify state
         addConsoleAndScroll('Disconnected remotely!');
-        addConsoleAndScroll(
-            'Message was not sent to Bluetooth device. [$text]');
+        addConsoleAndScroll('Message was not sent to Bluetooth device. [$text]');
         globals.isDisconnecting = true;
         globals.isConnected = false;
         if (globals.connection != null) {
@@ -985,5 +1034,10 @@ class _MyHomePageState extends State<MyHomePage> {
 void addConsoleAndScroll(String message) {
   globals.strArr.add(message);
   consoleController.scrollTo(
-      index: globals.strArr.length, duration: Duration(milliseconds: 333));
+      index:  globals.strArr.length,
+      duration: Duration(milliseconds: 333),
+      curve: Curves.easeInOutCubic);
+  // consoleController.scrollTo(
+  //     index: globals.strArr.length, duration: Duration(milliseconds: 333));
+  //consoleController.jumpTo(index: globals.strArr.length);
 }
