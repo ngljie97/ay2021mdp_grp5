@@ -14,6 +14,7 @@ BluetoothDevice server;
 bool isConnected = false;
 Color robotStatus = Colors.red;
 Color bluetoothStatus = Colors.red;
+
 // Command strings: [SRC][DST][OP] 2 CHARACTERS EA
 final String strStartExplore = 'ANADSE';
 final String strFastestPath = 'ANADFP';
@@ -23,7 +24,7 @@ final String strRotateRight = 'ANADRR';
 final String strReverse = 'ANADRV';
 
 // Arena
-List<List<String>> arenaState = [
+/*List<List<String>> arenaState = [
   ['', '', '', '', '', '', '', '', '', '', '', '', '', '', ''],
   ['', '', '', '', '', '', '', '', '', '', '', '', '', '', ''],
   ['', '', '', '', '', '', '', '', '', '', '', '', '', '', ''],
@@ -44,4 +45,4 @@ List<List<String>> arenaState = [
   ['R', 'RH', 'R', '', '', '', '', '', '', '', '', '', '', '', ''],
   ['R', 'R', 'R', '', '', '', '', '', '', '', '', '', '', '', ''],
   ['R', 'R', 'R', '', '', '', '', '', '', '', '', '', '', '', '']
-];
+];*/

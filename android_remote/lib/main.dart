@@ -9,6 +9,7 @@ import 'package:scrollable_positioned_list/scrollable_positioned_list.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
 import 'globals.dart' as globals;
+import 'modules/arena.dart';
 import 'router.dart';
 
 void main() {
@@ -122,6 +123,7 @@ class MyApp extends StatelessWidget {
         visualDensity: VisualDensity.adaptivePlatformDensity,
       ),
       home: MyHomePage(),
+      debugShowCheckedModeBanner: false,
     );
   }
 }
@@ -140,8 +142,8 @@ class _Message {
   String text;
 
   _Message(this.whom, this.text);
-  String gettext()
-  {
+
+  String getText() {
     return this.text;
   }
 }
@@ -149,61 +151,129 @@ class _Message {
 class _MyHomePageState extends State<MyHomePage> {
   static final clientID = 0;
 
+  Arena _arena = Arena();
   List<_Message> messages = List<_Message>();
   String _messageBuffer = '';
+
+  @override
+  void dispose() {
+    // Avoid memory leak (`setState` after dispose) and disconnect
+    if (globals.isConnected) {
+      globals.isDisconnecting = true;
+      globals.connection.dispose();
+      globals.connection = null;
+    }
+
+    super.dispose();
+  }
+
+  @override
+  void initState() {
+    consoleController = ItemScrollController();
+    super.initState();
+    _arena.setRobotPos();
+    print("Checking is connected...");
+    print(globals.isConnected);
+
+    if (globals.isConnecting) {
+      BluetoothConnection.toAddress(widget.server.address).then((_connection) {
+        addConsoleAndScroll('Successfully connected to ' + widget.server.name);
+        globals.bluetoothStatus = Colors.greenAccent;
+        globals.isConnected = true;
+        print('Connected to the device');
+        globals.connection = _connection;
+        setState(() {
+          globals.isConnecting = false;
+          globals.isDisconnecting = false;
+        });
+
+        globals.connection.input.listen(_onDataReceived).onDone(() {
+          if (globals.isDisconnecting) {
+            print('Disconnecting locally!');
+            addConsoleAndScroll('Disconnecting locally!');
+            globals.bluetoothStatus = Colors.red;
+            globals.connection.dispose();
+          } else {
+            print('Disconnected remotely!');
+            addConsoleAndScroll('Disconnecting remotely!');
+            globals.bluetoothStatus = Colors.red;
+            globals.connection.dispose();
+          }
+          if (this.mounted) {
+            setState(() {});
+          }
+        });
+      }).catchError((error) {
+        print('Cannot connect, exception occurred');
+
+        setState(() {
+          addConsoleAndScroll('Cannot connect, Socket not opened!');
+        });
+        print(error);
+      });
+    }
+  }
 
   @override
   Widget build(BuildContext context) {
     return new WillPopScope(
       onWillPop: _onWillPop,
       child: new Scaffold(
-        body: Stack(children: <Widget>[
-          Column(
+        body: Stack(
           children: <Widget>[
-            _buildArena(),
-            _buildBottomPanel(),
-
-          ],
-        ),
-          new Positioned( //Place it at the top, and not use the entire screen
-            top: 15.0,
-            left: 0.0,
-            right: 0.0,
-            child: AppBar(title: Text(''),
-              backgroundColor: Colors.transparent, //No more green
-
-              elevation: 0.0,
-              iconTheme: IconThemeData(color: Colors.white),
-
-
+            Column(
+              children: <Widget>[
+                _buildArena(),
+                _buildBottomPanel(),
+              ],
             ),
-
-          ),
-          new Positioned( //Place it at the top, and not use the entire screen
-            top: 55.0,
-            left: 520.0,
-            right: 0.0,
-            child: Icon(
-
-              Icons.adb_outlined,
-              color: globals.robotStatus,
-              size: 30.0,
-            )
-
-          ),
-          new Positioned( //Place it at the top, and not use the entire screen
-              top:55.0,
+            Positioned(
+              //Place it at the top, and not use the entire screen
+              top: 15.0,
+              left: 0.0,
+              right: 0.0,
+              child: AppBar(
+                title: Text(''),
+                backgroundColor: Colors.transparent, //No more green
+                elevation: 0.0,
+                iconTheme: IconThemeData(color: Colors.white),
+              ),
+            ),
+            Positioned(
+              //Place it at the top, and not use the entire screen
+              top: 55.0,
+              left: 520.0,
+              right: 0.0,
+              child: Icon(
+                Icons.adb_outlined,
+                color: globals.robotStatus,
+                size: 30.0,
+              ),
+            ),
+            Positioned(
+              //Place it at the top, and not use the entire screen
+              top: 55.0,
               left: 615.0,
               right: 0.0,
               child: Icon(
                 Icons.bluetooth,
                 color: globals.bluetoothStatus,
                 size: 30.0,
-              )
-
-          ),
-        ],),
-
+              ),
+            ),
+            Positioned(
+              //Place it at the top, and not use the entire screen
+              top: 55.0,
+              left: 200.0,
+              right: 10.0,
+              child: IconButton(
+                  icon: Icon(Icons.refresh),
+                  onPressed: () {
+                    setState(() => _arena.setRobotPos());
+                  }),
+            ),
+          ],
+        ),
         drawer: Drawer(
           child: ListView(
             padding: EdgeInsets.zero,
@@ -230,14 +300,14 @@ class _MyHomePageState extends State<MyHomePage> {
                   if (globals.isConnected) {
                     try {
                       globals.isDisconnecting = true;
-                      globals.isConnecting= false;
+                      globals.isConnecting = false;
                       _sendMessage("quitting");
                       globals.connection.dispose();
                       globals.connection = null;
                       globals.isConnected = false;
                     } catch (e) {
                       globals.isDisconnecting = true;
-                      globals.isConnecting= false;
+                      globals.isConnecting = false;
                       if (globals.connection != null) {
                         _sendMessage("quitting");
                         globals.connection.dispose();
@@ -310,78 +380,11 @@ class _MyHomePageState extends State<MyHomePage> {
                   Navigator.popAndPushNamed(context, aboutRoute);
                 },
               ),
-
             ],
           ),
         ),
       ),
-
     );
-  }
-
-  @override
-  void dispose() {
-    // Avoid memory leak (`setState` after dispose) and disconnect
-    if (globals.isConnected) {
-      globals.isDisconnecting = true;
-      globals.connection.dispose();
-      globals.connection = null;
-    }
-
-    super.dispose();
-  }
-
-  @override
-  void initState() {
-    consoleController = ItemScrollController();
-    super.initState();
-    print("Checking is connected...");
-    print(globals.isConnected);
-
-    if (globals.isConnecting) {
-      BluetoothConnection.toAddress(widget.server.address).then((_connection) {
-        addConsoleAndScroll('Successfully connected to ' + widget.server.name);
-        globals.bluetoothStatus=Colors.greenAccent;
-        globals.isConnected = true;
-        print('Connected to the device');
-        globals.connection = _connection;
-        setState(() {
-          globals.isConnecting = false;
-          globals.isDisconnecting = false;
-        });
-
-        globals.connection.input.listen(_onDataReceived).onDone(() {
-          // Example: Detect which side closed the connection
-          // There should be `isDisconnecting` flag to show are we are (locally)
-          // in middle of disconnecting process, should be set before calling
-          // `dispose`, `finish` or `close`, which all causes to disconnect.
-          // If we except the disconnection, `onDone` should be fired as result.
-          // If we didn't except this (no flag set), it means closing by remote.
-
-          if (globals.isDisconnecting) {
-            print('Disconnecting locally!');
-            addConsoleAndScroll('Disconnecting locally!');
-            globals.bluetoothStatus = Colors.red;
-            globals.connection.dispose();
-          } else {
-            print('Disconnected remotely!');
-            addConsoleAndScroll('Disconnecting remotely!');
-            globals.bluetoothStatus = Colors.red;
-            globals.connection.dispose();
-          }
-          if (this.mounted) {
-            setState(() {});
-          }
-        });
-      }).catchError((error) {
-        print('Cannot connect, exception occurred');
-
-        setState(() {
-          addConsoleAndScroll('Cannot connect, Socket not opened!');
-        });
-        print(error);
-      });
-    }
   }
 
   Widget _buildArena() {
@@ -407,12 +410,10 @@ class _MyHomePageState extends State<MyHomePage> {
                 itemCount: 15 * 20,
                 itemBuilder: (BuildContext context, int index) {
                   return _resolveGridItem(context, index);
-
                 }),
           ),
         ),
       ),
-
     );
   }
 
@@ -421,247 +422,8 @@ class _MyHomePageState extends State<MyHomePage> {
     x = (index / 15).floor();
     y = (index % 15);
 
-    switch (globals.arenaState[x][y]) {
-      case '':
-        return Padding(
-            padding: const EdgeInsets.all(1.0),
-            child: Container(
-              color: Colors.grey,
-              child: Text(''),
-            ));
-        break;
-
-      case 'P1':
-        return
-          Padding(
-              padding: const EdgeInsets.all(1.0),
-              child: Container(
-                color: Colors.grey,
-                child: Container(
-                  color: Colors.blue,
-                ),
-              ));
-        break;
-      case 'P2':
-        return
-          Padding(
-              padding: const EdgeInsets.all(1.0),
-              child: Container(
-                color: Colors.grey,
-                child:Container(
-                  color: Colors.yellow,
-                ),
-              ));
-        break;
-      case 'R':
-        return Container(
-              color: Colors.grey,
-              child: Container(
-                color: Colors.blueGrey,
-              ),
-            );
-        break;
-      case 'RH':
-        return Container(
-          color: Colors.grey,
-          child: Container(
-            color: Colors.redAccent,
-          ),
-        );
-        break;
-      case 'T':
-        return
-          Padding(
-              padding: const EdgeInsets.all(1.0),
-              child: Container(
-                color: Colors.black,
-                child: Icon(
-                  Icons.terrain,
-                  size: 40.0,
-                  color: Colors.red,
-                ),
-              ));
-
-        break;
-      case 'E':
-        return
-          Padding(
-              padding: const EdgeInsets.all(1.0),
-              child: Container(
-                color: Colors.grey,
-                child: Icon(Icons.remove_red_eye),
-              ));
-
-        break;
-      case 'A':
-        return Container(
-          decoration: BoxDecoration(
-            image: DecorationImage(
-              image: AssetImage(
-                  'assets/letter_a.PNG'),
-              fit: BoxFit.fill,
-            ),
-            shape: BoxShape.rectangle,
-          ),
-        );
-        break;
-      case 'B':
-        return Container(
-          decoration: BoxDecoration(
-            image: DecorationImage(
-              image: AssetImage(
-                  'assets/letter_b.PNG'),
-              fit: BoxFit.fill,
-            ),
-            shape: BoxShape.rectangle,
-          ),
-        );
-        break;
-      case 'C':
-        return Container(
-          decoration: BoxDecoration(
-            image: DecorationImage(
-              image: AssetImage(
-                  'assets/letter_c.PNG'),
-              fit: BoxFit.fill,
-            ),
-            shape: BoxShape.rectangle,
-          ),
-        );
-        break;
-      case 'D':
-        return Container(
-          decoration: BoxDecoration(
-            image: DecorationImage(
-              image: AssetImage(
-                  'assets/letter_d.PNG'),
-              fit: BoxFit.fill,
-            ),
-            shape: BoxShape.rectangle,
-          ),
-        );
-        break;
-      case 'aB':
-        return Container(
-          decoration: BoxDecoration(
-            image: DecorationImage(
-              image: AssetImage(
-                  'assets/arrow_blue.PNG'),
-              fit: BoxFit.fill,
-            ),
-            shape: BoxShape.rectangle,
-          ),
-        );
-        break;
-      case 'aG':
-        return Container(
-          decoration: BoxDecoration(
-            image: DecorationImage(
-              image: AssetImage(
-                  'assets/arrow_green.PNG'),
-              fit: BoxFit.fill,
-            ),
-            shape: BoxShape.rectangle,
-          ),
-        );
-        break;
-      case 'aR':
-        return Container(
-          decoration: BoxDecoration(
-            image: DecorationImage(
-              image: AssetImage(
-                  'assets/arrow_red.PNG'),
-              fit: BoxFit.fill,
-            ),
-            shape: BoxShape.rectangle,
-          ),
-        );
-        break;
-      case 'aW':
-        return Container(
-          decoration: BoxDecoration(
-            image: DecorationImage(
-              image: AssetImage(
-                  'assets/arrow_white.PNG'),
-              fit: BoxFit.fill,
-            ),
-            shape: BoxShape.rectangle,
-          ),
-        );
-        break;
-      case 'cY':
-        return Container(
-          decoration: BoxDecoration(
-            image: DecorationImage(
-              image: AssetImage(
-                  'assets/circle_yellow.PNG'),
-              fit: BoxFit.fill,
-            ),
-            shape: BoxShape.rectangle,
-          ),
-        );
-      case '1':
-        return Container(
-          decoration: BoxDecoration(
-            image: DecorationImage(
-              image: AssetImage(
-                  'assets/number_one.PNG'),
-              fit: BoxFit.fill,
-            ),
-            shape: BoxShape.rectangle,
-          ),
-        );
-      case '2':
-        return Container(
-          decoration: BoxDecoration(
-            image: DecorationImage(
-              image: AssetImage(
-                  'assets/number_two.PNG'),
-              fit: BoxFit.fill,
-            ),
-            shape: BoxShape.rectangle,
-          ),
-        );
-      case '3':
-        return Container(
-          decoration: BoxDecoration(
-            image: DecorationImage(
-              image: AssetImage(
-                  'assets/number_three.PNG'),
-              fit: BoxFit.fill,
-            ),
-            shape: BoxShape.rectangle,
-          ),
-        );
-      case '4':
-        return Container(
-          decoration: BoxDecoration(
-            image: DecorationImage(
-              image: AssetImage(
-                  'assets/number_four.PNG'),
-              fit: BoxFit.fill,
-            ),
-            shape: BoxShape.rectangle,
-          ),
-        );
-      case '5':
-        return Container(
-          decoration: BoxDecoration(
-            image: DecorationImage(
-              image: AssetImage(
-                  'assets/number_five.PNG'),
-              fit: BoxFit.fill,
-            ),
-            shape: BoxShape.rectangle,
-          ),
-        );
-        break;
-      default:
-        return Text(globals.arenaState[x][y].toString());
-    }
+    return _arena.getArenaState(x, y);
   }
-
-
 
   Widget _buildBottomPanel() {
     return Expanded(
@@ -716,50 +478,49 @@ class _MyHomePageState extends State<MyHomePage> {
                     mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                     crossAxisAlignment: CrossAxisAlignment.stretch,
                     children: <Widget>[
-                      Row(
-                        mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                        mainAxisSize: MainAxisSize.max,
-                        children: [
-
-                          Padding(
-                            padding: EdgeInsets.fromLTRB(7.5, 0, 7.5, 0),
-
-                            child: RaisedButton(
-                              onPressed: () async {
-                                if (globals.isConnected) {
-                                  _sendMessage(await _getFunctionString(1));
-                                }
-                              },
-                              child: Container(
-                                child: const Text(
-                                  'F1',
-                                  overflow: TextOverflow.ellipsis,
+                      Expanded(
+                        flex: 2,
+                        child: Row(
+                          mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                          mainAxisSize: MainAxisSize.max,
+                          children: [
+                            Expanded(
+                              flex: 1,
+                              child: RaisedButton(
+                                onPressed: () async {
+                                  if (globals.isConnected) {
+                                    _sendMessage(await _getFunctionString(1));
+                                  }
+                                },
+                                child: Container(
+                                  child: const Text(
+                                    'F1',
+                                    overflow: TextOverflow.ellipsis,
+                                  ),
                                 ),
                               ),
                             ),
-                          ),
-
-                          Padding(
-                            padding: EdgeInsets.fromLTRB(7.5, 0, 7.5, 0),
-
-                            child: RaisedButton(
-                              onPressed: () async {
-                                if (globals.isConnected) {
-                                  _sendMessage(await _getFunctionString(2));
-                                }
-                              },
-                              child: Container(
-                                child: const Text(
-                                  'F2',
-                                  overflow: TextOverflow.ellipsis,
+                            Expanded(
+                              flex: 1,
+                              child: RaisedButton(
+                                onPressed: () async {
+                                  if (globals.isConnected) {
+                                    _sendMessage(await _getFunctionString(2));
+                                  }
+                                },
+                                child: Container(
+                                  child: const Text(
+                                    'F2',
+                                    overflow: TextOverflow.ellipsis,
+                                  ),
                                 ),
                               ),
                             ),
-                          ),
-
-                        ],
+                          ],
+                        ),
                       ),
                       Expanded(
+                        flex: 6,
                         child: Column(
                           children: [
                             Row(
@@ -772,6 +533,12 @@ class _MyHomePageState extends State<MyHomePage> {
                                       if (globals.isConnected) {
                                         _sendMessage(globals.strForward);
                                       }
+                                      _arena.robot.moveForward();
+                                      if (!globals.updateMode) {
+                                        setState(() {
+                                          _arena.setRobotPos();
+                                        });
+                                      }
                                     },
                                   ),
                                 ),
@@ -783,9 +550,16 @@ class _MyHomePageState extends State<MyHomePage> {
                                 Expanded(
                                   child: IconButton(
                                     icon: Icon(Icons.rotate_left),
+                                    tooltip: 'Rotate Left',
                                     onPressed: () {
                                       if (globals.isConnected) {
                                         _sendMessage(globals.strRotateLeft);
+                                      }
+                                      _arena.robot.rotateLeft();
+                                      if (!globals.updateMode) {
+                                        setState(() {
+                                          _arena.setRobotPos();
+                                        });
                                       }
                                     },
                                   ),
@@ -802,10 +576,17 @@ class _MyHomePageState extends State<MyHomePage> {
                                 ),
                                 Expanded(
                                   child: IconButton(
+                                    tooltip: 'Rotate Right',
                                     icon: Icon(Icons.rotate_right),
                                     onPressed: () {
                                       if (globals.isConnected) {
                                         _sendMessage(globals.strRotateRight);
+                                      }
+                                      _arena.robot.rotateRight();
+                                      if (!globals.updateMode) {
+                                        setState(() {
+                                          _arena.setRobotPos();
+                                        });
                                       }
                                     },
                                   ),
@@ -815,19 +596,22 @@ class _MyHomePageState extends State<MyHomePage> {
                           ],
                         ),
                       ),
-                      RaisedButton(
-                        onPressed: () {
-                          setState(() {
-                            globals.controlMode = false;
-                          });
-                        },
-                        child: Container(
-                          child: const Text(
-                            'Hide controls',
-                            overflow: TextOverflow.ellipsis,
+                      Expanded(
+                        flex: 2,
+                        child: RaisedButton(
+                          onPressed: () {
+                            setState(() {
+                              globals.controlMode = false;
+                            });
+                          },
+                          child: Container(
+                            child: const Text(
+                              'Hide controls',
+                              overflow: TextOverflow.ellipsis,
+                            ),
                           ),
                         ),
-                      ),
+                      )
                     ],
                   ),
                 ),
@@ -841,51 +625,63 @@ class _MyHomePageState extends State<MyHomePage> {
                     mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                     crossAxisAlignment: CrossAxisAlignment.stretch,
                     children: <Widget>[
-                      RaisedButton(
-                        onPressed: () {
-                          if (globals.isConnected) {
-                            _sendMessage(globals.strStartExplore);
-                          }
-                        },
-                        child: Container(
-                          child: const Text(
-                            'Start Exploration',
-                            overflow: TextOverflow.ellipsis,
+                      Expanded(
+                        flex: 2,
+                        child: RaisedButton(
+                          onPressed: () {
+                            if (globals.isConnected) {
+                              _sendMessage(globals.strStartExplore);
+                            }
+                          },
+                          child: Container(
+                            child: const Text(
+                              'Start Exploration',
+                              overflow: TextOverflow.ellipsis,
+                            ),
                           ),
                         ),
                       ),
-                      RaisedButton(
-                        onPressed: () {
-                          if (globals.isConnected) {
-                            _sendMessage(globals.strFastestPath);
-                          }
-                        },
-                        child: Container(
-                          child: const Text(
-                            'Run Fastest Path',
-                            overflow: TextOverflow.ellipsis,
+                      Expanded(
+                        flex: 2,
+                        child: RaisedButton(
+                          onPressed: () {
+                            if (globals.isConnected) {
+                              _sendMessage(globals.strFastestPath);
+                            }
+                          },
+                          child: Container(
+                            child: const Text(
+                              'Run Fastest Path',
+                              overflow: TextOverflow.ellipsis,
+                            ),
                           ),
                         ),
                       ),
-                      RaisedButton(
-                        onPressed: () {},
-                        child: Container(
-                          child: const Text(
-                            'Set Waypoint',
-                            overflow: TextOverflow.ellipsis,
+                      Expanded(
+                        flex: 2,
+                        child: RaisedButton(
+                          onPressed: () {},
+                          child: Container(
+                            child: const Text(
+                              'Set Waypoint',
+                              overflow: TextOverflow.ellipsis,
+                            ),
                           ),
                         ),
                       ),
-                      RaisedButton(
-                        onPressed: () {
-                          setState(() {
-                            globals.controlMode = true;
-                          });
-                        },
-                        child: Container(
-                          child: const Text(
-                            'Show controls',
-                            overflow: TextOverflow.ellipsis,
+                      Expanded(
+                        flex: 2,
+                        child: RaisedButton(
+                          onPressed: () {
+                            setState(() {
+                              globals.controlMode = true;
+                            });
+                          },
+                          child: Container(
+                            child: const Text(
+                              'Show controls',
+                              overflow: TextOverflow.ellipsis,
+                            ),
                           ),
                         ),
                       ),
@@ -908,7 +704,6 @@ class _MyHomePageState extends State<MyHomePage> {
   }
 
   void _onDataReceived(Uint8List data) {
-
     // Allocate buffer for parsed data
     int backspacesCounter = 0;
     data.forEach((byte) {
@@ -944,11 +739,12 @@ class _MyHomePageState extends State<MyHomePage> {
           1,
           backspacesCounter > 0
               ? _messageBuffer.substring(
-              0, _messageBuffer.length - backspacesCounter)
+                  0, _messageBuffer.length - backspacesCounter)
               : _messageBuffer + dataString.substring(0, index),
         );
-        String tdataString = sdataString.gettext();
-        addConsoleAndScroll('Message Received from [$name] : ''[$tdataString]');
+        String tdataString = sdataString.getText();
+        addConsoleAndScroll(
+            'Message Received from [$name] : ' '[$tdataString]');
         // messages.add(
         //   _Message(
         //     1,
@@ -961,10 +757,9 @@ class _MyHomePageState extends State<MyHomePage> {
         _messageBuffer = dataString.substring(index);
       });
     } else {
-
       _messageBuffer = (backspacesCounter > 0
           ? _messageBuffer.substring(
-          0, _messageBuffer.length - backspacesCounter)
+              0, _messageBuffer.length - backspacesCounter)
           : _messageBuffer + dataString);
     }
   }
@@ -1014,11 +809,11 @@ class _MyHomePageState extends State<MyHomePage> {
         //
         // });
 
-
       } catch (e) {
         // Ignore error, but notify state
         addConsoleAndScroll('Disconnected remotely!');
-        addConsoleAndScroll('Message was not sent to Bluetooth device. [$text]');
+        addConsoleAndScroll(
+            'Message was not sent to Bluetooth device. [$text]');
         globals.isDisconnecting = true;
         globals.isConnected = false;
         if (globals.connection != null) {
@@ -1034,7 +829,7 @@ class _MyHomePageState extends State<MyHomePage> {
 void addConsoleAndScroll(String message) {
   globals.strArr.add(message);
   consoleController.scrollTo(
-      index:  globals.strArr.length,
+      index: globals.strArr.length,
       duration: Duration(milliseconds: 333),
       curve: Curves.easeInOutCubic);
   // consoleController.scrollTo(
