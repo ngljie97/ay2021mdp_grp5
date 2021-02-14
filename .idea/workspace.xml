@@ -1,5 +1,8 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <project version="4">
+  <component name="AndroidLogFilters">
+    <option name="TOOL_WINDOW_CONFIGURED_FILTER" value="Show only selected application" />
+  </component>
   <component name="BranchesTreeState">
     <expand>
       <path>
@@ -16,20 +19,28 @@
         <item name="GROUP_NODE:origin" type="e8cecc67:BranchNodeDescriptor" />
       </path>
     </expand>
-    <select />
+    <select>
+      <path>
+        <item name="ROOT" type="e8cecc67:BranchNodeDescriptor" />
+        <item name="REMOTE_ROOT" type="e8cecc67:BranchNodeDescriptor" />
+        <item name="GROUP_NODE:origin" type="e8cecc67:BranchNodeDescriptor" />
+        <item name="BRANCH:origin/reset" type="e8cecc67:BranchNodeDescriptor" />
+      </path>
+    </select>
   </component>
   <component name="ChangeListManager">
     <list default="true" id="28be24ed-ecd2-4996-a17e-b3573ad5f47d" name="Default Changelist" comment="">
+      <change afterPath="$PROJECT_DIR$/android_remote/lib/modules/arena.dart" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/android_remote/lib/globals.dart" beforeDir="false" afterPath="$PROJECT_DIR$/android_remote/lib/globals.dart" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/android_remote/lib/main.dart" beforeDir="false" afterPath="$PROJECT_DIR$/android_remote/lib/main.dart" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/android_remote/lib/page_master.dart" beforeDir="false" afterPath="$PROJECT_DIR$/android_remote/lib/page_master.dart" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/android_remote/pubspec.lock" beforeDir="false" afterPath="$PROJECT_DIR$/android_remote/pubspec.lock" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
     <option name="HIGHLIGHT_NON_ACTIVE_CHANGELIST" value="false" />
     <option name="LAST_RESOLUTION" value="IGNORE" />
   </component>
+  <component name="ExecutionTargetManager" SELECTED_TARGET="device_and_snapshot_combo_box_target[Pixel_3a_API_30_x86]" />
   <component name="FileTemplateManagerImpl">
     <option name="RECENT_TEMPLATES">
       <list>
@@ -38,14 +49,36 @@
     </option>
   </component>
   <component name="Git.Settings">
+    <favorite-branches>
+      <branch-storage>
+        <map>
+          <entry type="LOCAL">
+            <value>
+              <list>
+                <branch-info repo="$PROJECT_DIR$" source="v2.0" />
+              </list>
+            </value>
+          </entry>
+        </map>
+      </branch-storage>
+    </favorite-branches>
+    <option name="RECENT_BRANCH_BY_REPOSITORY">
+      <map>
+        <entry key="$PROJECT_DIR$" value="reset" />
+      </map>
+    </option>
     <option name="RECENT_GIT_ROOT_PATH" value="$PROJECT_DIR$" />
   </component>
   <component name="ProjectId" id="1nVKGgRaJ0ATBvcPkU4Mhttn6xo" />
+  <component name="ProjectLevelVcsManager" settingsEditedManually="true">
+    <ConfirmationsSetting value="2" id="Add" />
+  </component>
   <component name="ProjectViewState">
     <option name="hideEmptyMiddlePackages" value="true" />
     <option name="showLibraryContents" value="true" />
   </component>
   <component name="PropertiesComponent">
+    <property name="ASKED_ADD_EXTERNAL_FILES" value="true" />
     <property name="ASKED_SHARE_PROJECT_CONFIGURATION_FILES" value="true" />
     <property name="RunOnceActivity.OpenProjectViewOnStart" value="true" />
     <property name="RunOnceActivity.ShowReadmeOnStart" value="true" />
@@ -112,7 +145,42 @@
       <option name="project" value="LOCAL" />
       <updated>1611817453533</updated>
     </task>
-    <option name="localTasksCounter" value="5" />
+    <task id="LOCAL-00005" summary="updated Gui">
+      <created>1612715538554</created>
+      <option name="number" value="00005" />
+      <option name="presentableId" value="LOCAL-00005" />
+      <option name="project" value="LOCAL" />
+      <updated>1612715538554</updated>
+    </task>
+    <task id="LOCAL-00006" summary="merged Lijie together!">
+      <created>1612804350566</created>
+      <option name="number" value="00006" />
+      <option name="presentableId" value="LOCAL-00006" />
+      <option name="project" value="LOCAL" />
+      <updated>1612804350566</updated>
+    </task>
+    <task id="LOCAL-00007" summary="1. Upload flutter_bluetooth_serial folder">
+      <created>1613224660789</created>
+      <option name="number" value="00007" />
+      <option name="presentableId" value="LOCAL-00007" />
+      <option name="project" value="LOCAL" />
+      <updated>1613224660790</updated>
+    </task>
+    <task id="LOCAL-00008" summary="1. Changed FlutterBluetoothserial to Local folder&#10;2. Fix bluetooth scanning to work with android 10 devices&#10;3. Fix arena sizing and icons layout&#10;4. Changed appbar to stack on top of arena, and added robot and bluetooth status&#10;5. Changed F1 and F2 buttons to smaller size\&#10;6. Console now able to display bluetooth received message">
+      <created>1613224762343</created>
+      <option name="number" value="00008" />
+      <option name="presentableId" value="LOCAL-00008" />
+      <option name="project" value="LOCAL" />
+      <updated>1613224762343</updated>
+    </task>
+    <task id="LOCAL-00009" summary="1. changed yaml to point to local flutterbluetoothserial">
+      <created>1613227183592</created>
+      <option name="number" value="00009" />
+      <option name="presentableId" value="LOCAL-00009" />
+      <option name="project" value="LOCAL" />
+      <updated>1613227183592</updated>
+    </task>
+    <option name="localTasksCounter" value="10" />
     <servers />
   </component>
   <component name="Vcs.Log.Tabs.Properties">
@@ -120,7 +188,19 @@
       <map>
         <entry key="MAIN">
           <value>
-            <State />
+            <State>
+              <option name="FILTERS">
+                <map>
+                  <entry key="branch">
+                    <value>
+                      <list>
+                        <option value="origin/reset" />
+                      </list>
+                    </value>
+                  </entry>
+                </map>
+              </option>
+            </State>
           </value>
         </entry>
       </map>
@@ -128,94 +208,158 @@
     <option name="oldMeFiltersMigrated" value="true" />
   </component>
   <component name="VcsManagerConfiguration">
+    <option name="ADD_EXTERNAL_FILES_SILENTLY" value="true" />
     <MESSAGE value="gitignoreddd" />
     <MESSAGE value="Added ArenaGrid" />
     <MESSAGE value="updated Gui" />
-    <option name="LAST_COMMIT_MESSAGE" value="updated Gui" />
+    <MESSAGE value="New feature updated.&#10;1. Function string saving and retrieving.&#10;2. Abouts page rough." />
+    <MESSAGE value="merged Lijie together!" />
+    <MESSAGE value="1. Upload flutter_bluetooth_serial folder" />
+    <MESSAGE value="1. Changed FlutterBluetoothserial to Local folder&#10;2. Fix bluetooth scanning to work with android 10 devices&#10;3. Fix arena sizing and icons layout&#10;4. Changed appbar to stack on top of arena, and added robot and bluetooth status&#10;5. Changed F1 and F2 buttons to smaller size\&#10;6. Console now able to display bluetooth received message" />
+    <MESSAGE value="1. changed yaml to point to local flutterbluetoothserial" />
+    <option name="LAST_COMMIT_MESSAGE" value="1. changed yaml to point to local flutterbluetoothserial" />
   </component>
   <component name="WindowStateProjectService">
-    <state x="414" y="174" key="#com.intellij.execution.impl.EditConfigurationsDialog" timestamp="1611471338012">
+    <state x="414" y="174" key="#com.intellij.execution.impl.EditConfigurationsDialog" timestamp="1612715349758">
       <screen x="0" y="0" width="1920" height="1040" />
     </state>
     <state x="414" y="174" key="#com.intellij.execution.impl.EditConfigurationsDialog/0.0.1920.1040/-1920.0.1536.824@0.0.1920.1040" timestamp="1611471338012" />
+    <state x="414" y="174" key="#com.intellij.execution.impl.EditConfigurationsDialog/0.0.1920.1040/-1920.100.1920.1040@0.0.1920.1040" timestamp="1612715349758" />
     <state x="711" y="321" key="#com.intellij.fileTypes.FileTypeChooser" timestamp="1611570517035">
       <screen x="0" y="0" width="1920" height="1040" />
     </state>
     <state x="711" y="321" key="#com.intellij.fileTypes.FileTypeChooser/0.0.1920.1040/-1920.0.1536.824@0.0.1920.1040" timestamp="1611570517035" />
-    <state x="689" y="309" key="#com.intellij.ide.util.TreeFileChooserDialog" timestamp="1611471110731">
+    <state x="689" y="309" key="#com.intellij.ide.util.TreeFileChooserDialog" timestamp="1612715347732">
       <screen x="0" y="0" width="1920" height="1040" />
     </state>
     <state x="689" y="309" key="#com.intellij.ide.util.TreeFileChooserDialog/0.0.1920.1040/-1920.0.1536.824@0.0.1920.1040" timestamp="1611471110731" />
-    <state x="779" y="266" key="AndroidProcessChooserDialog" timestamp="1611602997035">
+    <state x="689" y="309" key="#com.intellij.ide.util.TreeFileChooserDialog/0.0.1920.1040/-1920.100.1920.1040@0.0.1920.1040" timestamp="1612715347732" />
+    <state x="411" y="270" key="#com.intellij.refactoring.safeDelete.UnsafeUsagesDialog" timestamp="1613218206020">
       <screen x="0" y="0" width="1920" height="1040" />
     </state>
-    <state x="779" y="266" key="AndroidProcessChooserDialog/0.0.1920.1040/-1920.0.1536.824@0.0.1920.1040" timestamp="1611602997035" />
-    <state x="587" y="88" key="CommitChangelistDialog2" timestamp="1611817452380">
+    <state x="411" y="270" key="#com.intellij.refactoring.safeDelete.UnsafeUsagesDialog/0.0.1920.1040/-1920.0.1536.824@0.0.1920.1040" timestamp="1613218206019" />
+    <state x="411" y="270" key="#com.intellij.refactoring.safeDelete.UnsafeUsagesDialog/0.0.1920.1040/-1920.100.1920.1040@0.0.1920.1040" timestamp="1612768908439" />
+    <state x="540" y="274" key="AndroidCreateResourceDirectoryDialog" timestamp="1612719172021">
       <screen x="0" y="0" width="1920" height="1040" />
     </state>
-    <state x="587" y="88" key="CommitChangelistDialog2/0.0.1920.1040/-1920.0.1536.824@0.0.1920.1040" timestamp="1611817452380" />
-    <state x="513" y="324" key="FileChooserDialogImpl" timestamp="1612486213548">
+    <state x="540" y="274" key="AndroidCreateResourceDirectoryDialog/0.0.1920.1040/-1920.100.1920.1040@0.0.1920.1040" timestamp="1612719172021" />
+    <state x="763" y="261" key="AndroidProcessChooserDialog" timestamp="1613319074544">
       <screen x="0" y="0" width="1920" height="1040" />
     </state>
-    <state x="513" y="324" key="FileChooserDialogImpl/0.0.1920.1040/-1920.0.1536.824@0.0.1920.1040" timestamp="1611832511492" />
+    <state x="779" y="266" key="AndroidProcessChooserDialog/0.0.1920.1040/-1920.0.1536.824@0.0.1920.1040" timestamp="1612961973428" />
+    <state x="763" y="261" key="AndroidProcessChooserDialog/0.0.1920.1040/-1920.100.1920.1040@0.0.1920.1040" timestamp="1613319074544" />
+    <state x="587" y="77" key="CommitChangelistDialog2" timestamp="1613227182611">
+      <screen x="0" y="0" width="1920" height="1040" />
+    </state>
+    <state x="587" y="77" key="CommitChangelistDialog2/0.0.1920.1040/-1920.0.1536.824@0.0.1920.1040" timestamp="1613227182611" />
+    <state x="513" y="324" key="FileChooserDialogImpl" timestamp="1613210627062">
+      <screen x="0" y="0" width="1920" height="1040" />
+    </state>
+    <state x="513" y="324" key="FileChooserDialogImpl/0.0.1920.1040/-1920.0.1536.824@0.0.1920.1040" timestamp="1613210627062" />
     <state x="-1407" y="424" key="FileChooserDialogImpl/0.0.1920.1040/-1920.100.1920.1040@-1920.100.1920.1040" timestamp="1612428069843" />
     <state x="513" y="324" key="FileChooserDialogImpl/0.0.1920.1040/-1920.100.1920.1040@0.0.1920.1040" timestamp="1611469962095" />
-    <state x="513" y="324" key="FileChooserDialogImpl/0.0.1920.1040@0.0.1920.1040" timestamp="1612486213548" />
-    <state width="1875" height="281" key="GridCell.Tab.0.bottom" timestamp="1612448898439">
+    <state width="914" height="247" key="GridCell.Tab.0.bottom" timestamp="1613325841623">
       <screen x="0" y="0" width="1920" height="1040" />
     </state>
-    <state width="1875" height="281" key="GridCell.Tab.0.bottom/0.0.1920.1040/-1920.0.1536.824@0.0.1920.1040" timestamp="1612448898439" />
-    <state width="1877" height="281" key="GridCell.Tab.0.bottom/0.0.1920.1040/-1920.100.1920.1040@0.0.1920.1040" timestamp="1612428398921" />
-    <state width="1860" height="279" key="GridCell.Tab.0.bottom/0.0.1920.1040@0.0.1920.1040" timestamp="1611886773626" />
-    <state width="1875" height="281" key="GridCell.Tab.0.center" timestamp="1612448898438">
+    <state width="937" height="273" key="GridCell.Tab.0.bottom/0.0.1920.1040/-1920.0.1536.824@0.0.1920.1040" timestamp="1613313452857" />
+    <state width="914" height="247" key="GridCell.Tab.0.bottom/0.0.1920.1040/-1920.100.1920.1040@0.0.1920.1040" timestamp="1613325841623" />
+    <state width="1877" height="281" key="GridCell.Tab.0.bottom/0.0.1920.1040@0.0.1920.1040" timestamp="1613018414794" />
+    <state width="914" height="247" key="GridCell.Tab.0.center" timestamp="1613325841623">
       <screen x="0" y="0" width="1920" height="1040" />
     </state>
-    <state width="1875" height="281" key="GridCell.Tab.0.center/0.0.1920.1040/-1920.0.1536.824@0.0.1920.1040" timestamp="1612448898438" />
-    <state width="1877" height="281" key="GridCell.Tab.0.center/0.0.1920.1040/-1920.100.1920.1040@0.0.1920.1040" timestamp="1612428398920" />
-    <state width="1860" height="279" key="GridCell.Tab.0.center/0.0.1920.1040@0.0.1920.1040" timestamp="1611886773626" />
-    <state width="1875" height="281" key="GridCell.Tab.0.left" timestamp="1612448898438">
+    <state width="937" height="273" key="GridCell.Tab.0.center/0.0.1920.1040/-1920.0.1536.824@0.0.1920.1040" timestamp="1613313452857" />
+    <state width="914" height="247" key="GridCell.Tab.0.center/0.0.1920.1040/-1920.100.1920.1040@0.0.1920.1040" timestamp="1613325841623" />
+    <state width="1877" height="281" key="GridCell.Tab.0.center/0.0.1920.1040@0.0.1920.1040" timestamp="1613018414793" />
+    <state width="914" height="247" key="GridCell.Tab.0.left" timestamp="1613325841623">
       <screen x="0" y="0" width="1920" height="1040" />
     </state>
-    <state width="1875" height="281" key="GridCell.Tab.0.left/0.0.1920.1040/-1920.0.1536.824@0.0.1920.1040" timestamp="1612448898438" />
-    <state width="1877" height="281" key="GridCell.Tab.0.left/0.0.1920.1040/-1920.100.1920.1040@0.0.1920.1040" timestamp="1612428398920" />
-    <state width="1860" height="279" key="GridCell.Tab.0.left/0.0.1920.1040@0.0.1920.1040" timestamp="1611886773626" />
-    <state width="1875" height="281" key="GridCell.Tab.0.right" timestamp="1612448898439">
+    <state width="937" height="273" key="GridCell.Tab.0.left/0.0.1920.1040/-1920.0.1536.824@0.0.1920.1040" timestamp="1613313452857" />
+    <state width="914" height="247" key="GridCell.Tab.0.left/0.0.1920.1040/-1920.100.1920.1040@0.0.1920.1040" timestamp="1613325841623" />
+    <state width="1877" height="281" key="GridCell.Tab.0.left/0.0.1920.1040@0.0.1920.1040" timestamp="1613018414793" />
+    <state width="914" height="247" key="GridCell.Tab.0.right" timestamp="1613325841623">
       <screen x="0" y="0" width="1920" height="1040" />
     </state>
-    <state width="1875" height="281" key="GridCell.Tab.0.right/0.0.1920.1040/-1920.0.1536.824@0.0.1920.1040" timestamp="1612448898439" />
-    <state width="1877" height="281" key="GridCell.Tab.0.right/0.0.1920.1040/-1920.100.1920.1040@0.0.1920.1040" timestamp="1612428398920" />
-    <state width="1860" height="279" key="GridCell.Tab.0.right/0.0.1920.1040@0.0.1920.1040" timestamp="1611886773626" />
-    <state x="-1459" y="264" key="SettingsEditor" timestamp="1612428074376">
-      <screen x="-1920" y="100" width="1920" height="1040" />
+    <state width="937" height="273" key="GridCell.Tab.0.right/0.0.1920.1040/-1920.0.1536.824@0.0.1920.1040" timestamp="1613313452857" />
+    <state width="914" height="247" key="GridCell.Tab.0.right/0.0.1920.1040/-1920.100.1920.1040@0.0.1920.1040" timestamp="1613325841623" />
+    <state width="1877" height="281" key="GridCell.Tab.0.right/0.0.1920.1040@0.0.1920.1040" timestamp="1613018414793" />
+    <state x="540" y="262" key="IDE.errors.dialog" timestamp="1613225823234">
+      <screen x="0" y="0" width="1920" height="1040" />
+    </state>
+    <state x="540" y="262" key="IDE.errors.dialog/0.0.1920.1040/-1920.0.1536.824@0.0.1920.1040" timestamp="1613225823234" />
+    <state x="683" y="222" key="RollbackChangesDialog" timestamp="1613315255070">
+      <screen x="0" y="0" width="1920" height="1040" />
+    </state>
+    <state x="683" y="222" key="RollbackChangesDialog/0.0.1920.1040/-1920.0.1536.824@0.0.1920.1040" timestamp="1613227044108" />
+    <state x="683" y="222" key="RollbackChangesDialog/0.0.1920.1040/-1920.100.1920.1040@0.0.1920.1040" timestamp="1613315255070" />
+    <state x="461" y="164" key="SettingsEditor" timestamp="1613316781260">
+      <screen x="0" y="0" width="1920" height="1040" />
     </state>
     <state x="461" y="164" key="SettingsEditor/0.0.1920.1040/-1920.0.1536.824@0.0.1920.1040" timestamp="1611570826575" />
     <state x="-1459" y="264" key="SettingsEditor/0.0.1920.1040/-1920.100.1920.1040@-1920.100.1920.1040" timestamp="1612428074376" />
+    <state x="461" y="164" key="SettingsEditor/0.0.1920.1040/-1920.100.1920.1040@0.0.1920.1040" timestamp="1613316781260" />
     <state x="461" y="164" key="SettingsEditor/0.0.1920.1040@0.0.1920.1040" timestamp="1611883129314" />
-    <state x="552" y="252" key="Vcs.Push.Dialog.v2" timestamp="1611817458190">
+    <state x="552" y="252" key="Vcs.Push.Dialog.v2" timestamp="1613227192774">
       <screen x="0" y="0" width="1920" height="1040" />
     </state>
-    <state x="552" y="252" key="Vcs.Push.Dialog.v2/0.0.1920.1040/-1920.0.1536.824@0.0.1920.1040" timestamp="1611817458190" />
+    <state x="552" y="252" key="Vcs.Push.Dialog.v2/0.0.1920.1040/-1920.0.1536.824@0.0.1920.1040" timestamp="1613227192774" />
+    <state x="769" y="433" key="com.intellij.openapi.vcs.update.UpdateOrStatusOptionsDialogupdate-v2" timestamp="1613319718298">
+      <screen x="0" y="0" width="1920" height="1040" />
+    </state>
+    <state x="769" y="433" key="com.intellij.openapi.vcs.update.UpdateOrStatusOptionsDialogupdate-v2/0.0.1920.1040/-1920.100.1920.1040@0.0.1920.1040" timestamp="1613319718298" />
+    <state x="-2000" y="276" width="1419" height="723" key="dock-window-1" timestamp="1613225016304">
+      <screen x="-1920" y="0" width="1536" height="824" />
+    </state>
+    <state x="-2000" y="276" width="1419" height="723" key="dock-window-1/0.0.1920.1040/-1920.0.1536.824@0.0.1920.1040" timestamp="1613225016304" />
+    <state x="667" y="119" width="585" height="801" key="find.popup" timestamp="1613218783470">
+      <screen x="0" y="0" width="1920" height="1040" />
+    </state>
+    <state x="667" y="119" width="585" height="801" key="find.popup/0.0.1920.1040/-1920.0.1536.824@0.0.1920.1040" timestamp="1613218783470" />
     <state x="668" y="308" key="git4idea.merge.GitPullDialog" timestamp="1611476108293">
       <screen x="0" y="0" width="1920" height="1040" />
     </state>
-    <state x="668" y="308" key="git4idea.merge.GitPullDialog/0.0.1920.1040/-1920.0.1536.824@0.0.1920.1040" timestamp="1611476108293" />
-    <state x="616" y="242" key="run.anything.popup" timestamp="1611603218896">
+    <state x="668" y="308" key="git4idea.merge.GitPullDialog/0.0.1920.1040/-1920.0.1536.824@0.0.1920.1040" timestamp="1612958071341" />
+    <state x="616" y="242" key="run.anything.popup" timestamp="1613146539734">
       <screen x="0" y="0" width="1920" height="1040" />
     </state>
     <state x="616" y="242" key="run.anything.popup/0.0.1920.1040/-1920.0.1536.824@0.0.1920.1040" timestamp="1611603218896" />
+    <state x="616" y="242" key="run.anything.popup/0.0.1920.1040/-1920.100.1920.1040@0.0.1920.1040" timestamp="1612795901511" />
+    <state x="616" y="242" key="run.anything.popup/0.0.1920.1040@0.0.1920.1040" timestamp="1613146539734" />
+    <state x="623" y="225" width="672" height="678" key="search.everywhere.popup" timestamp="1613218806808">
+      <screen x="0" y="0" width="1920" height="1040" />
+    </state>
+    <state x="623" y="225" width="672" height="678" key="search.everywhere.popup/0.0.1920.1040/-1920.0.1536.824@0.0.1920.1040" timestamp="1613218806808" />
   </component>
   <component name="XDebuggerManager">
     <breakpoint-manager>
       <breakpoints>
         <line-breakpoint enabled="true" suspend="THREAD" type="Dart">
           <url>file://$PROJECT_DIR$/android_remote/lib/states/ArenaGrid.dart</url>
-          <line>44</line>
+          <line>43</line>
           <option name="timeStamp" value="2" />
         </line-breakpoint>
         <line-breakpoint enabled="true" suspend="THREAD" type="Dart">
           <url>file://$PROJECT_DIR$/android_remote/lib/states/ArenaGrid.dart</url>
-          <line>59</line>
+          <line>57</line>
           <option name="timeStamp" value="3" />
+        </line-breakpoint>
+        <line-breakpoint enabled="true" suspend="THREAD" type="Dart">
+          <url>file://$PROJECT_DIR$/android_remote/lib/pages/DiscoveryPage.dart</url>
+          <line>55</line>
+          <option name="timeStamp" value="4" />
+        </line-breakpoint>
+        <line-breakpoint enabled="true" suspend="THREAD" type="Dart">
+          <url>file://$PROJECT_DIR$/android_remote/lib/pages/DiscoveryPage.dart</url>
+          <line>45</line>
+          <option name="timeStamp" value="5" />
+        </line-breakpoint>
+        <line-breakpoint enabled="true" suspend="THREAD" type="Dart">
+          <url>file://$PROJECT_DIR$/../../../../src/flutter/.pub-cache/hosted/pub.dartlang.org/flutter_bluetooth_serial-0.2.2/lib/FlutterBluetoothSerial.dart</url>
+          <line>206</line>
+          <option name="timeStamp" value="7" />
+        </line-breakpoint>
+        <line-breakpoint enabled="true" suspend="THREAD" type="Dart">
+          <url>file://$PROJECT_DIR$/android_remote/lib/main.dart</url>
+          <option name="timeStamp" value="8" />
         </line-breakpoint>
       </breakpoints>
     </breakpoint-manager>
