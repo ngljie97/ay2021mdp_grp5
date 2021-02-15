@@ -3,7 +3,6 @@ import 'dart:ui';
 import 'package:android_remote/modules/bluetooth_manager.dart';
 import 'package:android_remote/pages/bluetooth_connection.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter_bluetooth_serial/flutter_bluetooth_serial.dart';
 import 'package:scrollable_positioned_list/scrollable_positioned_list.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
@@ -38,9 +37,7 @@ class MyApp extends StatelessWidget {
 }
 
 class MyHomePage extends StatefulWidget {
-  final BluetoothDevice server;
-
-  const MyHomePage({this.server});
+  const MyHomePage();
 
   @override
   _MyHomePageState createState() => _MyHomePageState();
@@ -49,27 +46,20 @@ class MyHomePage extends StatefulWidget {
 class _MyHomePageState extends State<MyHomePage> {
   static Arena _arena;
 
-  void callback([String op, var param]) async {
-    switch (op) {
-      case 'addConsoleAndScroll':
-        String str = param.toString();
-        addConsoleAndScroll(str);
-        break;
-      case 'setRobotPos':
-        setState(() {
-          _arena.setRobotPos();
-        });
-        break;
-    }
+  void callback(String response) {
+    setState(() {
+      addConsoleAndScroll(response);
+    });
   }
 
   @override
   void initState() {
     consoleController = ItemScrollController();
     super.initState();
-    _arena = Arena(this.callback);
+    _arena = Arena();
     _arena.setRobotPos();
-    globals.btController = BluetoothController(this.callback);
+    if (globals.btController == null)
+      globals.btController = BluetoothController(this.callback);
     globals.btController.init();
   }
 
@@ -384,12 +374,20 @@ class _MyHomePageState extends State<MyHomePage> {
                                   child: IconButton(
                                     icon: Icon(Icons.arrow_circle_up),
                                     onPressed: () {
-                                      _arena.moveRobot('FW');
-                                      if (globals.btController.isConnected &&
+                                      if (globals.debugMode) {
+                                        _arena.moveRobot('FW');
+                                      } else if (globals
+                                              .btController.isConnected &&
                                           !globals.debugMode) {
-                                        globals.btController
-                                            .sendMessage(globals.strForward);
+                                        if (_arena.moveRobot('FW'))
+                                          globals.btController
+                                              .sendMessage(globals.strForward);
                                       }
+
+                                      if (!globals.updateMode)
+                                        setState(() {
+                                          _arena.setRobotPos();
+                                        });
                                     },
                                   ),
                                 ),
@@ -403,12 +401,20 @@ class _MyHomePageState extends State<MyHomePage> {
                                     icon: Icon(Icons.rotate_left),
                                     tooltip: 'Rotate Left',
                                     onPressed: () {
-                                      _arena.moveRobot('RL');
-                                      if (globals.btController.isConnected &&
+                                      if (globals.debugMode) {
+                                        _arena.moveRobot('RL');
+                                      } else if (globals
+                                              .btController.isConnected &&
                                           !globals.debugMode) {
-                                        globals.btController
-                                            .sendMessage(globals.strRotateLeft);
+                                        if (_arena.moveRobot('RL'))
+                                          globals.btController.sendMessage(
+                                              globals.strRotateLeft);
                                       }
+
+                                      if (!globals.updateMode)
+                                        setState(() {
+                                          _arena.setRobotPos();
+                                        });
                                     },
                                   ),
                                 ),
@@ -416,13 +422,22 @@ class _MyHomePageState extends State<MyHomePage> {
                                   child: IconButton(
                                     icon: Icon(Icons.arrow_circle_down),
                                     onPressed: () {
-                                      _arena.moveRobot('RR');
-                                      _arena.moveRobot('RR');
-                                      if (globals.btController.isConnected &&
+                                      if (globals.debugMode) {
+                                        _arena.moveRobot('RR');
+                                        _arena.moveRobot('RR');
+                                      } else if (globals
+                                              .btController.isConnected &&
                                           !globals.debugMode) {
-                                        globals.btController
-                                            .sendMessage(globals.strReverse);
+                                        if (_arena.moveRobot('RR') &&
+                                            _arena.moveRobot('RR'))
+                                          globals.btController.sendMessage(
+                                              globals.strRotateRight);
                                       }
+
+                                      if (!globals.updateMode)
+                                        setState(() {
+                                          _arena.setRobotPos();
+                                        });
                                     },
                                   ),
                                 ),
@@ -431,12 +446,20 @@ class _MyHomePageState extends State<MyHomePage> {
                                     tooltip: 'Rotate Right',
                                     icon: Icon(Icons.rotate_right),
                                     onPressed: () {
-                                      _arena.moveRobot('RR');
-                                      if (globals.btController.isConnected &&
+                                      if (globals.debugMode) {
+                                        _arena.moveRobot('RR');
+                                      } else if (globals
+                                              .btController.isConnected &&
                                           !globals.debugMode) {
-                                        globals.btController.sendMessage(
-                                            globals.strRotateRight);
+                                        if (_arena.moveRobot('RR'))
+                                          globals.btController.sendMessage(
+                                              globals.strRotateRight);
                                       }
+
+                                      if (!globals.updateMode)
+                                        setState(() {
+                                          _arena.setRobotPos();
+                                        });
                                     },
                                   ),
                                 ),
@@ -666,13 +689,13 @@ class _MyHomePageState extends State<MyHomePage> {
   }
 
   void addConsoleAndScroll(String message) {
-    globals.strArr.add(message);
+    setState(() {
+      globals.strArr.add(message);
+    });
+
     consoleController.scrollTo(
         index: globals.strArr.length,
         duration: Duration(milliseconds: 333),
         curve: Curves.easeInOutCubic);
-    // consoleController.scrollTo(
-    //     index: globals.strArr.length, duration: Duration(milliseconds: 333));
-    //consoleController.jumpTo(index: globals.strArr.length);
   }
 }

@@ -82,7 +82,7 @@ class _WayPoint {
 }
 
 class Arena {
-  Arena(this.callback);
+  Arena();
 
   List<List<String>> _arenaState = List.generate(
     20,
@@ -91,7 +91,6 @@ class Arena {
   );
   _WayPoint _wayPoint = _WayPoint(0, 0);
   _Robot _robot = _Robot(18, 1, 18, 1, 'N');
-  Function callback;
 
   void setWayPoint(int x, int y) {
     this._wayPoint = _WayPoint(x, y);
@@ -110,12 +109,9 @@ class Arena {
         break;
     }
 
-    if (globals.updateMode)
-      callback();
-    else
-      setRobotPos();
+    if (globals.updateMode) setRobotPos();
 
-    return (_robot.isDisplaced() > 0);
+    return (_robot.isDisplaced() != 0);
   }
 
   void setRobotPos() {

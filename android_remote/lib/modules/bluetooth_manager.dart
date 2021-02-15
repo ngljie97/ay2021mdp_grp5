@@ -13,7 +13,7 @@ class BluetoothController {
   bool isConnected = false;
   List<_Message> messages = List<_Message>();
   String _messageBuffer = '';
-  Function callback;
+  final Function(String) callback;
 
   BluetoothController(this.callback);
 
@@ -23,8 +23,7 @@ class BluetoothController {
 
     if (isConnecting) {
       BluetoothConnection.toAddress(server.address).then((_connection) {
-        callback(
-            'addConsoleAndScroll', 'Successfully connected to ' + server.name);
+        callback('Successfully connected to ' + server.name);
         isConnected = true;
         print('Connected to the device');
 
@@ -36,17 +35,17 @@ class BluetoothController {
         connection.input.listen(_onDataReceived).onDone(() {
           if (isDisconnecting) {
             print('Disconnecting locally!');
-            callback('addConsoleAndScroll', 'Disconnecting locally!');
+            callback('Disconnecting locally!');
             connection.dispose();
           } else {
             print('Disconnected remotely!');
-            callback('addConsoleAndScroll', 'Disconnecting remotely!');
+            callback('Disconnecting remotely!');
             connection.dispose();
           }
         });
       }).catchError((error) {
         print('Cannot connect, exception occurred');
-        callback('addConsoleAndScroll', 'Cannot connect, Socket not opened');
+        callback('Cannot connect, Socket not opened');
         print(error);
       });
     }
@@ -102,8 +101,7 @@ class BluetoothController {
     String name = this.server.name;
 
     String sdataString = dataString.trim();
-    callback('addConsoleAndScroll',
-        'Message Received from [$name]:\n[$sdataString]');
+    callback('Message Received from [$name]:\n[$sdataString]');
   }
 
   void sendMessage(String text) async {
@@ -117,11 +115,10 @@ class BluetoothController {
         await connection.output.allSent;
 
         messages.add(_Message(clientID, text));
-        callback('addConsoleAndScroll',
-            'Message sent to Bluetooth device:\n[$text]');
+        await callback('Message sent to Bluetooth device:\n[$text]');
       } catch (e) {
         // Ignore error, but notify state
-        callback('addConsoleAndScroll',
+        await callback(
             'Disconnected remotely!\nMessage was not sent to Bluetooth device. [$text]');
         this.disconnect();
       }
