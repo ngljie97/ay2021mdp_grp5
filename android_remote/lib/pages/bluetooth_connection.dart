@@ -5,7 +5,7 @@ import 'package:android_remote/pages/discovery_page.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bluetooth_serial/flutter_bluetooth_serial.dart';
 
-import '../globals.dart';
+import '../globals.dart' as globals;
 import '../main.dart';
 
 class ConnectionPage extends StatefulWidget {
@@ -73,6 +73,7 @@ class _ConnectionPage extends State<ConnectionPage> {
         });
       });
     });
+
     FlutterBluetoothSerial.instance.name.then((name) {
       setState(() {
         _name = name;
@@ -119,12 +120,8 @@ class _ConnectionPage extends State<ConnectionPage> {
 
   void _restartDiscovery() async {
     Navigator.pop(context);
-    // Navigator.of(context).push(
-    //   PageRouteBuilder(pageBuilder: (_, __, ___) => SelectBondedDevicePage(checkAvailability: false),
-    //     transitionDuration: Duration(seconds: 0),),
-    //
-    // );
-    selectedDevice = await Navigator.of(context).push(
+
+    globals.btController.selectedDevice = await Navigator.of(context).push(
       MaterialPageRoute(
         builder: (context) {
           return ConnectionPage(checkAvailability: false);
@@ -155,9 +152,10 @@ class _ConnectionPage extends State<ConnectionPage> {
               onTap: () {
                 if (_device.device != null) {
                   String name = _device.device.name;
-                  strArr.add('Trying to connect to Device: [$name]....');
+                  globals.strArr
+                      .add('Trying to connect to Device: [$name]....');
                   print('Connect -> selected ' + _device.device.address);
-                  isConnecting = true;
+                  globals.btController.isConnecting = true;
                   _startChat(context, _device.device);
                 } else {
                   print('Connect -> no device selected');

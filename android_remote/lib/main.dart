@@ -1,7 +1,6 @@
-import 'dart:convert';
-import 'dart:typed_data';
 import 'dart:ui';
 
+import 'package:android_remote/modules/bluetooth_manager.dart';
 import 'package:android_remote/pages/bluetooth_connection.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bluetooth_serial/flutter_bluetooth_serial.dart';
@@ -19,96 +18,6 @@ void main() {
 ItemScrollController consoleController;
 
 final TextEditingController textEditingController = new TextEditingController();
-
-void _showEditForm(BuildContext context, int i) async {
-  final prefs = await SharedPreferences.getInstance();
-  final _formKey = GlobalKey<FormState>();
-  final myController = TextEditingController();
-
-  String key = '';
-
-  switch (i) {
-    case 1:
-      key = 'function1';
-      break;
-    case 2:
-      key = 'function2';
-      break;
-  }
-
-  final value = prefs.getString(key) ?? 0;
-
-  _save(int num, String functionStr) async {
-    String key = '';
-
-    switch (num) {
-      case 1:
-        key = 'function1';
-        break;
-      case 2:
-        key = 'function2';
-        break;
-    }
-
-    if (key.length > 0) prefs.setString(key, functionStr);
-  }
-
-  showDialog(
-      context: context,
-      builder: (BuildContext context) {
-        return AlertDialog(
-          content: Stack(
-            overflow: Overflow.visible,
-            children: <Widget>[
-              Positioned(
-                right: -40.0,
-                top: -40.0,
-                child: InkResponse(
-                  onTap: () {
-                    Navigator.of(context).pop();
-                  },
-                  child: CircleAvatar(
-                    child: Icon(Icons.close),
-                    backgroundColor: Colors.red,
-                  ),
-                ),
-              ),
-              Form(
-                key: _formKey,
-                child: Column(
-                  mainAxisSize: MainAxisSize.min,
-                  children: <Widget>[
-                    Padding(
-                      padding: EdgeInsets.all(8.0),
-                      child: Text('Edit function $i'),
-                    ),
-                    Padding(
-                      padding: EdgeInsets.all(8.0),
-                      child: TextFormField(
-                        controller: myController,
-                        decoration: InputDecoration(
-                          hintText: '$value',
-                        ),
-                      ),
-                    ),
-                    Padding(
-                      padding: const EdgeInsets.all(8.0),
-                      child: RaisedButton(
-                        child: Text('Save'),
-                        onPressed: () {
-                          _save(i, myController.text);
-                          Navigator.of(context).pop();
-                        },
-                      ),
-                    )
-                  ],
-                ),
-              )
-            ],
-          ),
-        );
-      });
-}
 
 class MyApp extends StatelessWidget {
   // This widget is the root of your application.
@@ -137,82 +46,31 @@ class MyHomePage extends StatefulWidget {
   _MyHomePageState createState() => _MyHomePageState();
 }
 
-class _Message {
-  int whom;
-  String text;
-
-  _Message(this.whom, this.text);
-
-  String getText() {
-    return this.text;
-  }
-}
-
 class _MyHomePageState extends State<MyHomePage> {
-  static final clientID = 0;
+  static Arena _arena;
 
-  Arena _arena = Arena();
-  List<_Message> messages = List<_Message>();
-  String _messageBuffer = '';
-
-  @override
-  void dispose() {
-    // Avoid memory leak (`setState` after dispose) and disconnect
-    if (globals.isConnected) {
-      globals.isDisconnecting = true;
-      globals.connection.dispose();
-      globals.connection = null;
+  void callback([String op, var param]) async {
+    switch (op) {
+      case 'addConsoleAndScroll':
+        String str = param.toString();
+        addConsoleAndScroll(str);
+        break;
+      case 'setRobotPos':
+        setState(() {
+          _arena.setRobotPos();
+        });
+        break;
     }
-
-    super.dispose();
   }
 
   @override
   void initState() {
     consoleController = ItemScrollController();
     super.initState();
+    _arena = Arena(this.callback);
     _arena.setRobotPos();
-
-    print("Checking is connected...");
-    print(globals.isConnected);
-
-    if (globals.isConnecting) {
-      BluetoothConnection.toAddress(widget.server.address).then((_connection) {
-        addConsoleAndScroll('Successfully connected to ' + widget.server.name);
-        globals.bluetoothStatus = Colors.greenAccent;
-        globals.isConnected = true;
-        print('Connected to the device');
-        globals.connection = _connection;
-        setState(() {
-          globals.isConnecting = false;
-          globals.isDisconnecting = false;
-        });
-
-        globals.connection.input.listen(_onDataReceived).onDone(() {
-          if (globals.isDisconnecting) {
-            print('Disconnecting locally!');
-            addConsoleAndScroll('Disconnecting locally!');
-            globals.bluetoothStatus = Colors.red;
-            globals.connection.dispose();
-          } else {
-            print('Disconnected remotely!');
-            addConsoleAndScroll('Disconnecting remotely!');
-            globals.bluetoothStatus = Colors.red;
-            globals.connection.dispose();
-          }
-          if (this.mounted) {
-            setState(() {});
-          }
-        });
-      }).catchError((error) {
-        print('Cannot connect, exception occurred');
-
-        setState(() {
-          addConsoleAndScroll('Cannot connect, Socket not opened!');
-        });
-        print(error);
-      });
-    }
+    globals.btController = BluetoothController(this.callback);
+    globals.btController.init();
   }
 
   @override
@@ -229,7 +87,6 @@ class _MyHomePageState extends State<MyHomePage> {
               ],
             ),
             Container(
-
               child: Positioned(
                 //Place it at the top, and not use the entire screen
                 top: 5.0,
@@ -243,27 +100,30 @@ class _MyHomePageState extends State<MyHomePage> {
                 ),
               ),
             ),
-      Container(
-        padding: EdgeInsets.fromLTRB(MediaQuery.of(context).size.width - 110, 50, 0, 0),
-        child:Icon(
+            Container(
+              padding: EdgeInsets.fromLTRB(
+                  MediaQuery.of(context).size.width - 110, 50, 0, 0),
+              child: Icon(
                 Icons.adb_outlined,
                 color: globals.robotStatus,
                 size: 30.0,
               ),
             ),
-      Container(
-        padding: EdgeInsets.fromLTRB(MediaQuery.of(context).size.width - 55, 50, 0, 0),
-
+            Container(
+              padding: EdgeInsets.fromLTRB(
+                  MediaQuery.of(context).size.width - 55, 50, 0, 0),
               child: Icon(
                 Icons.bluetooth,
-                color: globals.bluetoothStatus,
+                color: (globals.btController.isConnected)
+                    ? Colors.greenAccent
+                    : Colors.red,
                 size: 30.0,
               ),
             ),
-      Container(
-        padding: EdgeInsets.fromLTRB(MediaQuery.of(context).size.width - 175, 43, 0, 0),
-        child:
-            IconButton(
+            Container(
+              padding: EdgeInsets.fromLTRB(
+                  MediaQuery.of(context).size.width - 175, 43, 0, 0),
+              child: IconButton(
                   icon: Icon(
                     Icons.refresh,
                     size: 30.0,
@@ -295,27 +155,15 @@ class _MyHomePageState extends State<MyHomePage> {
               ),
               ListTile(
                 leading: Icon(Icons.bluetooth),
-                title: Text('Connect / Disconnect'),
+                title: Text((globals.btController.isConnected)
+                    ? 'Disconnect'
+                    : 'Connect'),
                 onTap: () async {
-                  if (globals.isConnected) {
-                    try {
-                      globals.isDisconnecting = true;
-                      globals.isConnecting = false;
-                      _sendMessage("quitting");
-                      globals.connection.dispose();
-                      globals.connection = null;
-                      globals.isConnected = false;
-                    } catch (e) {
-                      globals.isDisconnecting = true;
-                      globals.isConnecting = false;
-                      if (globals.connection != null) {
-                        _sendMessage("quitting");
-                        globals.connection.dispose();
-                        globals.connection = null;
-                      }
-                    }
+                  if (globals.btController.isConnected) {
+                    globals.btController.disconnect();
                   }
-                  globals.selectedDevice = await Navigator.of(context).push(
+                  globals.btController.selectedDevice =
+                      await Navigator.of(context).push(
                     MaterialPageRoute(
                       builder: (context) {
                         return ConnectionPage(checkAvailability: false);
@@ -492,8 +340,9 @@ class _MyHomePageState extends State<MyHomePage> {
                               flex: 1,
                               child: RaisedButton(
                                 onPressed: () async {
-                                  if (globals.isConnected) {
-                                    _sendMessage(await _getFunctionString(1));
+                                  if (globals.btController.isConnected) {
+                                    globals.btController.sendMessage(
+                                        await _getFunctionString(1));
                                   }
                                 },
                                 child: Container(
@@ -508,8 +357,9 @@ class _MyHomePageState extends State<MyHomePage> {
                               flex: 1,
                               child: RaisedButton(
                                 onPressed: () async {
-                                  if (globals.isConnected) {
-                                    _sendMessage(await _getFunctionString(2));
+                                  if (globals.btController.isConnected) {
+                                    globals.btController.sendMessage(
+                                        await _getFunctionString(2));
                                   }
                                 },
                                 child: Container(
@@ -534,18 +384,11 @@ class _MyHomePageState extends State<MyHomePage> {
                                   child: IconButton(
                                     icon: Icon(Icons.arrow_circle_up),
                                     onPressed: () {
-                                      if (globals.isConnected) {
-                                        _sendMessage(globals.strForward);
-                                        _arena.robot.moveForward();
-                                      }
-                                      if (globals.debugMode &&
-                                          !globals.isConnected) {
-                                        _arena.robot.moveForward();
-                                      }
-                                      if (!globals.updateMode) {
-                                        setState(() {
-                                          _arena.setRobotPos();
-                                        });
+                                      _arena.moveRobot('FW');
+                                      if (globals.btController.isConnected &&
+                                          !globals.debugMode) {
+                                        globals.btController
+                                            .sendMessage(globals.strForward);
                                       }
                                     },
                                   ),
@@ -560,19 +403,11 @@ class _MyHomePageState extends State<MyHomePage> {
                                     icon: Icon(Icons.rotate_left),
                                     tooltip: 'Rotate Left',
                                     onPressed: () {
-                                      if (globals.isConnected) {
-                                        _sendMessage(globals.strRotateLeft);
-                                        _arena.robot.rotateLeft();
-                                      }
-                                      if (globals.debugMode &&
-                                          !globals.isConnected) {
-                                        _arena.robot.rotateLeft();
-                                      }
-
-                                      if (!globals.updateMode) {
-                                        setState(() {
-                                          _arena.setRobotPos();
-                                        });
+                                      _arena.moveRobot('RL');
+                                      if (globals.btController.isConnected &&
+                                          !globals.debugMode) {
+                                        globals.btController
+                                            .sendMessage(globals.strRotateLeft);
                                       }
                                     },
                                   ),
@@ -581,8 +416,12 @@ class _MyHomePageState extends State<MyHomePage> {
                                   child: IconButton(
                                     icon: Icon(Icons.arrow_circle_down),
                                     onPressed: () {
-                                      if (globals.isConnected) {
-                                        _sendMessage(globals.strReverse);
+                                      _arena.moveRobot('RR');
+                                      _arena.moveRobot('RR');
+                                      if (globals.btController.isConnected &&
+                                          !globals.debugMode) {
+                                        globals.btController
+                                            .sendMessage(globals.strReverse);
                                       }
                                     },
                                   ),
@@ -592,18 +431,11 @@ class _MyHomePageState extends State<MyHomePage> {
                                     tooltip: 'Rotate Right',
                                     icon: Icon(Icons.rotate_right),
                                     onPressed: () {
-                                      if (globals.isConnected) {
-                                        _sendMessage(globals.strRotateRight);
-                                        _arena.robot.rotateRight();
-                                      }
-                                      if (globals.debugMode &&
-                                          !globals.isConnected) {
-                                        _arena.robot.rotateRight();
-                                      }
-                                      if (!globals.updateMode) {
-                                        setState(() {
-                                          _arena.setRobotPos();
-                                        });
+                                      _arena.moveRobot('RR');
+                                      if (globals.btController.isConnected &&
+                                          !globals.debugMode) {
+                                        globals.btController.sendMessage(
+                                            globals.strRotateRight);
                                       }
                                     },
                                   ),
@@ -646,8 +478,9 @@ class _MyHomePageState extends State<MyHomePage> {
                         flex: 2,
                         child: RaisedButton(
                           onPressed: () {
-                            if (globals.isConnected) {
-                              _sendMessage(globals.strStartExplore);
+                            if (globals.btController.isConnected) {
+                              globals.btController
+                                  .sendMessage(globals.strStartExplore);
                             }
                           },
                           child: Container(
@@ -662,8 +495,9 @@ class _MyHomePageState extends State<MyHomePage> {
                         flex: 2,
                         child: RaisedButton(
                           onPressed: () {
-                            if (globals.isConnected) {
-                              _sendMessage(globals.strFastestPath);
+                            if (globals.btController.isConnected) {
+                              globals.btController
+                                  .sendMessage(globals.strFastestPath);
                             }
                           },
                           child: Container(
@@ -720,41 +554,6 @@ class _MyHomePageState extends State<MyHomePage> {
     return value;
   }
 
-  void _onDataReceived(Uint8List data) {
-    // Allocate buffer for parsed data
-    int backspacesCounter = 0;
-    data.forEach((byte) {
-      if (byte == 8 || byte == 127) {
-        backspacesCounter++;
-      }
-    });
-    Uint8List buffer = Uint8List(data.length - backspacesCounter);
-    int bufferIndex = buffer.length;
-
-    // Apply backspace control character
-    backspacesCounter = 0;
-    for (int i = data.length - 1; i >= 0; i--) {
-      if (data[i] == 8 || data[i] == 127) {
-        backspacesCounter++;
-      } else {
-        if (backspacesCounter > 0) {
-          backspacesCounter--;
-        } else {
-          buffer[--bufferIndex] = data[i];
-        }
-      }
-    }
-
-    // Create message if there is new line character
-    String dataString = String.fromCharCodes(buffer);
-    String name = widget.server.name;
-
-    setState(() {
-      String sdataString = dataString.trim();
-      addConsoleAndScroll('Message Received from [$name]:\n[$sdataString]');
-    });
-  }
-
   Future<bool> _onWillPop() async {
     return (await showDialog(
           context: context,
@@ -776,54 +575,104 @@ class _MyHomePageState extends State<MyHomePage> {
         false;
   }
 
-  void _sendMessage(String text) async {
-    text = text.trim();
-    textEditingController.clear();
-    setState(() {
-      messages.add(_Message(clientID, text));
-    });
+  void _showEditForm(BuildContext context, int i) async {
+    final prefs = await SharedPreferences.getInstance();
+    final _formKey = GlobalKey<FormState>();
+    final myController = TextEditingController();
 
-    if (text.length > 0) {
-      try {
-        globals.connection.output.add(utf8.encode(text));
-        await globals.connection.output.allSent;
+    String key = '';
 
-        setState(() {
-          messages.add(_Message(clientID, text));
-          addConsoleAndScroll('Message sent to Bluetooth device:\n[$text]');
-          consoleController.scrollTo(
-              index: globals.strArr.length,
-              duration: Duration(milliseconds: 333));
-        });
-
-        // Future.delayed(Duration(milliseconds: 333)).then((_) {
-        //
-        // });
-
-      } catch (e) {
-        // Ignore error, but notify state
-        addConsoleAndScroll('Disconnected remotely!');
-        addConsoleAndScroll(
-            'Message was not sent to Bluetooth device. [$text]');
-        globals.isDisconnecting = true;
-        globals.isConnected = false;
-        if (globals.connection != null) {
-          globals.connection.dispose();
-          globals.connection = null;
-        }
-        setState(() {});
-      }
+    switch (i) {
+      case 1:
+        key = 'function1';
+        break;
+      case 2:
+        key = 'function2';
+        break;
     }
-  }
-}
 
-void addConsoleAndScroll(String message) {
-  globals.strArr.add(message);
-  consoleController.scrollTo(
-      index: globals.strArr.length,
-      duration: Duration(milliseconds: 333),
-      curve: Curves.easeInOutCubic);
-  // consoleController.scrollTo(
-  //     index: globals.strArr.length, duration: Duration(milliseconds: 333));
-  //consoleController.jumpTo(index: globals.strArr.length);
+    final value = prefs.getString(key) ?? 0;
+
+    _save(int num, String functionStr) async {
+      String key = '';
+
+      switch (num) {
+        case 1:
+          key = 'function1';
+          break;
+        case 2:
+          key = 'function2';
+          break;
+      }
+
+      if (key.length > 0) prefs.setString(key, functionStr);
+    }
+
+    showDialog(
+        context: context,
+        builder: (BuildContext context) {
+          return AlertDialog(
+            content: Stack(
+              overflow: Overflow.visible,
+              children: <Widget>[
+                Positioned(
+                  right: -40.0,
+                  top: -40.0,
+                  child: InkResponse(
+                    onTap: () {
+                      Navigator.of(context).pop();
+                    },
+                    child: CircleAvatar(
+                      child: Icon(Icons.close),
+                      backgroundColor: Colors.red,
+                    ),
+                  ),
+                ),
+                Form(
+                  key: _formKey,
+                  child: Column(
+                    mainAxisSize: MainAxisSize.min,
+                    children: <Widget>[
+                      Padding(
+                        padding: EdgeInsets.all(8.0),
+                        child: Text('Edit function $i'),
+                      ),
+                      Padding(
+                        padding: EdgeInsets.all(8.0),
+                        child: TextFormField(
+                          controller: myController,
+                          decoration: InputDecoration(
+                            hintText: '$value',
+                          ),
+                        ),
+                      ),
+                      Padding(
+                        padding: const EdgeInsets.all(8.0),
+                        child: RaisedButton(
+                          child: Text('Save'),
+                          onPressed: () {
+                            _save(i, myController.text);
+                            Navigator.of(context).pop();
+                          },
+                        ),
+                      )
+                    ],
+                  ),
+                )
+              ],
+            ),
+          );
+        });
+  }
+
+  void addConsoleAndScroll(String message) {
+    globals.strArr.add(message);
+    consoleController.scrollTo(
+        index: globals.strArr.length,
+        duration: Duration(milliseconds: 333),
+        curve: Curves.easeInOutCubic);
+    // consoleController.scrollTo(
+    //     index: globals.strArr.length, duration: Duration(milliseconds: 333));
+    //consoleController.jumpTo(index: globals.strArr.length);
+  }
 }

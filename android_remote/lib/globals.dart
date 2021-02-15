@@ -1,28 +1,27 @@
 library android_remote.globals;
 
 import 'package:flutter/material.dart';
-import 'package:flutter_bluetooth_serial/flutter_bluetooth_serial.dart';
 
+import 'modules/bluetooth_manager.dart';
+
+// Flags for application operations.
 bool updateMode = false;
 bool debugMode = false;
-BluetoothDevice selectedDevice;
-List<String> strArr = [];
 bool controlMode = false;
-BluetoothConnection connection;
-bool isConnecting = false;
-bool isDisconnecting = false;
-BluetoothDevice server;
-bool isConnected = false;
+
+List<String> strArr = []; // To store the console log outputs.
+
 Color robotStatus = Colors.red;
-Color bluetoothStatus = Colors.red;
+
+BluetoothController btController;
 
 // Command strings: [SRC][DST][OP] 2 CHARACTERS EA
-final String strStartExplore = 'ANADSE';
-final String strFastestPath = 'ANADFP';
-final String strForward = 'ANADFW';
-final String strRotateLeft = 'ANADRL';
-final String strRotateRight = 'ANADRR';
-final String strReverse = 'ANADRV';
+final String strStartExplore = 'AN:AD:SE';
+final String strFastestPath = 'AN:AD:FP';
+final String strForward = 'AN:AD:FW';
+final String strRotateLeft = 'AN:AD:RL';
+final String strRotateRight = 'AN:AD:RR';
+final String strReverse = 'AN:AD:RV';
 
 // Arena
 /*List<List<String>> arenaState = [

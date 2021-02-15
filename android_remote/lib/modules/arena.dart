@@ -1,3 +1,4 @@
+import 'package:android_remote/globals.dart' as globals;
 import 'package:flutter/material.dart';
 
 class _Robot {
@@ -67,6 +68,10 @@ class _Robot {
         break;
     }
   }
+
+  int isDisplaced() {
+    return ((prevX - x) + (prevY - y));
+  }
 }
 
 class _WayPoint {
@@ -77,72 +82,98 @@ class _WayPoint {
 }
 
 class Arena {
+  Arena(this.callback);
+
   List<List<String>> _arenaState = List.generate(
-      20, (index) => List.generate(15, (index) => '0', growable: false),
-      growable: false);
-  _WayPoint wayPoint = _WayPoint(0, 0);
-  _Robot robot = _Robot(18, 1, 18, 1, 'N');
+    20,
+    (index) => List.generate(15, (index) => '0', growable: false),
+    growable: false,
+  );
+  _WayPoint _wayPoint = _WayPoint(0, 0);
+  _Robot _robot = _Robot(18, 1, 18, 1, 'N');
+  Function callback;
 
   void setWayPoint(int x, int y) {
-    this.wayPoint = _WayPoint(x, y);
+    this._wayPoint = _WayPoint(x, y);
   }
 
-  void _clearPrev(int flag) {
-    switch (flag) {
-      case 1:
-        _arenaState[robot.x + 2][robot.y - 1] = '1';
-        _arenaState[robot.x + 2][robot.y - 0] = '1';
-        _arenaState[robot.x + 2][robot.y + 1] = '1';
+  bool moveRobot(String operation) {
+    switch (operation) {
+      case 'FW':
+        _robot.moveForward();
         break;
-      case -1:
-        _arenaState[robot.x - 2][robot.y - 1] = '1';
-        _arenaState[robot.x - 2][robot.y - 0] = '1';
-        _arenaState[robot.x - 2][robot.y + 1] = '1';
+      case 'RL':
+        _robot.rotateLeft();
         break;
-      case 2:
-        _arenaState[robot.x - 1][robot.y + 2] = '1';
-        _arenaState[robot.x - 0][robot.y + 2] = '1';
-        _arenaState[robot.x + 1][robot.y + 2] = '1';
-        break;
-      case -2:
-        _arenaState[robot.x - 1][robot.y - 2] = '1';
-        _arenaState[robot.x - 0][robot.y - 2] = '1';
-        _arenaState[robot.x + 1][robot.y - 2] = '1';
+      case 'RR':
+        _robot.rotateRight();
         break;
     }
+
+    if (globals.updateMode)
+      callback();
+    else
+      setRobotPos();
+
+    return (_robot.isDisplaced() > 0);
   }
 
   void setRobotPos() {
+    void _clearPrev(int flag) {
+      switch (flag) {
+        case 1:
+          _arenaState[_robot.x + 2][_robot.y - 1] = '1';
+          _arenaState[_robot.x + 2][_robot.y - 0] = '1';
+          _arenaState[_robot.x + 2][_robot.y + 1] = '1';
+          break;
+        case -1:
+          _arenaState[_robot.x - 2][_robot.y - 1] = '1';
+          _arenaState[_robot.x - 2][_robot.y - 0] = '1';
+          _arenaState[_robot.x - 2][_robot.y + 1] = '1';
+          break;
+        case 2:
+          _arenaState[_robot.x - 1][_robot.y + 2] = '1';
+          _arenaState[_robot.x - 0][_robot.y + 2] = '1';
+          _arenaState[_robot.x + 1][_robot.y + 2] = '1';
+          break;
+        case -2:
+          _arenaState[_robot.x - 1][_robot.y - 2] = '1';
+          _arenaState[_robot.x - 0][_robot.y - 2] = '1';
+          _arenaState[_robot.x + 1][_robot.y - 2] = '1';
+          break;
+      }
+    }
+
     int xi = 0;
     int yj = 0;
 
-    int flag = ((robot.prevX - robot.x) + ((robot.prevY - robot.y) * 2));
+    int flag = ((_robot.prevX - _robot.x) + ((_robot.prevY - _robot.y) * 2));
     if (flag != 0) {
       _clearPrev(flag);
     }
 
     for (int i = -1; i <= 1; i++) {
       for (int j = -1; j <= 1; j++) {
-        _arenaState[this.robot.x + i][this.robot.y + j] = 'R';
+        _arenaState[this._robot.x + i][this._robot.y + j] = 'R';
       }
     }
 
-    switch (this.robot.direction) {
+    switch (this._robot.direction) {
       case 'N':
-        xi = this.robot.x - 1;
-        yj = this.robot.y;
+        xi = this._robot.x - 1;
+        yj = this._robot.y;
         break;
       case 'S':
-        xi = this.robot.x + 1;
-        yj = this.robot.y;
+        xi = this._robot.x + 1;
+        yj = this._robot.y;
         break;
       case 'E':
-        xi = this.robot.x;
-        yj = this.robot.y + 1;
+        xi = this._robot.x;
+        yj = this._robot.y + 1;
         break;
       case 'W':
-        xi = this.robot.x;
-        yj = this.robot.y - 1;
+        xi = this._robot.x;
+        yj = this._robot.y - 1;
         break;
     }
     _arenaState[xi][yj] = 'RH';
