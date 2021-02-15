@@ -1,8 +1,8 @@
 import 'dart:async';
-import 'package:android_remote/states/BluetoothDeviceListEntry.dart';
+
+import 'package:android_remote/modules/bluetooth_device_list_entry.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bluetooth_serial/flutter_bluetooth_serial.dart';
-
 
 class DiscoveryPage extends StatefulWidget {
   /// If true, discovery starts on page start, otherwise user must press action button.
@@ -45,17 +45,15 @@ class _DiscoveryPage extends State<DiscoveryPage> {
     List DupChecker = [];
     _streamSubscription =
         FlutterBluetoothSerial.instance.startDiscovery().listen((rs) {
-          setState(() {
-            if(!DupChecker.contains(rs.device.address))
-            {
-              print("checking");
-              print(rs);
-              DupChecker.add(rs.device.address);
-              results.add(rs);
-            }
-
-          });
-        });
+      setState(() {
+        if (!DupChecker.contains(rs.device.address)) {
+          print("checking");
+          print(rs);
+          DupChecker.add(rs.device.address);
+          results.add(rs);
+        }
+      });
+    });
 
     _streamSubscription.onDone(() {
       setState(() {
@@ -82,23 +80,22 @@ class _DiscoveryPage extends State<DiscoveryPage> {
         actions: <Widget>[
           isDiscovering
               ? FittedBox(
-            child: Container(
-              margin: new EdgeInsets.all(16.0),
-              child: CircularProgressIndicator(
-                valueColor: AlwaysStoppedAnimation<Color>(Colors.white),
-              ),
-            ),
-          )
+                  child: Container(
+                    margin: new EdgeInsets.all(16.0),
+                    child: CircularProgressIndicator(
+                      valueColor: AlwaysStoppedAnimation<Color>(Colors.white),
+                    ),
+                  ),
+                )
               : IconButton(
-            icon: Icon(Icons.replay),
-            onPressed: _restartDiscovery,
-          )
+                  icon: Icon(Icons.replay),
+                  onPressed: _restartDiscovery,
+                )
         ],
       ),
       body: ListView.builder(
         itemCount: results.length,
         itemBuilder: (BuildContext context, index) {
-
           BluetoothDiscoveryResult result = results[index];
           return BluetoothDeviceListEntry(
             device: result.device,

@@ -1,8 +1,7 @@
 import 'dart:async';
 
-import 'package:android_remote/pages/ChatPage.dart';
-import 'package:android_remote/pages/DiscoveryPage.dart';
-import 'package:android_remote/states/BluetoothDeviceListEntry.dart';
+import 'package:android_remote/modules/bluetooth_device_list_entry.dart';
+import 'package:android_remote/pages/discovery_page.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bluetooth_serial/flutter_bluetooth_serial.dart';
 
@@ -97,9 +96,7 @@ class _ConnectionPage extends State<ConnectionPage> {
 
     _isDiscovering = widget.checkAvailability;
 
-    if (_isDiscovering) {
-
-    }
+    if (_isDiscovering) {}
 
     // Setup a list of the bonded devices
     FlutterBluetoothSerial.instance
@@ -160,7 +157,7 @@ class _ConnectionPage extends State<ConnectionPage> {
                   String name = _device.device.name;
                   strArr.add('Trying to connect to Device: [$name]....');
                   print('Connect -> selected ' + _device.device.address);
-                  isConnecting=true;
+                  isConnecting = true;
                   _startChat(context, _device.device);
                 } else {
                   print('Connect -> no device selected');
@@ -225,27 +222,26 @@ class _ConnectionPage extends State<ConnectionPage> {
               });
             },
           ),
-              ListTile(
-                title: RaisedButton(
-                    child: const Text('Pair devices'),
-                    onPressed: () async {
-
-                      final BluetoothDevice selectedDevice =
+          ListTile(
+            title: RaisedButton(
+                child: const Text('Pair devices'),
+                onPressed: () async {
+                  final BluetoothDevice selectedDevice =
                       await Navigator.of(context).push(
-                        MaterialPageRoute(
-                          builder: (context) {
-                            return DiscoveryPage();
-                          },
-                        ),
-                      );
+                    MaterialPageRoute(
+                      builder: (context) {
+                        return DiscoveryPage();
+                      },
+                    ),
+                  );
 
-                      if (selectedDevice != null) {
-                        print('Discovery -> selected ' + selectedDevice.address);
-                      } else {
-                        print('Discovery -> no device selected');
-                      }
-                    }),
-              ),
+                  if (selectedDevice != null) {
+                    print('Discovery -> selected ' + selectedDevice.address);
+                  } else {
+                    print('Discovery -> no device selected');
+                  }
+                }),
+          ),
           Expanded(
             // wrap in Expanded
             child: ListView(children: list),
@@ -258,7 +254,6 @@ class _ConnectionPage extends State<ConnectionPage> {
 }
 
 void _startChat(BuildContext context, BluetoothDevice server) {
-
   Navigator.of(context).push(
     MaterialPageRoute(
       builder: (context) {
