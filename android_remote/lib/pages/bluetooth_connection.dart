@@ -152,8 +152,8 @@ class _ConnectionPage extends State<ConnectionPage> {
               onTap: () {
                 if (_device.device != null) {
                   String name = _device.device.name;
-                  globals.strArr
-                      .add('Trying to connect to Device: [$name]....');
+                  streamController = StreamController<String>();
+                  streamController.add('Trying to connect to Device: [$name]....');
                   print('Connect -> selected ' + _device.device.address);
                   globals.btController.isConnecting = true;
                   _startChat(context, _device.device);
@@ -257,7 +257,7 @@ void _startChat(BuildContext context, BluetoothDevice server) {
   Navigator.of(context).push(
     MaterialPageRoute(
       builder: (context) {
-        return MyHomePage();
+        return MyHomePage(streamController.stream);
       },
     ),
   );

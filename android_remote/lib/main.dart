@@ -1,3 +1,4 @@
+import 'dart:async';
 import 'dart:ui';
 
 import 'package:android_remote/modules/bluetooth_manager.dart';
@@ -10,6 +11,8 @@ import 'globals.dart' as globals;
 import 'modules/arena.dart';
 import 'router.dart';
 
+StreamController<String> streamController =
+    StreamController<String>.broadcast();
 void main() {
   runApp(MyApp());
 }
@@ -30,15 +33,16 @@ class MyApp extends StatelessWidget {
         brightness: Brightness.dark,
         visualDensity: VisualDensity.adaptivePlatformDensity,
       ),
-      home: MyHomePage(),
+      home: MyHomePage(streamController.stream),
       debugShowCheckedModeBanner: false,
     );
   }
 }
 
 class MyHomePage extends StatefulWidget {
-  const MyHomePage();
+  MyHomePage(this.stream);
 
+  final Stream<String> stream;
   @override
   _MyHomePageState createState() => _MyHomePageState();
 }
@@ -46,9 +50,22 @@ class MyHomePage extends StatefulWidget {
 class _MyHomePageState extends State<MyHomePage> {
   static Arena _arena;
 
-  void callback(String response) {
+  void mySetState(String message) {
+
+      addConsoleAndScroll(message);
+      if(message.contains('Disconnected remotely!'))
+        {
+          _arena.resetRobotPos();
+        }
+  }
+
+  void addConsoleAndScroll(String message) {
     setState(() {
-      addConsoleAndScroll(response);
+    globals.strArr.add(message);
+    consoleController.scrollTo(
+        index: globals.strArr.length,
+        duration: Duration(milliseconds: 333),
+        curve: Curves.easeInOutCubic);
     });
   }
 
@@ -56,10 +73,14 @@ class _MyHomePageState extends State<MyHomePage> {
   void initState() {
     consoleController = ItemScrollController();
     super.initState();
+
+    widget.stream.listen((message) {
+      mySetState(message);
+    });
     _arena = Arena();
     _arena.setRobotPos();
     if (globals.btController == null)
-      globals.btController = BluetoothController(this.callback);
+      globals.btController = BluetoothController();
     globals.btController.init();
   }
 
@@ -150,7 +171,13 @@ class _MyHomePageState extends State<MyHomePage> {
                     : 'Connect'),
                 onTap: () async {
                   if (globals.btController.isConnected) {
+                    addConsoleAndScroll('Disconnecting locally!');
                     globals.btController.disconnect();
+                    addConsoleAndScroll('Disconnected locally!');
+                    _arena.resetRobotPos();
+                  }
+                  if (!globals.btController.isConnected) {
+                    streamController.close();
                   }
                   globals.btController.selectedDevice =
                       await Navigator.of(context).push(
@@ -383,7 +410,6 @@ class _MyHomePageState extends State<MyHomePage> {
                                           globals.btController
                                               .sendMessage(globals.strForward);
                                       }
-
                                       if (!globals.updateMode)
                                         setState(() {
                                           _arena.setRobotPos();
@@ -404,17 +430,17 @@ class _MyHomePageState extends State<MyHomePage> {
                                       if (globals.debugMode) {
                                         _arena.moveRobot('RL');
                                       } else if (globals
-                                              .btController.isConnected &&
+                                          .btController.isConnected &&
                                           !globals.debugMode) {
                                         if (_arena.moveRobot('RL'))
-                                          globals.btController.sendMessage(
-                                              globals.strRotateLeft);
+                                          globals.btController
+                                              .sendMessage(globals.strRotateLeft);
                                       }
-
                                       if (!globals.updateMode)
                                         setState(() {
                                           _arena.setRobotPos();
                                         });
+
                                     },
                                   ),
                                 ),
@@ -686,16 +712,5 @@ class _MyHomePageState extends State<MyHomePage> {
             ),
           );
         });
-  }
-
-  void addConsoleAndScroll(String message) {
-    setState(() {
-      globals.strArr.add(message);
-    });
-
-    consoleController.scrollTo(
-        index: globals.strArr.length,
-        duration: Duration(milliseconds: 333),
-        curve: Curves.easeInOutCubic);
   }
 }

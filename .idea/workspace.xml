@@ -34,7 +34,9 @@
       <change beforePath="$PROJECT_DIR$/android_remote/lib/globals.dart" beforeDir="false" afterPath="$PROJECT_DIR$/android_remote/lib/globals.dart" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/android_remote/lib/main.dart" beforeDir="false" afterPath="$PROJECT_DIR$/android_remote/lib/main.dart" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/android_remote/lib/modules/arena.dart" beforeDir="false" afterPath="$PROJECT_DIR$/android_remote/lib/modules/arena.dart" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/android_remote/lib/states/ArenaGrid.dart" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/android_remote/lib/modules/bluetooth_manager.dart" beforeDir="false" afterPath="$PROJECT_DIR$/android_remote/lib/modules/bluetooth_manager.dart" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/android_remote/lib/pages/bluetooth_connection.dart" beforeDir="false" afterPath="$PROJECT_DIR$/android_remote/lib/pages/bluetooth_connection.dart" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/android_remote/lib/router.dart" beforeDir="false" afterPath="$PROJECT_DIR$/android_remote/lib/router.dart" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />

@@ -12,11 +12,11 @@ class PageRouter {
   static Route<dynamic> generateRoute(RouteSettings settings) {
     switch (settings.name) {
       case homeRoute:
-        return MaterialPageRoute(builder: (_) => MyHomePage());
+        //return MaterialPageRoute(builder: (_) => MyHomePage("hello"));
       case aboutRoute:
-        return MaterialPageRoute(builder: (_) => AboutPage());
+       // return MaterialPageRoute(builder: (_) => AboutPage());
       default:
-        return MaterialPageRoute(builder: (_) => MyHomePage());
+       // return MaterialPageRoute(builder: (_) => MyHomePage("hello"));
     }
   }
 }

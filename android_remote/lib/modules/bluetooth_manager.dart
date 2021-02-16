@@ -1,7 +1,9 @@
 import 'dart:convert';
 import 'dart:typed_data';
 
+import 'package:android_remote/main.dart';
 import 'package:flutter_bluetooth_serial/flutter_bluetooth_serial.dart';
+
 
 class BluetoothController {
   static final clientID = 0;
@@ -13,9 +15,9 @@ class BluetoothController {
   bool isConnected = false;
   List<_Message> messages = List<_Message>();
   String _messageBuffer = '';
-  final Function(String) callback;
 
-  BluetoothController(this.callback);
+
+  BluetoothController();
 
   void init() {
     print("Checking is connected...");
@@ -23,7 +25,7 @@ class BluetoothController {
 
     if (isConnecting) {
       BluetoothConnection.toAddress(server.address).then((_connection) {
-        callback('Successfully connected to ' + server.name);
+        streamController.add('Successfully connected to ' + server.name);
         isConnected = true;
         print('Connected to the device');
 
@@ -35,17 +37,18 @@ class BluetoothController {
         connection.input.listen(_onDataReceived).onDone(() {
           if (isDisconnecting) {
             print('Disconnecting locally!');
-            callback('Disconnecting locally!');
-            connection.dispose();
+            streamController.add('Disconnecting locally!');
+            this.disconnect();
           } else {
             print('Disconnected remotely!');
-            callback('Disconnecting remotely!');
-            connection.dispose();
+            streamController.add('Disconnecting remotely!');
+            this.disconnect();
           }
         });
       }).catchError((error) {
         print('Cannot connect, exception occurred');
-        callback('Cannot connect, Socket not opened');
+        streamController.add('Cannot connect, Socket not opened');
+
         print(error);
       });
     }
@@ -101,7 +104,8 @@ class BluetoothController {
     String name = this.server.name;
 
     String sdataString = dataString.trim();
-    callback('Message Received from [$name]:\n[$sdataString]');
+
+    streamController.add('Message Received from [$name]:\n[$sdataString]');
   }
 
   void sendMessage(String text) async {
@@ -114,16 +118,21 @@ class BluetoothController {
         connection.output.add(utf8.encode(text));
         await connection.output.allSent;
 
-        messages.add(_Message(clientID, text));
-        await callback('Message sent to Bluetooth device:\n[$text]');
+
+          messages.add(_Message(clientID, text));
+
+        streamController.add('Message sent to Bluetooth device:\n[$text]');
+
       } catch (e) {
         // Ignore error, but notify state
-        await callback(
-            'Disconnected remotely!\nMessage was not sent to Bluetooth device. [$text]');
-        this.disconnect();
+
+        streamController.add('Disconnected remotely!');
+
+        //this.disconnect();
       }
     }
   }
+
 }
 
 class _Message {

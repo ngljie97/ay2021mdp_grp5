@@ -9,7 +9,7 @@ bool updateMode = false;
 bool debugMode = false;
 bool controlMode = false;
 
-List<String> strArr = []; // To store the console log outputs.
+List<String> strArr = ["Console initialized"]; // To store the console log outputs.
 
 Color robotStatus = Colors.red;
 

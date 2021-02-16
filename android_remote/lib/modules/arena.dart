@@ -1,4 +1,5 @@
 import 'package:android_remote/globals.dart' as globals;
+import 'package:android_remote/main.dart';
 import 'package:flutter/material.dart';
 
 class _Robot {
@@ -113,7 +114,16 @@ class Arena {
 
     return (_robot.isDisplaced() != 0);
   }
-
+  void resetRobotPos(){
+    streamController.add('Resetted Robot to Start Location.');
+    this._arenaState = List.generate(
+      20,
+          (index) => List.generate(15, (index) => '0', growable: false),
+      growable: false,
+    );
+    this._robot = _Robot(18, 1, 18, 1, 'N');
+    this.setRobotPos();
+  }
   void setRobotPos() {
     void _clearPrev(int flag) {
       switch (flag) {
