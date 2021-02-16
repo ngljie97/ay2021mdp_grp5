@@ -105,7 +105,7 @@ class BluetoothController {
 
     String sdataString = dataString.trim();
 
-    streamController.add('Message Received from [$name]:\n[$sdataString]');
+    streamController.add('Message Received from [$name]: [$sdataString]');
   }
 
   void sendMessage(String text) async {
@@ -121,7 +121,7 @@ class BluetoothController {
 
           messages.add(_Message(clientID, text));
 
-        streamController.add('Message sent to Bluetooth device:\n[$text]');
+        streamController.add('Message sent to Bluetooth device: [$text]');
 
       } catch (e) {
         // Ignore error, but notify state

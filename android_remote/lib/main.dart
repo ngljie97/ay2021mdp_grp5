@@ -3,6 +3,7 @@ import 'dart:ui';
 
 import 'package:android_remote/modules/bluetooth_manager.dart';
 import 'package:android_remote/pages/bluetooth_connection.dart';
+import 'package:android_remote/pages/consoleBackupPage.dart';
 import 'package:flutter/material.dart';
 import 'package:scrollable_positioned_list/scrollable_positioned_list.dart';
 import 'package:shared_preferences/shared_preferences.dart';
@@ -10,6 +11,7 @@ import 'package:shared_preferences/shared_preferences.dart';
 import 'globals.dart' as globals;
 import 'modules/arena.dart';
 import 'router.dart';
+import 'package:intl/intl.dart';
 
 StreamController<String> streamController =
     StreamController<String>.broadcast();
@@ -51,21 +53,20 @@ class _MyHomePageState extends State<MyHomePage> {
   static Arena _arena;
 
   void mySetState(String message) {
-
-      addConsoleAndScroll(message);
-      if(message.contains('Disconnected remotely!'))
-        {
-          _arena.resetRobotPos();
-        }
+    addConsoleAndScroll(message);
+    if (message.contains('Disconnected remotely!')) {
+      _arena.resetRobotPos();
+    }
   }
 
   void addConsoleAndScroll(String message) {
     setState(() {
-    globals.strArr.add(message);
-    consoleController.scrollTo(
-        index: globals.strArr.length,
-        duration: Duration(milliseconds: 333),
-        curve: Curves.easeInOutCubic);
+      globals.strArr.add(message);
+      globals.BackupstrArr.add(DateFormat(globals.Datetimeformat).format(DateTime.now())+" | "+message);
+      consoleController.scrollTo(
+          index: globals.strArr.length,
+          duration: Duration(milliseconds: 333),
+          curve: Curves.easeInOutCubic);
     });
   }
 
@@ -321,13 +322,64 @@ class _MyHomePageState extends State<MyHomePage> {
                             decoration: BoxDecoration(
                               border: Border.all(color: Colors.black),
                             ),
-                            child: new ScrollablePositionedList.builder(
-                              itemScrollController: consoleController,
-                              itemCount: globals.strArr.length,
-                              itemBuilder: (context, index) {
-                                return new Text(globals.strArr[index]);
-                              },
-                            ),
+                            child: Stack(
+                                children: [
+                              new ScrollablePositionedList.builder(
+                                itemScrollController: consoleController,
+                                itemCount: globals.strArr.length,
+                                itemBuilder: (context, index) {
+                                  return new Padding(
+                                      padding: EdgeInsets.fromLTRB(5, 10, 0, 0),
+                                      child:Text(globals.strArr[index]));
+                                },
+                              ),
+
+                                Align(
+                                  alignment: Alignment.bottomRight,
+                                  child: IconButton(
+                                    icon: Icon(Icons.delete),
+                                    onPressed: () {
+                                      setState(() {
+                                        globals.strArr = ["Console log cleared."];
+                                        globals.BackupstrArr.add(DateFormat(globals.Datetimeformat).format(DateTime.now())+" | "+"Console log cleared.");
+                                      });
+
+                                    },
+                                  ),
+                                ),
+
+                                Align(
+
+                                  alignment: Alignment.topRight,
+                                  child: IconButton(
+
+                                    icon: Icon(Icons.bookmarks),
+                                    onPressed: () {
+                                      Navigator.of(context).push(PageRouteBuilder(
+                                          opaque: false,
+                                          pageBuilder: (BuildContext context, _, __) {
+                                            return ConsoleBackupPage();
+                                          },
+                                        transitionsBuilder: (context, animation, secondaryAnimation, child) {
+                                          var begin = Offset(0.0, 1.0);
+                                          var end = Offset.zero;
+                                          var curve = Curves.ease;
+
+                                          var tween = Tween(begin: begin, end: end).chain(CurveTween(curve: curve));
+
+                                          return SlideTransition(
+                                            position: animation.drive(tween),
+                                            child: child,
+                                          );
+                                        },
+                                        transitionDuration: Duration(milliseconds: 500),
+
+                                      ));
+                                    },
+                                  ),
+                                ),
+
+                            ]),
                           ),
                         ),
                       ],
@@ -430,17 +482,16 @@ class _MyHomePageState extends State<MyHomePage> {
                                       if (globals.debugMode) {
                                         _arena.moveRobot('RL');
                                       } else if (globals
-                                          .btController.isConnected &&
+                                              .btController.isConnected &&
                                           !globals.debugMode) {
                                         if (_arena.moveRobot('RL'))
-                                          globals.btController
-                                              .sendMessage(globals.strRotateLeft);
+                                          globals.btController.sendMessage(
+                                              globals.strRotateLeft);
                                       }
                                       if (!globals.updateMode)
                                         setState(() {
                                           _arena.setRobotPos();
                                         });
-
                                     },
                                   ),
                                 ),

@@ -1,16 +1,18 @@
 library android_remote.globals;
 
 import 'package:flutter/material.dart';
-
+import 'package:intl/intl.dart';
 import 'modules/bluetooth_manager.dart';
 
 // Flags for application operations.
 bool updateMode = false;
 bool debugMode = false;
 bool controlMode = false;
+String Datetimeformat ='yyyy/MM/dd, kk:mm:ss';
+String formattedDate = DateFormat(Datetimeformat).format(DateTime.now())+" | "+"Console initialized";
 
 List<String> strArr = ["Console initialized"]; // To store the console log outputs.
-
+List<String> BackupstrArr = [formattedDate];
 Color robotStatus = Colors.red;
 
 BluetoothController btController;
