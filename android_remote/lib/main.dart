@@ -335,7 +335,7 @@ class _MyHomePageState extends State<MyHomePage> {
                               ),
 
                                 Align(
-                                  alignment: Alignment.bottomRight,
+                                  alignment: Alignment.topRight,
                                   child: IconButton(
                                     icon: Icon(Icons.delete),
                                     onPressed: () {
@@ -350,7 +350,7 @@ class _MyHomePageState extends State<MyHomePage> {
 
                                 Align(
 
-                                  alignment: Alignment.topRight,
+                                  alignment: Alignment.bottomRight,
                                   child: IconButton(
 
                                     icon: Icon(Icons.bookmarks),
