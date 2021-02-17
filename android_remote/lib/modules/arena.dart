@@ -98,21 +98,25 @@ class Arena {
   }
 
   bool moveRobot(String operation) {
+    bool isRotate = false;
+
     switch (operation) {
       case 'FW':
         _robot.moveForward();
         break;
       case 'RL':
         _robot.rotateLeft();
+        isRotate = true;
         break;
       case 'RR':
         _robot.rotateRight();
+        isRotate = true;
         break;
     }
 
     if (globals.updateMode) setRobotPos();
 
-    return (_robot.isDisplaced() != 0);
+    return isRotate || (_robot.isDisplaced() != 0);
   }
   void resetRobotPos(){
     streamController.add('Resetted Robot to Start Location.');
