@@ -44,12 +44,14 @@ class BluetoothController {
             print('Disconnected remotely!');
             streamController.add('Disconnecting remotely!');
             this.disconnect();
+            this.reconnect();
           }
         });
-      }).catchError((error) {
+      }).catchError((error) async {
         print('Cannot connect, exception occurred');
-        streamController.add('Cannot connect, Socket not opened');
-
+        streamController.add('Cannot connect, Socket not opened..');
+        streamController.add('Retrying in 3 seconds.');
+        new Future.delayed(const Duration(seconds:3), () => reconnect());
         print(error);
       });
     }
@@ -67,7 +69,12 @@ class BluetoothController {
       }
     }
   }
-
+  void reconnect()
+  {
+    this.isConnecting = true;
+    this.server = server;
+    init();
+  }
   void disconnect() {
     sendMessage('Disconnecting from remote host...');
     this.dispose();

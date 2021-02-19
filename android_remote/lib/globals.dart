@@ -1,6 +1,7 @@
 library android_remote.globals;
 
 import 'package:flutter/material.dart';
+import 'package:flutter_bluetooth_serial/flutter_bluetooth_serial.dart';
 import 'package:intl/intl.dart';
 import 'modules/bluetooth_manager.dart';
 
@@ -10,7 +11,7 @@ bool debugMode = false;
 bool controlMode = false;
 String Datetimeformat ='yyyy/MM/dd, kk:mm:ss';
 String formattedDate = DateFormat(Datetimeformat).format(DateTime.now())+" | "+"Console initialized";
-
+BluetoothDevice lastdevice;
 List<String> strArr = ["Console initialized"]; // To store the console log outputs.
 List<String> BackupstrArr = [formattedDate];
 Color robotStatus = Colors.red;
