@@ -1,9 +1,11 @@
 import 'dart:convert';
+import 'dart:io';
 import 'dart:typed_data';
 
 import 'package:android_remote/main.dart';
 import 'package:flutter_bluetooth_serial/flutter_bluetooth_serial.dart';
 
+import '../globals.dart';
 
 class BluetoothController {
   static final clientID = 0;
@@ -15,7 +17,6 @@ class BluetoothController {
   bool isConnected = false;
   List<_Message> messages = List<_Message>();
   String _messageBuffer = '';
-
 
   BluetoothController();
 
@@ -74,41 +75,43 @@ class BluetoothController {
     isConnected = false;
   }
 
-  void _onDataReceived(Uint8List data) {
+  Future _onDataReceived(Uint8List data) async {
     // Allocate buffer for parsed data
-    int backspacesCounter = 0;
-    data.forEach((byte) {
-      if (byte == 8 || byte == 127) {
-        backspacesCounter++;
-      }
-    });
-    Uint8List buffer = Uint8List(data.length - backspacesCounter);
-    int bufferIndex = buffer.length;
 
-    // Apply backspace control character
-    backspacesCounter = 0;
-    for (int i = data.length - 1; i >= 0; i--) {
-      if (data[i] == 8 || data[i] == 127) {
-        backspacesCounter++;
-      } else {
-        if (backspacesCounter > 0) {
-          backspacesCounter--;
+      int backspacesCounter = 0;
+      data.forEach((byte) {
+        if (byte == 8 || byte == 127) {
+          backspacesCounter++;
+        }
+      });
+      Uint8List buffer = Uint8List(data.length - backspacesCounter);
+      int bufferIndex = buffer.length;
+
+      // Apply backspace control character
+      backspacesCounter = 0;
+      for (int i = data.length - 1; i >= 0; i--) {
+        if (data[i] == 8 || data[i] == 127) {
+          backspacesCounter++;
         } else {
-          buffer[--bufferIndex] = data[i];
+          if (backspacesCounter > 0) {
+            backspacesCounter--;
+          } else {
+            buffer[--bufferIndex] = data[i];
+          }
         }
       }
-    }
 
-    // Create message if there is new line character
-    String dataString = String.fromCharCodes(buffer);
-    String name = this.server.name;
+      // Create message if there is new line character
+      String dataString = String.fromCharCodes(buffer);
+      String name = this.server.name;
 
-    String sdataString = dataString.trim();
+      String sdataString = dataString.trim();
 
-    streamController.add('Message Received from [$name]: [$sdataString]');
+      streamController.add('Message Received from [$name]: [$sdataString]');
+
   }
 
-  void sendMessage(String text) async {
+  Future sendMessage(String text) async {
     text = text.trim();
 
     messages.add(_Message(clientID, text));
@@ -118,11 +121,9 @@ class BluetoothController {
         connection.output.add(utf8.encode(text));
         await connection.output.allSent;
 
-
-          messages.add(_Message(clientID, text));
+        messages.add(_Message(clientID, text));
 
         streamController.add('Message sent to Bluetooth device: [$text]');
-
       } catch (e) {
         // Ignore error, but notify state
 
@@ -132,7 +133,6 @@ class BluetoothController {
       }
     }
   }
-
 }
 
 class _Message {

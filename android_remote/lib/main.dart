@@ -15,6 +15,7 @@ import 'package:intl/intl.dart';
 
 StreamController<String> streamController =
     StreamController<String>.broadcast();
+
 void main() {
   runApp(MyApp());
 }
@@ -45,6 +46,7 @@ class MyHomePage extends StatefulWidget {
   MyHomePage(this.stream);
 
   final Stream<String> stream;
+
   @override
   _MyHomePageState createState() => _MyHomePageState();
 }
@@ -62,7 +64,10 @@ class _MyHomePageState extends State<MyHomePage> {
   void addConsoleAndScroll(String message) {
     setState(() {
       globals.strArr.add(message);
-      globals.BackupstrArr.add(DateFormat(globals.Datetimeformat).format(DateTime.now())+" | "+message);
+      globals.BackupstrArr.add(
+          DateFormat(globals.Datetimeformat).format(DateTime.now()) +
+              " | " +
+              message);
       consoleController.scrollTo(
           index: globals.strArr.length,
           duration: Duration(milliseconds: 333),
@@ -322,63 +327,64 @@ class _MyHomePageState extends State<MyHomePage> {
                             decoration: BoxDecoration(
                               border: Border.all(color: Colors.black),
                             ),
-                            child: Stack(
-                                children: [
+                            child: Stack(children: [
                               new ScrollablePositionedList.builder(
                                 itemScrollController: consoleController,
                                 itemCount: globals.strArr.length,
                                 itemBuilder: (context, index) {
                                   return new Padding(
                                       padding: EdgeInsets.fromLTRB(5, 10, 0, 0),
-                                      child:Text(globals.strArr[index]));
+                                      child: Text(globals.strArr[index]));
                                 },
                               ),
-
-                                Align(
-                                  alignment: Alignment.topRight,
-                                  child: IconButton(
-                                    icon: Icon(Icons.delete),
-                                    onPressed: () {
-                                      setState(() {
-                                        globals.strArr = ["Console log cleared."];
-                                        globals.BackupstrArr.add(DateFormat(globals.Datetimeformat).format(DateTime.now())+" | "+"Console log cleared.");
-                                      });
-
-                                    },
-                                  ),
+                              Align(
+                                alignment: Alignment.topRight,
+                                child: IconButton(
+                                  icon: Icon(Icons.delete),
+                                  onPressed: () {
+                                    setState(() {
+                                      globals.strArr = ["Console log cleared."];
+                                      globals.BackupstrArr.add(
+                                          DateFormat(globals.Datetimeformat)
+                                                  .format(DateTime.now()) +
+                                              " | " +
+                                              "Console log cleared.");
+                                    });
+                                  },
                                 ),
+                              ),
+                              Align(
+                                alignment: Alignment.bottomRight,
+                                child: IconButton(
+                                  icon: Icon(Icons.bookmarks),
+                                  onPressed: () {
+                                    Navigator.of(context).push(PageRouteBuilder(
+                                      opaque: false,
+                                      pageBuilder:
+                                          (BuildContext context, _, __) {
+                                        return ConsoleBackupPage();
+                                      },
+                                      transitionsBuilder: (context, animation,
+                                          secondaryAnimation, child) {
+                                        var begin = Offset(0.0, 1.0);
+                                        var end = Offset.zero;
+                                        var curve = Curves.ease;
 
-                                Align(
+                                        var tween = Tween(
+                                                begin: begin, end: end)
+                                            .chain(CurveTween(curve: curve));
 
-                                  alignment: Alignment.bottomRight,
-                                  child: IconButton(
-
-                                    icon: Icon(Icons.bookmarks),
-                                    onPressed: () {
-                                      Navigator.of(context).push(PageRouteBuilder(
-                                          opaque: false,
-                                          pageBuilder: (BuildContext context, _, __) {
-                                            return ConsoleBackupPage();
-                                          },
-                                        transitionsBuilder: (context, animation, secondaryAnimation, child) {
-                                          var begin = Offset(0.0, 1.0);
-                                          var end = Offset.zero;
-                                          var curve = Curves.ease;
-
-                                          var tween = Tween(begin: begin, end: end).chain(CurveTween(curve: curve));
-
-                                          return SlideTransition(
-                                            position: animation.drive(tween),
-                                            child: child,
-                                          );
-                                        },
-                                        transitionDuration: Duration(milliseconds: 500),
-
-                                      ));
-                                    },
-                                  ),
+                                        return SlideTransition(
+                                          position: animation.drive(tween),
+                                          child: child,
+                                        );
+                                      },
+                                      transitionDuration:
+                                          Duration(milliseconds: 500),
+                                    ));
+                                  },
                                 ),
-
+                              ),
                             ]),
                           ),
                         ),
@@ -410,7 +416,7 @@ class _MyHomePageState extends State<MyHomePage> {
                               child: RaisedButton(
                                 onPressed: () async {
                                   if (globals.btController.isConnected) {
-                                    globals.btController.sendMessage(
+                                    await globals.btController.sendMessage(
                                         await _getFunctionString(1));
                                   }
                                 },
@@ -427,7 +433,7 @@ class _MyHomePageState extends State<MyHomePage> {
                               child: RaisedButton(
                                 onPressed: () async {
                                   if (globals.btController.isConnected) {
-                                    globals.btController.sendMessage(
+                                    await globals.btController.sendMessage(
                                         await _getFunctionString(2));
                                   }
                                 },
@@ -452,15 +458,16 @@ class _MyHomePageState extends State<MyHomePage> {
                                 Expanded(
                                   child: IconButton(
                                     icon: Icon(Icons.arrow_circle_up),
-                                    onPressed: () {
+                                    onPressed: () async {
                                       if (globals.debugMode) {
                                         _arena.moveRobot('FW');
                                       } else if (globals
                                               .btController.isConnected &&
                                           !globals.debugMode) {
-                                        if (_arena.moveRobot('FW'))
-                                          globals.btController
+                                        if (_arena.moveRobot('FW')) {
+                                          await globals.btController
                                               .sendMessage(globals.strForward);
+                                        }
                                       }
                                       if (!globals.updateMode)
                                         setState(() {

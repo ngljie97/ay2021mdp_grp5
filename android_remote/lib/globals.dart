@@ -18,12 +18,13 @@ Color robotStatus = Colors.red;
 BluetoothController btController;
 
 // Command strings: [SRC][DST][OP] 2 CHARACTERS EA
-final String strStartExplore = 'AN:AD:SE';
-final String strFastestPath = 'AN:AD:FP';
-final String strForward = 'AN:AD:FW';
-final String strRotateLeft = 'AN:AD:RL';
-final String strRotateRight = 'AN:AD:RR';
-final String strReverse = 'AN:AD:RV';
+final String strStartExplore = 'EX_START';
+final String strFastestPath = 'FP_START';
+final String strForward = 'ROBOT_FW';
+final String strRotateLeft = 'ROBOT_RL';
+final String strRotateRight = 'ROBOT_RR';
+final String strReverse = 'ROBOT_RV';
+final String strImgFind ='IF_START';
 
 // Arena
 /*List<List<String>> arenaState = [
