@@ -7,6 +7,7 @@ import 'package:flutter_bluetooth_serial/flutter_bluetooth_serial.dart';
 
 import '../globals.dart';
 
+
 class BluetoothController {
   static final clientID = 0;
   BluetoothDevice selectedDevice;
@@ -25,10 +26,12 @@ class BluetoothController {
     print(isConnected);
 
     if (isConnecting) {
+
       BluetoothConnection.toAddress(server.address).then((_connection) {
         streamController.add('Successfully connected to ' + server.name);
         isConnected = true;
         print('Connected to the device');
+        print(server.bondState.stringValue);
 
         connection = _connection;
 
@@ -36,23 +39,26 @@ class BluetoothController {
         isDisconnecting = false;
 
         connection.input.listen(_onDataReceived).onDone(() {
+          print("errortest2");
+
           if (isDisconnecting) {
             print('Disconnecting locally!');
             streamController.add('Disconnecting locally!');
             this.disconnect();
           } else {
-            print('Disconnected remotely!');
+
             streamController.add('Disconnecting remotely!');
+            streamController.add('Retrying in 3 seconds.');
             this.disconnect();
-            this.reconnect();
+            new Future.delayed(const Duration(seconds:3), () => this.reconnect());
           }
         });
       }).catchError((error) async {
         print('Cannot connect, exception occurred');
         streamController.add('Cannot connect, Socket not opened..');
         streamController.add('Retrying in 3 seconds.');
-        new Future.delayed(const Duration(seconds:3), () => reconnect());
-        print(error);
+        this.disconnect();
+        new Future.delayed(const Duration(seconds:3), () => this.reconnect());
       });
     }
   }
@@ -62,7 +68,10 @@ class BluetoothController {
     if (isConnected) {
       isDisconnecting = true;
       try {
-        connection.dispose();
+        this.connection.output.close();
+        this.connection.finish();
+        this.connection.close();
+        this.connection.dispose();
       } catch (e) {
         // do nothing}
         connection = null;
@@ -72,11 +81,12 @@ class BluetoothController {
   void reconnect()
   {
     this.isConnecting = true;
-    this.server = server;
+    this.server = lastdevice;
     init();
   }
   void disconnect() {
     sendMessage('Disconnecting from remote host...');
+
     this.dispose();
     isConnecting = false;
     isConnected = false;
@@ -133,7 +143,7 @@ class BluetoothController {
         streamController.add('Message sent to Bluetooth device: [$text]');
       } catch (e) {
         // Ignore error, but notify state
-
+        print("errortest1");
         streamController.add('Disconnected remotely!');
 
         //this.disconnect();
