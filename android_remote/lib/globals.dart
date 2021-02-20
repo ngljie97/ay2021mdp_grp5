@@ -9,6 +9,7 @@ import 'modules/bluetooth_manager.dart';
 bool updateMode = false;
 bool debugMode = false;
 bool controlMode = false;
+bool gyroMode = false;
 String Datetimeformat ='yyyy/MM/dd, kk:mm:ss';
 String formattedDate = DateFormat(Datetimeformat).format(DateTime.now())+" | "+"Console initialized";
 BluetoothDevice lastdevice;
