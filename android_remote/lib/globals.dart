@@ -20,7 +20,7 @@ List<String> strArr = [
   "Console initialized"
 ]; // To store the console log outputs.
 List<String> BackupstrArr = [formattedDate];
-int robotStatus = 0;
+bool robotStatus = false;
 
 BluetoothController btController;
 

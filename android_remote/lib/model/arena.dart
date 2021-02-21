@@ -102,6 +102,26 @@ class Arena {
     return '0';
   }
 
+  void setObstacle(int x, int y) {
+    this._obstaclesRecords[x][y] = 1;
+  }
+
+  void removeObstacle(int x, int y) {
+    this._obstaclesRecords[x][y] = 0;
+  }
+
+  void setExplored(int x, int y) {
+    this._explorationStatus[x][y] = 1;
+  }
+
+  void removeExplored(int x, int y) {
+    this._explorationStatus[x][y] = 0;
+  }
+
+  void refreshArena() {
+
+  }
+
   Widget getArenaState(int x, int y, Function onTapFunction) {
     String item = isRobot(x, y);
 

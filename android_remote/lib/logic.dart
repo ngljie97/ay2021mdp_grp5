@@ -1,4 +1,4 @@
-import 'arena.dart';
+import 'model/arena.dart';
 
 bool executeCommand(Arena arena, String command, [List<String> args]) {
   switch (command) {
