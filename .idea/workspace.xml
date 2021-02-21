@@ -30,12 +30,8 @@
   <component name="ChangeListManager">
     <list default="true" id="28be24ed-ecd2-4996-a17e-b3573ad5f47d" name="Default Changelist" comment="Bug fixes">
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/android_remote/lib/globals.dart" beforeDir="false" afterPath="$PROJECT_DIR$/android_remote/lib/globals.dart" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/android_remote/lib/logic.dart" beforeDir="false" afterPath="$PROJECT_DIR$/android_remote/lib/logic.dart" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/android_remote/lib/main.dart" beforeDir="false" afterPath="$PROJECT_DIR$/android_remote/lib/main.dart" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/android_remote/lib/model/arena.dart" beforeDir="false" afterPath="$PROJECT_DIR$/android_remote/lib/model/arena.dart" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/android_remote/lib/model/map.dart" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/android_remote/lib/modules/bluetooth_manager.dart" beforeDir="false" afterPath="$PROJECT_DIR$/android_remote/lib/modules/bluetooth_manager.dart" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/android_remote/pubspec.lock" beforeDir="false" afterPath="$PROJECT_DIR$/android_remote/pubspec.lock" afterDir="false" />
     </list>
     <list id="31802251-d898-47f0-9952-af88a6db3e74" name="Revert &quot;New branch for rollback in case of issues when splitting the classes.&quot;" comment="Revert &quot;New branch for rollback in case of issues when splitting the classes.&quot;&#10;&#10;This reverts commit 511a0cdd" />
     <list id="99b10710-ba7f-4aa0-b735-a4ed3fdbe4eb" name="Revert &quot;Revert &quot;New branch for rollback in case of issues when splitting the classes.&quot;&quot;" comment="Revert &quot;Revert &quot;New branch for rollback in case of issues when splitting the classes.&quot;&quot;&#10;&#10;This reverts commit 1bbd892a" />
@@ -44,7 +40,6 @@
     <option name="HIGHLIGHT_NON_ACTIVE_CHANGELIST" value="false" />
     <option name="LAST_RESOLUTION" value="IGNORE" />
   </component>
-  <component name="ExecutionTargetManager" SELECTED_TARGET="device_and_snapshot_combo_box_target[Pixel_3a_API_30_x86]" />
   <component name="FileTemplateManagerImpl">
     <option name="RECENT_TEMPLATES">
       <list>
@@ -86,6 +81,7 @@
     <property name="ASKED_SHARE_PROJECT_CONFIGURATION_FILES" value="true" />
     <property name="RunOnceActivity.OpenProjectViewOnStart" value="true" />
     <property name="RunOnceActivity.ShowReadmeOnStart" value="true" />
+    <property name="dart.analysis.tool.window.visible" value="false" />
     <property name="io.flutter.reload.alreadyRun" value="true" />
     <property name="last_opened_file_path" value="$USER_HOME$/MDP5Android/FlutterWorkingBlue" />
     <property name="settings.editor.selected.configurable" value="flutter.settings" />
