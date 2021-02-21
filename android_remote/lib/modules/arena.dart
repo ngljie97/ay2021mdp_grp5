@@ -4,10 +4,10 @@ import 'package:flutter/material.dart';
 
 class _Robot {
   int prevX;
-  int prevY;
   int x;
   int y;
-  String direction;
+  int prevY;
+  int direction;
 
   _Robot(this.x, this.y, this.prevX, this.prevY, this.direction);
 
@@ -17,57 +17,27 @@ class _Robot {
     prevY = y;
 
     switch (this.direction) {
-      case 'N':
+      case 0:
         newPos = this.x - 1;
         this.x = (newPos > 0 && newPos < 19) ? newPos : x;
         break;
-      case 'S':
+      case 2:
         newPos = this.x + 1;
         this.x = (newPos > 0 && newPos < 19) ? newPos : x;
         break;
-      case 'E':
+      case 1:
         newPos = this.y + 1;
         this.y = (newPos > 0 && newPos < 14) ? newPos : y;
         break;
-      case 'W':
+      case 3:
         newPos = this.y - 1;
         this.y = (newPos > 0 && newPos < 14) ? newPos : y;
         break;
     }
   }
 
-  void rotateLeft() {
-    switch (this.direction) {
-      case 'N':
-        this.direction = 'W';
-        break;
-      case 'S':
-        this.direction = 'E';
-        break;
-      case 'E':
-        this.direction = 'N';
-        break;
-      case 'W':
-        this.direction = 'S';
-        break;
-    }
-  }
-
-  void rotateRight() {
-    switch (this.direction) {
-      case 'N':
-        this.direction = 'E';
-        break;
-      case 'S':
-        this.direction = 'W';
-        break;
-      case 'E':
-        this.direction = 'S';
-        break;
-      case 'W':
-        this.direction = 'N';
-        break;
-    }
+  void rotate(int modifier) {
+    this.direction = (this.direction + modifier) % 4;
   }
 
   int isDisplaced() {
@@ -85,13 +55,25 @@ class _WayPoint {
 class Arena {
   Arena();
 
-  List<List<String>> _arenaState = List.generate(
+  List<List<int>> _explorationStatus = List.generate(
     20,
-    (index) => List.generate(15, (index) => '0', growable: false),
+        (index) => List.generate(15, (index) => 0, growable: false),
     growable: false,
   );
+  List<List<int>> _obstaclesRecords = List.generate(
+    20,
+        (index) => List.generate(15, (index) => 0, growable: false),
+    growable: false,
+  );
+
+/*  List<List<int>> _arenaState = List.generate(
+    20,
+        (index) => List.generate(15, (index) => 0, growable: false),
+    growable: false,
+  );*/
+
   _WayPoint _wayPoint = _WayPoint(0, 0);
-  _Robot _robot = _Robot(18, 1, 18, 1, 'N');
+  _Robot _robot = _Robot(18, 1, 18, 1, 0);
 
   void setWayPoint(int x, int y) {
     this._wayPoint = _WayPoint(x, y);
@@ -100,114 +82,130 @@ class Arena {
   bool moveRobot(String operation) {
     bool isRotate = false;
 
-    switch (operation) {
-      case 'FW':
-        _robot.moveForward();
-        break;
-      case 'RL':
-        _robot.rotateLeft();
-        isRotate = true;
-        break;
-      case 'RR':
-        _robot.rotateRight();
-        isRotate = true;
-        break;
-    }
+    if (globals.debugMode)
+      switch (operation) {
+        case 'FW':
+          _robot.moveForward();
+          break;
+        case 'RL':
+          _robot.rotate(-1);
+          isRotate = true;
+          break;
+        case 'RR':
+          _robot.rotate(1);
+          isRotate = true;
+          break;
+      }
 
-    if (globals.updateMode) setRobotPos();
+/*    if (globals.updateMode) displayRobot();*/
 
     return isRotate || (_robot.isDisplaced() != 0);
   }
-  void resetRobotPos(){
-    streamController.add('Resetted Robot to Start Location.');
-    this._arenaState = List.generate(
-      20,
-          (index) => List.generate(15, (index) => '0', growable: false),
-      growable: false,
-    );
-    this._robot = _Robot(18, 1, 18, 1, 'N');
-    this.setRobotPos();
+
+  void resetRobotPos() {
+    streamController.add('Reset Robot to Start Location.');
+    this._robot = _Robot(18, 1, 18, 1, 0);
+/*    this.displayRobot();*/
   }
-  void setRobotPos() {
-    void _clearPrev(int flag) {
-      switch (flag) {
-        case 1:
-          _arenaState[_robot.x + 2][_robot.y - 1] = '1';
-          _arenaState[_robot.x + 2][_robot.y - 0] = '1';
-          _arenaState[_robot.x + 2][_robot.y + 1] = '1';
-          break;
-        case -1:
-          _arenaState[_robot.x - 2][_robot.y - 1] = '1';
-          _arenaState[_robot.x - 2][_robot.y - 0] = '1';
-          _arenaState[_robot.x - 2][_robot.y + 1] = '1';
-          break;
-        case 2:
-          _arenaState[_robot.x - 1][_robot.y + 2] = '1';
-          _arenaState[_robot.x - 0][_robot.y + 2] = '1';
-          _arenaState[_robot.x + 1][_robot.y + 2] = '1';
-          break;
-        case -2:
-          _arenaState[_robot.x - 1][_robot.y - 2] = '1';
-          _arenaState[_robot.x - 0][_robot.y - 2] = '1';
-          _arenaState[_robot.x + 1][_robot.y - 2] = '1';
-          break;
-      }
-    }
 
-    int xi = 0;
-    int yj = 0;
+  void setRobotPos(int x, int y, int dir) {
+    _robot.prevX = _robot.x;
+    _robot.prevY = _robot.y;
 
-    int flag = ((_robot.prevX - _robot.x) + ((_robot.prevY - _robot.y) * 2));
-    if (flag != 0) {
-      _clearPrev(flag);
-    }
+    _robot.x = x;
+    _robot.y = y;
+    _robot.direction = dir;
+  }
 
+  int isRobot(int x, int y) {
     for (int i = -1; i <= 1; i++) {
       for (int j = -1; j <= 1; j++) {
-        _arenaState[this._robot.x + i][this._robot.y + j] = 'R';
+        if ((this._robot.x + 1) == x || (this._robot.y + 1) == y) {
+          int xi = 0;
+          int yj = 0;
+
+          switch (this._robot.direction) {
+            case 0:
+              xi = this._robot.x - 1;
+              yj = this._robot.y;
+              break;
+            case 1:
+              xi = this._robot.x;
+              yj = this._robot.y + 1;
+              break;
+            case 2:
+              xi = this._robot.x + 1;
+              yj = this._robot.y;
+              break;
+            case 3:
+              xi = this._robot.x;
+              yj = this._robot.y - 1;
+              break;
+          }
+
+          if (xi == x && yj == y)
+            return 4;
+          else
+            return 3;
+        }
       }
     }
-
-    switch (this._robot.direction) {
-      case 'N':
-        xi = this._robot.x - 1;
-        yj = this._robot.y;
-        break;
-      case 'S':
-        xi = this._robot.x + 1;
-        yj = this._robot.y;
-        break;
-      case 'E':
-        xi = this._robot.x;
-        yj = this._robot.y + 1;
-        break;
-      case 'W':
-        xi = this._robot.x;
-        yj = this._robot.y - 1;
-        break;
-    }
-    _arenaState[xi][yj] = 'RH';
+    return 0;
   }
 
-  Widget getArenaState(int x, int y) {
-    String state = _arenaState[x][y];
-    switch (state) {
-      case 'R':
-        return Container(
-          color: Colors.grey,
-          child: Container(
-            color: Colors.blueGrey,
+  Widget getArenaState(int x, int y, Function onTapFunction) {
+    int item = isRobot(x, y);
+
+    if (item == 0) {
+      item = _obstaclesRecords[x][y];
+    }
+
+    if (item == 0) {
+      item = _explorationStatus[x][y];
+    }
+
+    return _resolveItem ('$item', onTapFunction);
+  }
+
+  Widget _resolveItem(String item, Function onTapFunction) {
+    switch (item) {
+      case '0': // Unexplored
+        return Padding(
+          padding: const EdgeInsets.all(1),
+          child: GestureDetector(
+            child: Container(
+              color: Colors.grey,
+              child: Text(''),
+            ),
+            onTap: onTapFunction,
           ),
         );
         break;
-      case 'RH':
-        return Container(
-          color: Colors.grey,
-          child: Container(
-            color: Colors.redAccent,
+
+      case '1': // Explored
+        return Padding(
+          padding: const EdgeInsets.all(1),
+          child: GestureDetector(
+            child: Container(
+              color: Colors.white,
+              child: Text(''),
+            ),
+            onTap: onTapFunction,
           ),
         );
         break;
+
+      case 'O':
+        return Padding(
+          padding: const EdgeInsets.all(1),
+          child: Container(
+            color: Colors.black,
+            child: Text('X'),
+          ),
+        );
+        break;
+
+    // Image Recognition
       case 'A':
         return Container(
           decoration: BoxDecoration(
@@ -357,27 +355,27 @@ class Arena {
           ),
         );
         break;
+    // End of Image Recognition
 
-      case '0':
-        return Padding(
-            padding: const EdgeInsets.all(1),
-            child: Container(
-              color: Colors.black54,
-              child: Text(''),
-            ));
+      case 'R':
+        return Container(
+          color: Colors.grey,
+          child: Container(
+            color: Colors.blueGrey,
+          ),
+        );
         break;
-
-      case '1':
-        return Padding(
-            padding: const EdgeInsets.all(1),
-            child: Container(
-              color: Colors.white24,
-              child: Text(''),
-            ));
+      case 'RH':
+        return Container(
+          color: Colors.grey,
+          child: Container(
+            color: Colors.redAccent,
+          ),
+        );
         break;
 
       default:
-        return Text(state);
+        return Text(item);
     }
   }
 }
