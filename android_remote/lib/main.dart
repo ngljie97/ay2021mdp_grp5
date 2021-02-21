@@ -54,13 +54,12 @@ class MyHomePage extends StatefulWidget {
 }
 
 class _MyHomePageState extends State<MyHomePage> {
-  static Arena _arena = globals.arena;
   bool _setWayPoint = false;
 
   void mySetState(String message) {
     addConsoleAndScroll(message);
     if (message.contains('Disconnected remotely!')) {
-      _arena.resetRobotPos();
+      globals.arena.resetRobotPos();
     }
   }
 
@@ -93,8 +92,8 @@ class _MyHomePageState extends State<MyHomePage> {
     widget.stream.listen((message) {
       mySetState(message);
     });
-    _arena = Arena();
-    // _arena.displayRobot();
+    globals.arena = Arena();
+    // globals.arena.displayRobot();
     if (globals.btController == null)
       globals.btController = BluetoothController();
     globals.btController.init();
@@ -104,15 +103,15 @@ class _MyHomePageState extends State<MyHomePage> {
     //commandString = 'FW','RR'
     //globalString = globals.strForward
     if (globals.debugMode) {
-      _arena.moveRobot(commandString);
+      globals.arena.moveRobot(commandString);
     } else if (globals.btController.isConnected && !globals.debugMode) {
-      if (_arena.moveRobot(commandString)) {
+      if (globals.arena.moveRobot(commandString)) {
         await globals.btController.sendMessage(globalString);
       }
     }
     if (!globals.updateMode)
       setState(() {
-        //_arena.setRobotPos();
+        //globals.arena.setRobotPos();
       });
   }
 
@@ -244,7 +243,7 @@ class _MyHomePageState extends State<MyHomePage> {
                     onPressed: () {
                       addConsoleAndScroll('Resetted robot to start position');
                       setState(() {
-                        _arena.resetRobotPos();
+                        globals.arena.resetRobotPos();
                       });
                     },
                   ),
@@ -282,7 +281,7 @@ class _MyHomePageState extends State<MyHomePage> {
                     addConsoleAndScroll('Disconnecting locally!');
                     globals.btController.disconnect();
                     addConsoleAndScroll('Disconnected locally!');
-                    _arena.resetRobotPos();
+                    globals.arena.resetRobotPos();
                   }
                   if (!globals.btController.isConnected) {
                     streamController.close();
@@ -412,12 +411,12 @@ class _MyHomePageState extends State<MyHomePage> {
     void onTapFunction() {
       if (_setWayPoint) {
         _setWayPoint = false;
-        _arena.setWayPoint(x, y);
+        globals.arena.setWayPoint(x, y);
         addConsoleAndScroll('WayPoint set at [$x,$y]');
       }
     }
 
-    return _arena.getArenaState(x, y, onTapFunction);
+    return globals.arena.getArenaState(x, y, onTapFunction);
   }
 
   Widget _buildBottomPanel() {
@@ -581,11 +580,11 @@ class _MyHomePageState extends State<MyHomePage> {
                                     icon: Icon(Icons.arrow_circle_up),
                                     onPressed: () async {
                                       if (globals.debugMode) {
-                                        _arena.moveRobot('FW');
+                                        globals.arena.moveRobot('FW');
                                       } else if (globals
                                               .btController.isConnected &&
                                           !globals.debugMode) {
-                                        if (_arena.moveRobot('FW')) {
+                                        if (globals.arena.moveRobot('FW')) {
                                           await globals.btController
                                               .sendMessage(globals.strForward);
                                         }
@@ -604,11 +603,11 @@ class _MyHomePageState extends State<MyHomePage> {
                                     tooltip: 'Rotate Left',
                                     onPressed: () {
                                       if (globals.debugMode) {
-                                        _arena.moveRobot('RL');
+                                        globals.arena.moveRobot('RL');
                                       } else if (globals
                                               .btController.isConnected &&
                                           !globals.debugMode) {
-                                        if (_arena.moveRobot('RL'))
+                                        if (globals.arena.moveRobot('RL'))
                                           globals.btController.sendMessage(
                                               globals.strRotateLeft);
                                       }
@@ -624,11 +623,11 @@ class _MyHomePageState extends State<MyHomePage> {
                                     icon: Icon(Icons.rotate_right),
                                     onPressed: () {
                                       if (globals.debugMode) {
-                                        _arena.moveRobot('RR');
+                                        globals.arena.moveRobot('RR');
                                       } else if (globals
                                               .btController.isConnected &&
                                           !globals.debugMode) {
-                                        if (_arena.moveRobot('RR'))
+                                        if (globals.arena.moveRobot('RR'))
                                           globals.btController.sendMessage(
                                               globals.strRotateRight);
                                       }
