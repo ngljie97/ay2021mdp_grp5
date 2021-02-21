@@ -1,8 +1,10 @@
+import 'globals.dart' as globals;
 import 'model/arena.dart';
 
-bool executeCommand(Arena arena, String command, [List<String> args]) {
+bool executeCommand(String command, [List<String> args]) {
+  Arena arena = globals.arena;
   switch (command) {
-    case "ROBOT_POS":
+    case 'ROBOT_POS':
       if (args.isNotEmpty) {
         int x = args[0] as int;
         int y = args[1] as int;
@@ -11,7 +13,31 @@ bool executeCommand(Arena arena, String command, [List<String> args]) {
         arena.setRobotPos(x, y, dir);
       }
       break;
-    case "MAP":
+    case 'MAP':
+      if (args.isNotEmpty) {
+        String mapDescriptor1 = args[0];
+        String mapDescriptor2 = args[2];
+
+        arena.updateMapWithDescriptors(mapDescriptor1, mapDescriptor2);
+      }
+      break;
+    case 'ADDOBSTACLE':
+      if (args.isNotEmpty) {
+        List coord = args[0].split(',');
+        int x = coord[0];
+        int y = coord[1];
+
+        arena.setObstacle(x, y);
+      }
+      break;
+    case 'REMOVEOBSTACLE':
+      if (args.isNotEmpty) {
+        List coord = args[0].split(',');
+        int x = coord[0];
+        int y = coord[1];
+
+        arena.removeObstacle(x, y);
+      }
       break;
     default:
       break;

@@ -54,7 +54,7 @@ class MyHomePage extends StatefulWidget {
 }
 
 class _MyHomePageState extends State<MyHomePage> {
-  static Arena _arena;
+  static Arena _arena = globals.arena;
   bool _setWayPoint = false;
 
   void mySetState(String message) {

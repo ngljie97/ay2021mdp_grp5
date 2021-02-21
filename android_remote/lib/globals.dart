@@ -3,6 +3,7 @@ library android_remote.globals;
 import 'package:flutter_bluetooth_serial/flutter_bluetooth_serial.dart';
 import 'package:intl/intl.dart';
 
+import 'model/arena.dart';
 import 'modules/bluetooth_manager.dart';
 
 // Flags for application operations.
@@ -22,6 +23,7 @@ List<String> BackupstrArr = [formattedDate];
 bool robotStatus = false;
 
 BluetoothController btController;
+Arena arena;
 
 // Command strings (sending)
 final String strStartExplore = 'EX_START';

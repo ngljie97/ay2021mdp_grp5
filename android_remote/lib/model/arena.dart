@@ -2,6 +2,7 @@ import 'package:android_remote/globals.dart' as globals;
 import 'package:android_remote/main.dart';
 import 'package:android_remote/model/robot.dart';
 import 'package:android_remote/model/waypoint.dart';
+import 'package:convert/convert.dart';
 import 'package:flutter/material.dart';
 
 class Arena {
@@ -23,6 +24,20 @@ class Arena {
 
   void setWayPoint(int x, int y) {
     this._wayPoint.update(x, y);
+  }
+
+  void updateMapWithDescriptors(String mapDescriptor1, String mapDescriptor2) {
+    List<int> exploration = hex.decode(mapDescriptor1);
+    List<int> obstacles = hex.decode(mapDescriptor2);
+    int x, y = 0;
+
+    for (int i = 0; i < 300; i++) {
+      x = (i / 15).floor();
+      y = (i % 15);
+
+      this._explorationStatus[x][y] = exploration[i + 2];
+      this._obstaclesRecords[x][y] = obstacles[i + 2];
+    }
   }
 
   bool moveRobot(String operation) {
@@ -118,9 +133,7 @@ class Arena {
     this._explorationStatus[x][y] = 0;
   }
 
-  void refreshArena() {
-
-  }
+  void refreshArena() {}
 
   Widget getArenaState(int x, int y, Function onTapFunction) {
     String item = isRobot(x, y);

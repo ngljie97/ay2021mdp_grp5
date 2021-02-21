@@ -1,11 +1,11 @@
 import 'dart:convert';
 import 'dart:typed_data';
 
+import 'package:android_remote/logic.dart' as logic;
 import 'package:android_remote/main.dart';
 import 'package:flutter_bluetooth_serial/flutter_bluetooth_serial.dart';
 
 import '../globals.dart';
-
 
 class BluetoothController {
   static final clientID = 0;
@@ -25,7 +25,6 @@ class BluetoothController {
     print(isConnected);
 
     if (isConnecting) {
-
       BluetoothConnection.toAddress(server.address).then((_connection) {
         streamController.add('Successfully connected to ' + server.name);
         isConnected = true;
@@ -45,11 +44,11 @@ class BluetoothController {
             streamController.add('Disconnecting locally!');
             this.disconnect();
           } else {
-
             streamController.add('Disconnecting remotely!');
             streamController.add('Retrying in 3 seconds.');
             this.disconnect();
-            new Future.delayed(const Duration(seconds:3), () => this.reconnect());
+            new Future.delayed(
+                const Duration(seconds: 3), () => this.reconnect());
           }
         });
       }).catchError((error) async {
@@ -57,7 +56,7 @@ class BluetoothController {
         streamController.add('Cannot connect, Socket not opened..');
         streamController.add('Retrying in 3 seconds.');
         this.disconnect();
-        new Future.delayed(const Duration(seconds:3), () => this.reconnect());
+        new Future.delayed(const Duration(seconds: 3), () => this.reconnect());
       });
     }
   }
@@ -77,12 +76,13 @@ class BluetoothController {
       }
     }
   }
-  void reconnect()
-  {
+
+  void reconnect() {
     this.isConnecting = true;
     this.server = lastdevice;
     init();
   }
+
   void disconnect() {
     sendMessage('Disconnecting from remote host...');
 
@@ -93,38 +93,41 @@ class BluetoothController {
 
   Future _onDataReceived(Uint8List data) async {
     // Allocate buffer for parsed data
+    int backspacesCounter = 0;
+    data.forEach((byte) {
+      if (byte == 8 || byte == 127) {
+        backspacesCounter++;
+      }
+    });
+    Uint8List buffer = Uint8List(data.length - backspacesCounter);
+    int bufferIndex = buffer.length;
 
-      int backspacesCounter = 0;
-      data.forEach((byte) {
-        if (byte == 8 || byte == 127) {
-          backspacesCounter++;
-        }
-      });
-      Uint8List buffer = Uint8List(data.length - backspacesCounter);
-      int bufferIndex = buffer.length;
-
-      // Apply backspace control character
-      backspacesCounter = 0;
-      for (int i = data.length - 1; i >= 0; i--) {
-        if (data[i] == 8 || data[i] == 127) {
-          backspacesCounter++;
+    // Apply backspace control character
+    backspacesCounter = 0;
+    for (int i = data.length - 1; i >= 0; i--) {
+      if (data[i] == 8 || data[i] == 127) {
+        backspacesCounter++;
+      } else {
+        if (backspacesCounter > 0) {
+          backspacesCounter--;
         } else {
-          if (backspacesCounter > 0) {
-            backspacesCounter--;
-          } else {
-            buffer[--bufferIndex] = data[i];
-          }
+          buffer[--bufferIndex] = data[i];
         }
       }
+    }
 
-      // Create message if there is new line character
-      String dataString = String.fromCharCodes(buffer);
-      String name = this.server.name;
+    // Create message if there is new line character
+    String dataString = String.fromCharCodes(buffer);
+    String name = this.server.name;
 
-      String sdataString = dataString.trim();
+    String sdataString = dataString.trim();
 
-      streamController.add('Message Received from [$name]: [$sdataString]');
+    List<String> tmp = sdataString.split(':');
+    String command = tmp.removeAt(0);
 
+    logic.executeCommand(command, tmp);
+
+    streamController.add('Message Received from [$name]: [$sdataString]');
   }
 
   Future sendMessage(String text) async {
