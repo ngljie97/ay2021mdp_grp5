@@ -24,8 +24,8 @@ bool executeCommand(String command, [List<String> args]) {
     case 'ADDOBSTACLE':
       if (args.isNotEmpty) {
         List<String> coord = args[0].split(',');
-        int x = int.parse(coord[0].trim());
-        int y = int.parse(coord[1].trim());
+        int x = int.parse(coord[1].trim());
+        int y = int.parse(coord[0].trim());
 
         arena.setObstacle(x, y);
       }
@@ -33,8 +33,8 @@ bool executeCommand(String command, [List<String> args]) {
     case 'REMOVEOBSTACLE':
       if (args.isNotEmpty) {
         List<String> coord = args[0].split(',');
-        int x = int.parse(coord[0].trim());
-        int y = int.parse(coord[1].trim());
+        int x = int.parse(coord[1].trim());
+        int y = int.parse(coord[0].trim());
 
         arena.removeObstacle(x, y);
       }

@@ -81,13 +81,13 @@ class _MyHomePageState extends State<MyHomePage> {
   void initState() {
     consoleController = ItemScrollController();
     super.initState();
+    // _streamSubscription =
+    //     accelerometerEvents.listen((AccelerometerEvent event) {
+    //       setState(() {
+    //         acceleration = event;
+    //       });
+    //     });
 
-    _streamSubscription =
-        accelerometerEvents.listen((AccelerometerEvent event) {
-      setState(() {
-        acceleration = event;
-      });
-    });
 
     widget.stream.listen((message) {
       mySetState(message);
@@ -163,7 +163,7 @@ class _MyHomePageState extends State<MyHomePage> {
                   title: Text(''),
                   backgroundColor: Colors.transparent, //No more green
                   elevation: 0.0,
-                  iconTheme: IconThemeData(color: Colors.white),
+                  iconTheme: IconThemeData(color: Colors.blueAccent),
                 ),
               ),
             ),
@@ -192,7 +192,9 @@ class _MyHomePageState extends State<MyHomePage> {
                   MediaQuery.of(context).size.width - 175, 43, 0, 0),
               child: IconButton(
                   icon: Icon(
+
                     Icons.refresh,
+                    color: Colors.blueAccent,
                     size: 30.0,
                   ),
                   onPressed: () {
@@ -213,10 +215,17 @@ class _MyHomePageState extends State<MyHomePage> {
                           if (globals.gyroMode) {
                             globals.gyroMode = false;
                             addConsoleAndScroll("Motion Control Disabled.");
+                            _streamSubscription.cancel();
                             _timer.cancel();
                           } else {
                             globals.gyroMode = true;
                             addConsoleAndScroll("Motion Control Enabled.");
+                            _streamSubscription =
+                                accelerometerEvents.listen((AccelerometerEvent event) {
+                                  setState(() {
+                                    acceleration = event;
+                                  });
+                                });
                             _timer = Timer.periodic(
                                 const Duration(milliseconds: 800), (_) {
                               setState(() {
@@ -237,13 +246,14 @@ class _MyHomePageState extends State<MyHomePage> {
             Center(
               child: Container(
                 child: Align(
-                  alignment: Alignment(1, 0.1),
+                  alignment: Alignment(1, 0.07),
                   child: IconButton(
                     icon: Icon(Icons.cached),
+                    color: Colors.blueAccent,
                     onPressed: () {
-                      addConsoleAndScroll('Resetted robot to start position');
                       setState(() {
                         globals.arena.resetRobotPos();
+
                       });
                     },
                   ),
