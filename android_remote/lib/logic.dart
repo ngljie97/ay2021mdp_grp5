@@ -23,22 +23,23 @@ bool executeCommand(String command, [List<String> args]) {
       break;
     case 'ADDOBSTACLE':
       if (args.isNotEmpty) {
-        List coord = args[0].split(',');
-        int x = coord[0];
-        int y = coord[1];
+        List<String> coord = args[0].split(',');
+        int x = coord[0].trim() as int;
+        int y = coord[1].trim() as int;
 
         arena.setObstacle(x, y);
       }
       break;
     case 'REMOVEOBSTACLE':
       if (args.isNotEmpty) {
-        List coord = args[0].split(',');
-        int x = coord[0];
-        int y = coord[1];
+        List<String> coord = args[0].split(',');
+        int x = coord[0].trim() as int;
+        int y = coord[1].trim() as int;
 
         arena.removeObstacle(x, y);
       }
       break;
+
     default:
       break;
   }
