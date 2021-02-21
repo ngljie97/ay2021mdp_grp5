@@ -1,25 +1,25 @@
 import 'dart:async';
-import 'dart:io';
 import 'dart:ui';
 
 import 'package:android_remote/modules/bluetooth_manager.dart';
 import 'package:android_remote/pages/bluetooth_connection.dart';
 import 'package:android_remote/pages/consoleBackupPage.dart';
 import 'package:flutter/material.dart';
+import 'package:intl/intl.dart';
 import 'package:scrollable_positioned_list/scrollable_positioned_list.dart';
+import 'package:sensors/sensors.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
 import 'globals.dart' as globals;
 import 'modules/arena.dart';
 import 'router.dart';
-import 'package:intl/intl.dart';
-import 'package:sensors/sensors.dart';
 
 StreamController<String> streamController =
     StreamController<String>.broadcast();
 AccelerometerEvent acceleration;
 StreamSubscription<AccelerometerEvent> _streamSubscription;
 Timer _timer;
+
 void main() {
   runApp(MyApp());
 }
@@ -57,6 +57,7 @@ class MyHomePage extends StatefulWidget {
 
 class _MyHomePageState extends State<MyHomePage> {
   static Arena _arena;
+  bool _setWaypoint = false;
 
   void mySetState(String message) {
     addConsoleAndScroll(message);
@@ -95,23 +96,20 @@ class _MyHomePageState extends State<MyHomePage> {
       mySetState(message);
     });
     _arena = Arena();
-    _arena.setRobotPos();
+    // _arena.displayRobot();
     if (globals.btController == null)
       globals.btController = BluetoothController();
     globals.btController.init();
   }
-  Future<void> moveControls(String commandString, String globalString)
-  async {
+
+  Future<void> moveControls(String commandString, String globalString) async {
     //commandString = 'FW','RR'
     //globalString = globals.strForward
     if (globals.debugMode) {
       _arena.moveRobot(commandString);
-    } else if (globals
-        .btController.isConnected &&
-        !globals.debugMode) {
+    } else if (globals.btController.isConnected && !globals.debugMode) {
       if (_arena.moveRobot(commandString)) {
-        await globals.btController
-            .sendMessage(globalString);
+        await globals.btController.sendMessage(globalString);
       }
     }
     if (!globals.updateMode)
@@ -119,6 +117,7 @@ class _MyHomePageState extends State<MyHomePage> {
         _arena.setRobotPos();
       });
   }
+
   void _motionControl() {
     if (globals.gyroMode) {
       final AccelerometerEvent currentAcceleration = acceleration;
@@ -200,7 +199,7 @@ class _MyHomePageState extends State<MyHomePage> {
                     size: 30.0,
                   ),
                   onPressed: () {
-                    setState(() => _arena.setRobotPos());
+                    setState(() {});
                   }),
             ),
             Center(
@@ -221,7 +220,8 @@ class _MyHomePageState extends State<MyHomePage> {
                           } else {
                             globals.gyroMode = true;
                             addConsoleAndScroll("Motion Control Enabled.");
-                            _timer = Timer.periodic(const Duration(milliseconds: 800), (_) {
+                            _timer = Timer.periodic(
+                                const Duration(milliseconds: 800), (_) {
                               setState(() {
                                 _motionControl();
                               });
@@ -231,8 +231,6 @@ class _MyHomePageState extends State<MyHomePage> {
                           addConsoleAndScroll(
                               "Device need to be connected or in debug mode!");
                         }
-
-
                       });
                     },
                   ),
@@ -403,7 +401,13 @@ class _MyHomePageState extends State<MyHomePage> {
     x = (index / 15).floor();
     y = (index % 15);
 
-    return _arena.getArenaState(x, y);
+    void onTapFunction() {
+      _setWaypoint = false;
+
+      _arena.setWayPoint(x, y);
+    }
+
+    return _arena.getArenaState(x, y, onTapFunction);
   }
 
   Widget _buildBottomPanel() {
@@ -565,7 +569,20 @@ class _MyHomePageState extends State<MyHomePage> {
                                   child: IconButton(
                                     icon: Icon(Icons.arrow_circle_up),
                                     onPressed: () async {
-                                      moveControls('FW', globals.strForward);
+                                      if (globals.debugMode) {
+                                        _arena.moveRobot('FW');
+                                      } else if (globals
+                                              .btController.isConnected &&
+                                          !globals.debugMode) {
+                                        if (_arena.moveRobot('FW')) {
+                                          await globals.btController
+                                              .sendMessage(globals.strForward);
+                                        }
+                                      }
+                                      if (!globals.updateMode)
+                                        setState(() {
+                                          _arena.setRobotPos();
+                                        });
                                     },
                                   ),
                                 ),
@@ -578,27 +595,16 @@ class _MyHomePageState extends State<MyHomePage> {
                                   child: IconButton(
                                     icon: Icon(Icons.rotate_left),
                                     tooltip: 'Rotate Left',
-                                    onPressed: () async {
-                                      moveControls('RL', globals.strRotateLeft);
-                                    },
-                                  ),
-                                ),
-                                Expanded(
-                                  child: IconButton(
-                                    icon: Icon(Icons.arrow_circle_down),
                                     onPressed: () {
                                       if (globals.debugMode) {
-                                        _arena.moveRobot('RR');
-                                        _arena.moveRobot('RR');
+                                        _arena.moveRobot('RL');
                                       } else if (globals
                                               .btController.isConnected &&
                                           !globals.debugMode) {
-                                        if (_arena.moveRobot('RR') &&
-                                            _arena.moveRobot('RR'))
+                                        if (_arena.moveRobot('RL'))
                                           globals.btController.sendMessage(
-                                              globals.strRotateRight);
+                                              globals.strRotateLeft);
                                       }
-
                                       if (!globals.updateMode)
                                         setState(() {
                                           _arena.setRobotPos();
@@ -607,11 +613,27 @@ class _MyHomePageState extends State<MyHomePage> {
                                   ),
                                 ),
                                 Expanded(
+                                  child: Icon(Icons.circle),
+                                ),
+                                Expanded(
                                   child: IconButton(
                                     tooltip: 'Rotate Right',
                                     icon: Icon(Icons.rotate_right),
-                                    onPressed: () async {
-                                      moveControls('RR', globals.strRotateRight);
+                                    onPressed: () {
+                                      if (globals.debugMode) {
+                                        _arena.moveRobot('RR');
+                                      } else if (globals
+                                              .btController.isConnected &&
+                                          !globals.debugMode) {
+                                        if (_arena.moveRobot('RR'))
+                                          globals.btController.sendMessage(
+                                              globals.strRotateRight);
+                                      }
+
+                                      if (!globals.updateMode)
+                                        setState(() {
+                                          _arena.setRobotPos();
+                                        });
                                     },
                                   ),
                                 ),
@@ -686,7 +708,9 @@ class _MyHomePageState extends State<MyHomePage> {
                       Expanded(
                         flex: 2,
                         child: RaisedButton(
-                          onPressed: () {},
+                          onPressed: () {
+                            _setWaypoint = true;
+                          },
                           child: Container(
                             child: const Text(
                               'Set Waypoint',

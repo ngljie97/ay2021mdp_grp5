@@ -1,7 +1,5 @@
+import 'package:android_remote/pages/about.dart';
 import 'package:flutter/material.dart';
-
-import 'main.dart';
-import 'pages/about.dart';
 
 const String homeRoute = '/';
 const String connectionRoute = '/bluetooth_connection';
@@ -14,7 +12,7 @@ class PageRouter {
       case homeRoute:
         //return MaterialPageRoute(builder: (_) => MyHomePage("hello"));
       case aboutRoute:
-       // return MaterialPageRoute(builder: (_) => AboutPage());
+       return MaterialPageRoute(builder: (_) => AboutPage());
       default:
        // return MaterialPageRoute(builder: (_) => MyHomePage("hello"));
     }
