@@ -20,7 +20,7 @@ List<String> strArr = [
   "Console initialized"
 ]; // To store the console log outputs.
 List<String> BackupstrArr = [formattedDate];
-Color robotStatus = Colors.red;
+int robotStatus = 0;
 
 BluetoothController btController;
 
@@ -31,7 +31,7 @@ final String strForward = 'ROBOT_FW';
 final String strRotateLeft = 'ROBOT_RL';
 final String strRotateRight = 'ROBOT_RR';
 final String strReverse = 'ROBOT_RV';
-final String strImgFind ='IF_START';
+final String strImgFind = 'IF_START';
 
 // Command prefixes (receive)
 final String strCommand1 = '';

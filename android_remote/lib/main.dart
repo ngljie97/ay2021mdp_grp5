@@ -114,7 +114,7 @@ class _MyHomePageState extends State<MyHomePage> {
     }
     if (!globals.updateMode)
       setState(() {
-        _arena.setRobotPos();
+        //_arena.setRobotPos();
       });
   }
 
@@ -175,7 +175,7 @@ class _MyHomePageState extends State<MyHomePage> {
                   MediaQuery.of(context).size.width - 110, 50, 0, 0),
               child: Icon(
                 Icons.adb_outlined,
-                color: globals.robotStatus,
+                color: (globals.robotStatus == 0) ? Colors.red : Colors.green,
                 size: 30.0,
               ),
             ),
@@ -402,9 +402,11 @@ class _MyHomePageState extends State<MyHomePage> {
     y = (index % 15);
 
     void onTapFunction() {
-      _setWaypoint = false;
+      if (_setWaypoint) {
+        _setWaypoint = false;
 
-      _arena.setWayPoint(x, y);
+        _arena.setWayPoint(x, y);
+      }
     }
 
     return _arena.getArenaState(x, y, onTapFunction);
@@ -524,6 +526,7 @@ class _MyHomePageState extends State<MyHomePage> {
                             Expanded(
                               flex: 1,
                               child: RaisedButton(
+                                color: Colors.blue[400],
                                 onPressed: () async {
                                   if (globals.btController.isConnected) {
                                     await globals.btController.sendMessage(
@@ -579,10 +582,6 @@ class _MyHomePageState extends State<MyHomePage> {
                                               .sendMessage(globals.strForward);
                                         }
                                       }
-                                      if (!globals.updateMode)
-                                        setState(() {
-                                          _arena.setRobotPos();
-                                        });
                                     },
                                   ),
                                 ),
@@ -605,10 +604,6 @@ class _MyHomePageState extends State<MyHomePage> {
                                           globals.btController.sendMessage(
                                               globals.strRotateLeft);
                                       }
-                                      if (!globals.updateMode)
-                                        setState(() {
-                                          _arena.setRobotPos();
-                                        });
                                     },
                                   ),
                                 ),
@@ -629,11 +624,6 @@ class _MyHomePageState extends State<MyHomePage> {
                                           globals.btController.sendMessage(
                                               globals.strRotateRight);
                                       }
-
-                                      if (!globals.updateMode)
-                                        setState(() {
-                                          _arena.setRobotPos();
-                                        });
                                     },
                                   ),
                                 ),
@@ -645,6 +635,7 @@ class _MyHomePageState extends State<MyHomePage> {
                       Expanded(
                         flex: 2,
                         child: RaisedButton(
+                          color: Colors.indigo[200],
                           onPressed: () {
                             setState(() {
                               globals.controlMode = false;
@@ -674,10 +665,12 @@ class _MyHomePageState extends State<MyHomePage> {
                       Expanded(
                         flex: 2,
                         child: RaisedButton(
+                          color: Colors.indigo[800],
                           onPressed: () {
                             if (globals.btController.isConnected) {
                               globals.btController
                                   .sendMessage(globals.strStartExplore);
+                              globals.robotStatus = 1;
                             }
                           },
                           child: Container(
@@ -691,10 +684,12 @@ class _MyHomePageState extends State<MyHomePage> {
                       Expanded(
                         flex: 2,
                         child: RaisedButton(
+                          color: Colors.indigo[700],
                           onPressed: () {
                             if (globals.btController.isConnected) {
                               globals.btController
                                   .sendMessage(globals.strFastestPath);
+                              globals.robotStatus = 1;
                             }
                           },
                           child: Container(
@@ -708,6 +703,8 @@ class _MyHomePageState extends State<MyHomePage> {
                       Expanded(
                         flex: 2,
                         child: RaisedButton(
+                          color:
+                              (_setWaypoint) ? Colors.grey : Colors.indigo[600],
                           onPressed: () {
                             _setWaypoint = true;
                           },
@@ -722,6 +719,7 @@ class _MyHomePageState extends State<MyHomePage> {
                       Expanded(
                         flex: 2,
                         child: RaisedButton(
+                          color: Colors.indigo[200],
                           onPressed: () {
                             setState(() {
                               globals.controlMode = true;

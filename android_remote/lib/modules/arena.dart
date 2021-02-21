@@ -1,82 +1,28 @@
 import 'package:android_remote/globals.dart' as globals;
 import 'package:android_remote/main.dart';
+import 'package:android_remote/model/robot.dart';
+import 'package:android_remote/model/waypoint.dart';
 import 'package:flutter/material.dart';
-
-class _Robot {
-  int prevX;
-  int x;
-  int y;
-  int prevY;
-  int direction;
-
-  _Robot(this.x, this.y, this.prevX, this.prevY, this.direction);
-
-  void moveForward() {
-    int newPos = 0;
-    prevX = x;
-    prevY = y;
-
-    switch (this.direction) {
-      case 0:
-        newPos = this.x - 1;
-        this.x = (newPos > 0 && newPos < 19) ? newPos : x;
-        break;
-      case 2:
-        newPos = this.x + 1;
-        this.x = (newPos > 0 && newPos < 19) ? newPos : x;
-        break;
-      case 1:
-        newPos = this.y + 1;
-        this.y = (newPos > 0 && newPos < 14) ? newPos : y;
-        break;
-      case 3:
-        newPos = this.y - 1;
-        this.y = (newPos > 0 && newPos < 14) ? newPos : y;
-        break;
-    }
-  }
-
-  void rotate(int modifier) {
-    this.direction = (this.direction + modifier) % 4;
-  }
-
-  int isDisplaced() {
-    return ((prevX - x) + (prevY - y));
-  }
-}
-
-class _WayPoint {
-  int x;
-  int y;
-
-  _WayPoint(this.x, this.y);
-}
 
 class Arena {
   Arena();
 
   List<List<int>> _explorationStatus = List.generate(
     20,
-        (index) => List.generate(15, (index) => 0, growable: false),
+    (index) => List.generate(15, (index) => 0, growable: false),
     growable: false,
   );
   List<List<int>> _obstaclesRecords = List.generate(
     20,
-        (index) => List.generate(15, (index) => 0, growable: false),
+    (index) => List.generate(15, (index) => 0, growable: false),
     growable: false,
   );
 
-/*  List<List<int>> _arenaState = List.generate(
-    20,
-        (index) => List.generate(15, (index) => 0, growable: false),
-    growable: false,
-  );*/
-
-  _WayPoint _wayPoint = _WayPoint(0, 0);
-  _Robot _robot = _Robot(18, 1, 18, 1, 0);
+  WayPoint _wayPoint = WayPoint(-1, -1);
+  Robot _robot = Robot(18, 1, 18, 1, 0);
 
   void setWayPoint(int x, int y) {
-    this._wayPoint = _WayPoint(x, y);
+    this._wayPoint.update(x, y);
   }
 
   bool moveRobot(String operation) {
@@ -97,15 +43,12 @@ class Arena {
           break;
       }
 
-/*    if (globals.updateMode) displayRobot();*/
-
     return isRotate || (_robot.isDisplaced() != 0);
   }
 
   void resetRobotPos() {
     streamController.add('Reset Robot to Start Location.');
-    this._robot = _Robot(18, 1, 18, 1, 0);
-/*    this.displayRobot();*/
+    this._robot = Robot(18, 1, 18, 1, 0);
   }
 
   void setRobotPos(int x, int y, int dir) {
@@ -117,58 +60,99 @@ class Arena {
     _robot.direction = dir;
   }
 
-  int isRobot(int x, int y) {
+  String isRobot(int x, int y) {
+    int xi = 0;
+    int yj = 0;
+
     for (int i = -1; i <= 1; i++) {
       for (int j = -1; j <= 1; j++) {
-        if ((this._robot.x + 1) == x || (this._robot.y + 1) == y) {
-          int xi = 0;
-          int yj = 0;
-
-          switch (this._robot.direction) {
-            case 0:
-              xi = this._robot.x - 1;
-              yj = this._robot.y;
-              break;
-            case 1:
-              xi = this._robot.x;
-              yj = this._robot.y + 1;
-              break;
-            case 2:
-              xi = this._robot.x + 1;
-              yj = this._robot.y;
-              break;
-            case 3:
-              xi = this._robot.x;
-              yj = this._robot.y - 1;
-              break;
+        if ((this._robot.x + i) == x && (this._robot.y + j) == y) {
+          if (xi + yj == 0) {
+            switch (this._robot.direction) {
+              case 0:
+                xi = this._robot.x - 1;
+                yj = this._robot.y;
+                break;
+              case 1:
+                xi = this._robot.x;
+                yj = this._robot.y + 1;
+                break;
+              case 2:
+                xi = this._robot.x + 1;
+                yj = this._robot.y;
+                break;
+              case 3:
+                xi = this._robot.x;
+                yj = this._robot.y - 1;
+                break;
+            }
           }
 
-          if (xi == x && yj == y)
-            return 4;
-          else
-            return 3;
+          _explorationStatus[x][y] = 1;
+
+          if (xi == x && yj == y) {
+            return 'RH';
+          } else {
+            return 'RB';
+          }
         }
       }
     }
-    return 0;
+
+    return '0';
   }
 
   Widget getArenaState(int x, int y, Function onTapFunction) {
-    int item = isRobot(x, y);
+    String item = isRobot(x, y);
 
-    if (item == 0) {
-      item = _obstaclesRecords[x][y];
+    if (item == '0') {
+      item = _inSpecialZone(x, y);
+
+      if (item == '0') {
+        if (_obstaclesRecords[x][y] == 1) {
+          item = 'O';
+        } else {
+          switch (_explorationStatus[x][y] + WayPoint.isWayPoint(x, y)) {
+            case 0:
+              item = '0';
+              break;
+            case 1:
+              item = '1';
+              break;
+            case 3:
+              item = 'WP0';
+              break;
+            case 4:
+              item = 'WP1';
+              break;
+          }
+        }
+      }
     }
 
-    if (item == 0) {
-      item = _explorationStatus[x][y];
-    }
-
-    return _resolveItem ('$item', onTapFunction);
+    return _resolveItem(item, onTapFunction);
   }
 
   Widget _resolveItem(String item, Function onTapFunction) {
     switch (item) {
+      case 'RB':
+        return Container(
+          color: Colors.grey,
+          child: Container(
+            color: Colors.blueGrey,
+          ),
+        );
+        break;
+
+      case 'RH':
+        return Container(
+          color: Colors.grey,
+          child: Container(
+            color: Colors.redAccent,
+          ),
+        );
+        break;
+
       case '0': // Unexplored
         return Padding(
           padding: const EdgeInsets.all(1),
@@ -195,6 +179,38 @@ class Arena {
         );
         break;
 
+      case 'WP0': // WayPoint on unexplored tile
+        return Padding(
+          padding: const EdgeInsets.all(1),
+          child: GestureDetector(
+            child: Container(
+              color: Colors.grey,
+              child: Icon(
+                Icons.pin_drop,
+                color: Colors.white,
+              ),
+            ),
+            onTap: onTapFunction,
+          ),
+        );
+        break;
+
+      case 'WP1': // WayPoint on explored tile
+        return Padding(
+          padding: const EdgeInsets.all(1),
+          child: GestureDetector(
+            child: Container(
+              color: Colors.white,
+              child: Icon(
+                Icons.pin_drop,
+                color: Colors.black,
+              ),
+            ),
+            onTap: onTapFunction,
+          ),
+        );
+        break;
+
       case 'O':
         return Padding(
           padding: const EdgeInsets.all(1),
@@ -205,7 +221,7 @@ class Arena {
         );
         break;
 
-    // Image Recognition
+      // Image Recognition
       case 'A':
         return Container(
           decoration: BoxDecoration(
@@ -355,27 +371,58 @@ class Arena {
           ),
         );
         break;
-    // End of Image Recognition
+      // End of Image Recognition
 
-      case 'R':
-        return Container(
-          color: Colors.grey,
-          child: Container(
-            color: Colors.blueGrey,
-          ),
-        );
+      case 'S':
+        return Icon(Icons.play_arrow);
         break;
-      case 'RH':
-        return Container(
-          color: Colors.grey,
-          child: Container(
-            color: Colors.redAccent,
-          ),
-        );
+      case 'E':
+        return Icon(Icons.golf_course);
+        break;
+      case 'SM':
+        return Text('');
+        break;
+      case 'EM':
+        return Text('');
         break;
 
       default:
         return Text(item);
+        break;
     }
   }
+}
+
+String _inSpecialZone(int x, int y) {
+  switch (x) {
+    case 0:
+    case 1:
+    case 2:
+      switch (y) {
+        case 13:
+          if (x == 1) return 'E';
+          continue case14;
+        case 12:
+        case14:
+        case 14:
+          return 'EM';
+          break;
+      }
+      break;
+    case 17:
+    case 18:
+    case 19:
+      switch (y) {
+        case 1:
+          if (x == 18) return 'S';
+          continue case2;
+        case 0:
+        case2:
+        case 2:
+          return 'SM';
+          break;
+      }
+      break;
+  }
+  return '0';
 }
