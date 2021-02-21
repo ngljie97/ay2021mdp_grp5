@@ -2,6 +2,7 @@ import 'dart:async';
 import 'dart:ui';
 
 import 'package:android_remote/modules/bluetooth_manager.dart';
+import 'package:android_remote/pages/about.dart';
 import 'package:android_remote/pages/bluetooth_connection.dart';
 import 'package:android_remote/pages/consoleBackupPage.dart';
 import 'package:flutter/material.dart';
@@ -12,10 +13,9 @@ import 'package:shared_preferences/shared_preferences.dart';
 
 import 'globals.dart' as globals;
 import 'model/arena.dart';
-import 'router.dart';
 
 StreamController<String> streamController =
-StreamController<String>.broadcast();
+    StreamController<String>.broadcast();
 AccelerometerEvent acceleration;
 StreamSubscription<AccelerometerEvent> _streamSubscription;
 Timer _timer;
@@ -33,8 +33,6 @@ class MyApp extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
-      onGenerateRoute: PageRouter.generateRoute,
-      initialRoute: homeRoute,
       title: 'Remote Controller Module',
       theme: ThemeData(
         brightness: Brightness.dark,
@@ -87,10 +85,10 @@ class _MyHomePageState extends State<MyHomePage> {
 
     _streamSubscription =
         accelerometerEvents.listen((AccelerometerEvent event) {
-          setState(() {
-            acceleration = event;
-          });
-        });
+      setState(() {
+        acceleration = event;
+      });
+    });
 
     widget.stream.listen((message) {
       mySetState(message);
@@ -172,10 +170,7 @@ class _MyHomePageState extends State<MyHomePage> {
             ),
             Container(
               padding: EdgeInsets.fromLTRB(
-                  MediaQuery
-                      .of(context)
-                      .size
-                      .width - 110, 50, 0, 0),
+                  MediaQuery.of(context).size.width - 110, 50, 0, 0),
               child: Icon(
                 Icons.adb_outlined,
                 color: (globals.robotStatus) ? Colors.green : Colors.red,
@@ -184,10 +179,7 @@ class _MyHomePageState extends State<MyHomePage> {
             ),
             Container(
               padding: EdgeInsets.fromLTRB(
-                  MediaQuery
-                      .of(context)
-                      .size
-                      .width - 55, 50, 0, 0),
+                  MediaQuery.of(context).size.width - 55, 50, 0, 0),
               child: Icon(
                 Icons.bluetooth,
                 color: (globals.btController.isConnected)
@@ -198,10 +190,7 @@ class _MyHomePageState extends State<MyHomePage> {
             ),
             Container(
               padding: EdgeInsets.fromLTRB(
-                  MediaQuery
-                      .of(context)
-                      .size
-                      .width - 175, 43, 0, 0),
+                  MediaQuery.of(context).size.width - 175, 43, 0, 0),
               child: IconButton(
                   icon: Icon(
                     Icons.refresh,
@@ -299,7 +288,7 @@ class _MyHomePageState extends State<MyHomePage> {
                     streamController.close();
                   }
                   globals.btController.selectedDevice =
-                  await Navigator.of(context).push(
+                      await Navigator.of(context).push(
                     MaterialPageRoute(
                       builder: (context) {
                         return ConnectionPage(checkAvailability: false);
@@ -371,7 +360,11 @@ class _MyHomePageState extends State<MyHomePage> {
                 leading: Icon(Icons.info_outline),
                 title: Text('About'),
                 onTap: () {
-                  Navigator.popAndPushNamed(context, aboutRoute);
+                  Navigator.of(context).push(MaterialPageRoute(
+                    builder: (context) {
+                      return AboutPage();
+                    },
+                  ));
                 },
               ),
             ],
@@ -385,33 +378,18 @@ class _MyHomePageState extends State<MyHomePage> {
     return new Expanded(
       flex: 10,
       child: AspectRatio(
-        aspectRatio: MediaQuery
-            .of(context)
-            .devicePixelRatio /
-            (MediaQuery
-                .of(context)
-                .devicePixelRatio +
-                (MediaQuery
-                    .of(context)
-                    .devicePixelRatio *
-                    (MediaQuery
-                        .of(context)
-                        .size
-                        .aspectRatio / 4))),
+        aspectRatio: MediaQuery.of(context).devicePixelRatio /
+            (MediaQuery.of(context).devicePixelRatio +
+                (MediaQuery.of(context).devicePixelRatio *
+                    (MediaQuery.of(context).size.aspectRatio / 4))),
         child: Center(
           child: Container(
             padding: EdgeInsets.fromLTRB(0, 0, 0, 0),
             child: GridView.builder(
                 gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
                   crossAxisCount: 15,
-                  childAspectRatio: MediaQuery
-                      .of(context)
-                      .size
-                      .width /
-                      (MediaQuery
-                          .of(context)
-                          .size
-                          .height / 1.8),
+                  childAspectRatio: MediaQuery.of(context).size.width /
+                      (MediaQuery.of(context).size.height / 1.8),
                   crossAxisSpacing: 0,
                   mainAxisSpacing: 0,
                 ),
@@ -427,8 +405,7 @@ class _MyHomePageState extends State<MyHomePage> {
   }
 
   Widget _resolveGridItem(BuildContext context, int index) {
-    int x,
-        y = 0;
+    int x, y = 0;
     x = (index / 15).floor();
     y = (index % 15);
 
@@ -489,7 +466,7 @@ class _MyHomePageState extends State<MyHomePage> {
                                       globals.strArr = ["Console log cleared."];
                                       globals.BackupstrArr.add(
                                           DateFormat(globals.Datetimeformat)
-                                              .format(DateTime.now()) +
+                                                  .format(DateTime.now()) +
                                               " | " +
                                               "Console log cleared.");
                                     });
@@ -514,7 +491,7 @@ class _MyHomePageState extends State<MyHomePage> {
                                         var curve = Curves.ease;
 
                                         var tween = Tween(
-                                            begin: begin, end: end)
+                                                begin: begin, end: end)
                                             .chain(CurveTween(curve: curve));
 
                                         return SlideTransition(
@@ -523,7 +500,7 @@ class _MyHomePageState extends State<MyHomePage> {
                                         );
                                       },
                                       transitionDuration:
-                                      Duration(milliseconds: 500),
+                                          Duration(milliseconds: 500),
                                     ));
                                   },
                                 ),
@@ -538,7 +515,7 @@ class _MyHomePageState extends State<MyHomePage> {
               ),
             ),
           ),
-              () {
+          () {
             if (globals.controlMode) {
               return Expanded(
                 flex: 4,
@@ -606,7 +583,7 @@ class _MyHomePageState extends State<MyHomePage> {
                                       if (globals.debugMode) {
                                         _arena.moveRobot('FW');
                                       } else if (globals
-                                          .btController.isConnected &&
+                                              .btController.isConnected &&
                                           !globals.debugMode) {
                                         if (_arena.moveRobot('FW')) {
                                           await globals.btController
@@ -629,7 +606,7 @@ class _MyHomePageState extends State<MyHomePage> {
                                       if (globals.debugMode) {
                                         _arena.moveRobot('RL');
                                       } else if (globals
-                                          .btController.isConnected &&
+                                              .btController.isConnected &&
                                           !globals.debugMode) {
                                         if (_arena.moveRobot('RL'))
                                           globals.btController.sendMessage(
@@ -649,7 +626,7 @@ class _MyHomePageState extends State<MyHomePage> {
                                       if (globals.debugMode) {
                                         _arena.moveRobot('RR');
                                       } else if (globals
-                                          .btController.isConnected &&
+                                              .btController.isConnected &&
                                           !globals.debugMode) {
                                         if (_arena.moveRobot('RR'))
                                           globals.btController.sendMessage(
@@ -739,7 +716,7 @@ class _MyHomePageState extends State<MyHomePage> {
                         flex: 2,
                         child: RaisedButton(
                           color:
-                          (_setWayPoint) ? Colors.grey : Colors.indigo[600],
+                              (_setWayPoint) ? Colors.grey : Colors.indigo[600],
                           onPressed: () {
                             if (_setWayPoint) {
                               _setWayPoint = false;
@@ -795,23 +772,22 @@ class _MyHomePageState extends State<MyHomePage> {
 
   Future<bool> _onWillPop() async {
     return (await showDialog(
-      context: context,
-      builder: (context) =>
-      new AlertDialog(
-        title: new Text('Are you sure?'),
-        content: new Text('Do you want to exit an App'),
-        actions: <Widget>[
-          new FlatButton(
-            onPressed: () => Navigator.of(context).pop(false),
-            child: new Text('No'),
+          context: context,
+          builder: (context) => new AlertDialog(
+            title: new Text('Are you sure?'),
+            content: new Text('Do you want to exit an App'),
+            actions: <Widget>[
+              new FlatButton(
+                onPressed: () => Navigator.of(context).pop(false),
+                child: new Text('No'),
+              ),
+              new FlatButton(
+                onPressed: () => Navigator.of(context).pop(true),
+                child: new Text('Yes'),
+              ),
+            ],
           ),
-          new FlatButton(
-            onPressed: () => Navigator.of(context).pop(true),
-            child: new Text('Yes'),
-          ),
-        ],
-      ),
-    )) ??
+        )) ??
         false;
   }
 

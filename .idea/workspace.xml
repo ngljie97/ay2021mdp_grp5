@@ -28,12 +28,12 @@
     </select>
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="28be24ed-ecd2-4996-a17e-b3573ad5f47d" name="Default Changelist" comment="Changelog:&#10;1. Arena status calculation changed. Uses map descriptor.&#10;2. Start and End location added to map.&#10;3. Setting WayPoint working now.&#10;4. Added colors to buttons to make them look more distinct.&#10;5. Added feedback thru the use of color when setting waypoint.">
+    <list default="true" id="28be24ed-ecd2-4996-a17e-b3573ad5f47d" name="Default Changelist" comment="Bug fixes">
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/android_remote/lib/globals.dart" beforeDir="false" afterPath="$PROJECT_DIR$/android_remote/lib/globals.dart" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/android_remote/lib/main.dart" beforeDir="false" afterPath="$PROJECT_DIR$/android_remote/lib/main.dart" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/android_remote/lib/modules/arena.dart" beforeDir="false" afterPath="$PROJECT_DIR$/android_remote/lib/model/arena.dart" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/android_remote/lib/modules/logic.dart" beforeDir="false" afterPath="$PROJECT_DIR$/android_remote/lib/logic.dart" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/android_remote/lib/pages/discovery_page.dart" beforeDir="false" afterPath="$PROJECT_DIR$/android_remote/lib/pages/discovery_page.dart" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/android_remote/lib/router.dart" beforeDir="false" />
     </list>
     <list id="31802251-d898-47f0-9952-af88a6db3e74" name="Revert &quot;New branch for rollback in case of issues when splitting the classes.&quot;" comment="Revert &quot;New branch for rollback in case of issues when splitting the classes.&quot;&#10;&#10;This reverts commit 511a0cdd" />
     <list id="99b10710-ba7f-4aa0-b735-a4ed3fdbe4eb" name="Revert &quot;Revert &quot;New branch for rollback in case of issues when splitting the classes.&quot;&quot;" comment="Revert &quot;Revert &quot;New branch for rollback in case of issues when splitting the classes.&quot;&quot;&#10;&#10;This reverts commit 1bbd892a" />
@@ -225,7 +225,14 @@
       <option name="project" value="LOCAL" />
       <updated>1613898275683</updated>
     </task>
-    <option name="localTasksCounter" value="16" />
+    <task id="LOCAL-00016" summary="Bug fixes">
+      <created>1613900791007</created>
+      <option name="number" value="00016" />
+      <option name="presentableId" value="LOCAL-00016" />
+      <option name="project" value="LOCAL" />
+      <updated>1613900791007</updated>
+    </task>
+    <option name="localTasksCounter" value="17" />
     <servers />
   </component>
   <component name="Vcs.Log.Tabs.Properties">
@@ -269,7 +276,8 @@
     <MESSAGE value="1)Added reconnect feature." />
     <MESSAGE value="Changes to arena calculation." />
     <MESSAGE value="Changelog:&#10;1. Arena status calculation changed. Uses map descriptor.&#10;2. Start and End location added to map.&#10;3. Setting WayPoint working now.&#10;4. Added colors to buttons to make them look more distinct.&#10;5. Added feedback thru the use of color when setting waypoint." />
-    <option name="LAST_COMMIT_MESSAGE" value="Changelog:&#10;1. Arena status calculation changed. Uses map descriptor.&#10;2. Start and End location added to map.&#10;3. Setting WayPoint working now.&#10;4. Added colors to buttons to make them look more distinct.&#10;5. Added feedback thru the use of color when setting waypoint." />
+    <MESSAGE value="Bug fixes" />
+    <option name="LAST_COMMIT_MESSAGE" value="Bug fixes" />
   </component>
   <component name="WindowStateProjectService">
     <state x="414" y="174" key="#com.intellij.execution.impl.EditConfigurationsDialog" timestamp="1612715349758">
@@ -286,11 +294,11 @@
     </state>
     <state x="689" y="309" key="#com.intellij.ide.util.TreeFileChooserDialog/0.0.1920.1040/-1920.0.1536.824@0.0.1920.1040" timestamp="1611471110731" />
     <state x="689" y="309" key="#com.intellij.ide.util.TreeFileChooserDialog/0.0.1920.1040/-1920.100.1920.1040@0.0.1920.1040" timestamp="1612715347732" />
-    <state x="411" y="270" key="#com.intellij.refactoring.safeDelete.UnsafeUsagesDialog" timestamp="1613218206020">
+    <state x="411" y="270" key="#com.intellij.refactoring.safeDelete.UnsafeUsagesDialog" timestamp="1613900932362">
       <screen x="0" y="0" width="1920" height="1040" />
     </state>
     <state x="411" y="270" key="#com.intellij.refactoring.safeDelete.UnsafeUsagesDialog/0.0.1920.1040/-1920.0.1536.824@0.0.1920.1040" timestamp="1613218206019" />
-    <state x="411" y="270" key="#com.intellij.refactoring.safeDelete.UnsafeUsagesDialog/0.0.1920.1040/-1920.100.1920.1040@0.0.1920.1040" timestamp="1612768908439" />
+    <state x="411" y="270" key="#com.intellij.refactoring.safeDelete.UnsafeUsagesDialog/0.0.1920.1040/-1920.100.1920.1040@0.0.1920.1040" timestamp="1613900932362" />
     <state x="540" y="274" key="AndroidCreateResourceDirectoryDialog" timestamp="1612719172021">
       <screen x="0" y="0" width="1920" height="1040" />
     </state>

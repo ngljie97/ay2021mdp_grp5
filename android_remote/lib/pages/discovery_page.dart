@@ -4,8 +4,6 @@ import 'package:android_remote/modules/bluetooth_device_list_entry.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bluetooth_serial/flutter_bluetooth_serial.dart';
 
-import '../globals.dart';
-import '../main.dart';
 import 'bluetooth_connection.dart';
 
 class DiscoveryPage extends StatefulWidget {
@@ -120,24 +118,21 @@ class _DiscoveryPage extends State<DiscoveryPage> {
                   bonded = await FlutterBluetoothSerial.instance
                       .bondDeviceAtAddress(result.device.address);
 
-
-                  print('Bonding with ${result.device.address} has ${bonded ? 'succeed' : 'failed'}.');
-                  if(bonded)
-                    {
+                  print(
+                      'Bonding with ${result.device.address} has ${bonded ? 'succeed' : 'failed'}.');
+                  if (bonded) {
                     if (result.device != null) {
-
-                        Navigator.pop(context);
-                        Navigator.pop(context);
-                        Navigator.of(context).push(
-                          MaterialPageRoute(
-                            builder: (context) {
-                              return ConnectionPage(checkAvailability: false);
-                            },
-                          ),
-                        );
+                      Navigator.pop(context);
+                      Navigator.pop(context);
+                      Navigator.of(context).push(
+                        MaterialPageRoute(
+                          builder: (context) {
+                            return ConnectionPage(checkAvailability: false);
+                          },
+                        ),
+                      );
                     }
-                    }
-
+                  }
                 }
                 setState(() {
                   results[results.indexOf(result)] = BluetoothDiscoveryResult(
