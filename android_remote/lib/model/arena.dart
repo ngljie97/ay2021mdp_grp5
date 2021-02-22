@@ -9,7 +9,7 @@ class Arena {
   List<List<int>> _explorationStatus, _obstaclesRecords;
   WayPoint _wayPoint;
   Robot _robot;
-  int imagedirection =0;
+  int imagedirection = 0;
 
   Arena(String selector) {
     if (selector[0] == '1') {
@@ -194,14 +194,15 @@ class Arena {
     this._obstaclesRecords[x][y] = 1;
   }
 
-
   void removeObstacle(int x, int y) {
     this._obstaclesRecords[x][y] = 0;
   }
+
   void setImage(int x, int y, int imageid, int dir) {
     this._obstaclesRecords[x][y] = imageid;
     this.imagedirection = dir;
   }
+
   void setExplored(int x, int y) {
     this._explorationStatus[x][y] = 1;
   }
@@ -453,63 +454,63 @@ class Arena {
       case 'n1':
         return RotatedBox(
             quarterTurns: this.imagedirection,
-            child:Container(
-          decoration: BoxDecoration(
-            image: DecorationImage(
-              image: AssetImage('assets/number_one.PNG'),
-              fit: BoxFit.fill,
-            ),
-            shape: BoxShape.rectangle,
-          ),
-        ));
+            child: Container(
+              decoration: BoxDecoration(
+                image: DecorationImage(
+                  image: AssetImage('assets/number_one.PNG'),
+                  fit: BoxFit.fill,
+                ),
+                shape: BoxShape.rectangle,
+              ),
+            ));
       case 'n2':
         return RotatedBox(
             quarterTurns: this.imagedirection,
-            child:Container(
-          decoration: BoxDecoration(
-            image: DecorationImage(
-              image: AssetImage('assets/number_two.PNG'),
-              fit: BoxFit.fill,
-            ),
-            shape: BoxShape.rectangle,
-          ),
-        ));
+            child: Container(
+              decoration: BoxDecoration(
+                image: DecorationImage(
+                  image: AssetImage('assets/number_two.PNG'),
+                  fit: BoxFit.fill,
+                ),
+                shape: BoxShape.rectangle,
+              ),
+            ));
       case 'n3':
         return RotatedBox(
             quarterTurns: this.imagedirection,
-            child:Container(
-          decoration: BoxDecoration(
-            image: DecorationImage(
-              image: AssetImage('assets/number_three.PNG'),
-              fit: BoxFit.fill,
-            ),
-            shape: BoxShape.rectangle,
-          ),
-        ));
+            child: Container(
+              decoration: BoxDecoration(
+                image: DecorationImage(
+                  image: AssetImage('assets/number_three.PNG'),
+                  fit: BoxFit.fill,
+                ),
+                shape: BoxShape.rectangle,
+              ),
+            ));
       case 'n4':
         return RotatedBox(
             quarterTurns: this.imagedirection,
-            child:Container(
-          decoration: BoxDecoration(
-            image: DecorationImage(
-              image: AssetImage('assets/number_four.PNG'),
-              fit: BoxFit.fill,
-            ),
-            shape: BoxShape.rectangle,
-          ),
-        ));
+            child: Container(
+              decoration: BoxDecoration(
+                image: DecorationImage(
+                  image: AssetImage('assets/number_four.PNG'),
+                  fit: BoxFit.fill,
+                ),
+                shape: BoxShape.rectangle,
+              ),
+            ));
       case 'n5':
         return RotatedBox(
             quarterTurns: this.imagedirection,
-            child:Container(
-          decoration: BoxDecoration(
-            image: DecorationImage(
-              image: AssetImage('assets/number_five.PNG'),
-              fit: BoxFit.fill,
-            ),
-            shape: BoxShape.rectangle,
-          ),
-        ));
+            child: Container(
+              decoration: BoxDecoration(
+                image: DecorationImage(
+                  image: AssetImage('assets/number_five.PNG'),
+                  fit: BoxFit.fill,
+                ),
+                shape: BoxShape.rectangle,
+              ),
+            ));
         break;
       // End of Image Recognition
 
