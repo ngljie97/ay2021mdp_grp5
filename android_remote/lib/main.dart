@@ -59,12 +59,12 @@ class _MyHomePageState extends State<MyHomePage> {
   void mySetState(String message) {
     addConsoleAndScroll(message);
     if (message.contains('Disconnected remotely!')) {
-      globals.arena.resetRobotPos();
+      globals.arena = Arena('1110');
     }
   }
 
   void addConsoleAndScroll(String message) {
-    setState(() {
+
       globals.strArr.add(message);
       globals.BackupstrArr.add(
           DateFormat(globals.Datetimeformat).format(DateTime.now()) +
@@ -74,7 +74,9 @@ class _MyHomePageState extends State<MyHomePage> {
           index: globals.strArr.length,
           duration: Duration(milliseconds: 333),
           curve: Curves.easeInOutCubic);
-    });
+      if(!globals.updateMode)
+        setState(() {}
+    );
   }
 
   @override
@@ -102,6 +104,8 @@ class _MyHomePageState extends State<MyHomePage> {
   Future<void> moveControls(String commandString) async {
     //commandString = 'FW','RR'
     //globalString = globals.strForward
+
+
     String globalString = '';
     switch (commandString) {
       case 'FW':
@@ -163,6 +167,9 @@ class _MyHomePageState extends State<MyHomePage> {
                 _buildBottomPanel(),
               ],
             ),
+            Visibility(
+              visible: !_setWayPoint,
+              child:
             Container(
               child: Positioned(
                 //Place it at the top, and not use the entire screen
@@ -177,15 +184,23 @@ class _MyHomePageState extends State<MyHomePage> {
                 ),
               ),
             ),
+            ),
+            Visibility(
+              visible: !_setWayPoint,
+              child:
             Container(
               padding: EdgeInsets.fromLTRB(
                   MediaQuery.of(context).size.width - 110, 50, 0, 0),
               child: Icon(
                 Icons.adb_outlined,
-                color: (globals.robotStatus) ? Colors.green : Colors.red,
+                color: (globals.debugMode) ? Colors.green : Colors.red,
                 size: 30.0,
               ),
             ),
+            ),
+      Visibility(
+        visible: !_setWayPoint,
+        child:
             Container(
               padding: EdgeInsets.fromLTRB(
                   MediaQuery.of(context).size.width - 55, 50, 0, 0),
@@ -196,7 +211,10 @@ class _MyHomePageState extends State<MyHomePage> {
                     : Colors.red,
                 size: 30.0,
               ),
-            ),
+            ),),
+      Visibility(
+        visible: !_setWayPoint,
+        child:
             Container(
               padding: EdgeInsets.fromLTRB(
                   MediaQuery.of(context).size.width - 175, 43, 0, 0),
@@ -210,7 +228,10 @@ class _MyHomePageState extends State<MyHomePage> {
                   onPressed: () {
                     setState(() {});
                   }),
-            ),
+            ),),
+            Visibility(
+              visible: !_setWayPoint,
+              child:
             Center(
               child: Container(
                 child: Align(
@@ -253,7 +274,10 @@ class _MyHomePageState extends State<MyHomePage> {
                   ),
                 ),
               ),
-            ),
+            ),),
+            Visibility(
+              visible: !_setWayPoint,
+              child:
             Center(
               child: Container(
                 child: Align(
@@ -270,7 +294,7 @@ class _MyHomePageState extends State<MyHomePage> {
                   ),
                 ),
               ),
-            ),
+            ),),
           ],
         ),
         drawer: Drawer(
@@ -301,8 +325,9 @@ class _MyHomePageState extends State<MyHomePage> {
                   if (globals.btController.isConnected) {
                     addConsoleAndScroll('Disconnecting locally!');
                     globals.btController.disconnect();
+                    globals.btController.isReconnecting=false;
                     addConsoleAndScroll('Disconnected locally!');
-                    globals.arena.resetRobotPos();
+                    globals.arena = Arena('1110');
                   }
                   if (!globals.btController.isConnected) {
                     streamController.close();
@@ -371,7 +396,7 @@ class _MyHomePageState extends State<MyHomePage> {
                   onChanged: (value) {
                     setState(() {
                       globals.debugMode = value;
-                      globals.robotStatus = value;
+
                     });
                   },
                 ),
@@ -464,10 +489,22 @@ class _MyHomePageState extends State<MyHomePage> {
                 mainAxisAlignment: MainAxisAlignment.start,
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: <Widget>[
+                  Row( children:[
                   Text(
                     'Console output:',
                     textAlign: TextAlign.left,
                   ),
+                  Padding(padding: EdgeInsets.fromLTRB(0, 0, 130, 0),),
+                  Text(
+                    'Robot Status',
+                    textAlign: TextAlign.left,
+                    style: TextStyle(fontWeight: FontWeight.bold, color: (globals.btController.isConnected) ? Colors.green : Colors.red,),
+                  ),
+                    Text(
+                      ' : '+globals.robotStatus,
+                      textAlign: TextAlign.left,
+                    ),
+                  ]),
                   Expanded(
                     child: Flex(
                       direction: Axis.horizontal,
@@ -688,7 +725,7 @@ class _MyHomePageState extends State<MyHomePage> {
                               globals.btController
                                   .sendMessage(globals.strStartExplore);
                               setState(() {
-                                globals.robotStatus = true;
+                                globals.robotStatus = 'Moving';
                               });
                             }
                           },
@@ -709,7 +746,7 @@ class _MyHomePageState extends State<MyHomePage> {
                               globals.btController
                                   .sendMessage(globals.strFastestPath);
                               setState(() {
-                                globals.robotStatus = true;
+                                globals.robotStatus = 'Moving';
                               });
                             }
                           },

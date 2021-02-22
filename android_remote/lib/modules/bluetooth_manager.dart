@@ -13,6 +13,7 @@ class BluetoothController {
   BluetoothConnection connection;
   bool isConnecting = false;
   bool isDisconnecting = false;
+  bool isReconnecting = false;
   BluetoothDevice server;
   bool isConnected = false;
   List<_Message> messages = List<_Message>();
@@ -37,26 +38,34 @@ class BluetoothController {
         isDisconnecting = false;
 
         connection.input.listen(_onDataReceived).onDone(() {
-          print("errortest2");
 
           if (isDisconnecting) {
             print('Disconnecting locally!');
             streamController.add('Disconnecting locally!');
             this.disconnect();
           } else {
+            this.isReconnecting=true;
             streamController.add('Disconnecting remotely!');
             streamController.add('Retrying in 3 seconds.');
             this.disconnect();
-            new Future.delayed(
-                const Duration(seconds: 3), () => this.reconnect());
+            new Future.delayed(const Duration(seconds: 3), () => this.reconnect());
+            if(isConnected)
+              isReconnecting=false;
           }
         });
       }).catchError((error) async {
+        print(error);
         print('Cannot connect, exception occurred');
         streamController.add('Cannot connect, Socket not opened..');
-        streamController.add('Retrying in 3 seconds.');
         this.disconnect();
-        new Future.delayed(const Duration(seconds: 3), () => this.reconnect());
+        if(isReconnecting) {
+          streamController.add('Retrying in 3 seconds.');
+          new Future.delayed(
+              const Duration(seconds: 3), () => this.reconnect());
+          if(isConnected)
+            isReconnecting=false;
+
+        }
       });
     }
   }
@@ -145,7 +154,6 @@ class BluetoothController {
         streamController.add('Message sent to Bluetooth device: [$text]');
       } catch (e) {
         // Ignore error, but notify state
-        print("errortest1");
         streamController.add('Disconnected remotely!');
 
         //this.disconnect();

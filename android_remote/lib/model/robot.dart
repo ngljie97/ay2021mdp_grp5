@@ -33,6 +33,7 @@ class Robot {
   }
 
   void rotate(int modifier) {
+
     this.direction = (this.direction + modifier) % 4;
   }
 

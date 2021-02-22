@@ -5,14 +5,19 @@ bool executeCommand(String command, [List<String> args]) {
   Arena arena = globals.arena;
   switch (command) {
     case 'ROBOT_POS':
+    case 'ROBOTPOSITION':
+    //forchecklist
+      globals.robotStatus='IDLE';
       if (args.isNotEmpty) {
-        int x = args[0] as int;
-        int y = args[1] as int;
-        int dir = args[2] as int;
-
+        List<String> coord = args[0].split(',');
+        int x = int.parse(coord[1].trim())+1;
+        int y = int.parse(coord[0].trim())+1;
+        int dir = int.parse(coord[2].trim());
         arena.setRobotPos(x, y, dir);
       }
       break;
+
+
     case 'MAP':
       if (args.isNotEmpty) {
         String mapDescriptor1 = args[0];
@@ -25,8 +30,8 @@ bool executeCommand(String command, [List<String> args]) {
     case 'ADDOBSTACLE':
       if (args.isNotEmpty) {
         List<String> coord = args[0].split(',');
-        int x = coord[0].trim() as int;
-        int y = coord[1].trim() as int;
+        int x = int.parse(coord[1].trim());
+        int y = int.parse(coord[0].trim());
 
         arena.setObstacle(x, y);
       }
@@ -40,7 +45,7 @@ bool executeCommand(String command, [List<String> args]) {
         arena.removeObstacle(x, y);
       }
       break;
-    case 'grid':
+    case "{\"grid\" ":
       if (args.isNotEmpty) {
         String descriptor = args[0];
 
