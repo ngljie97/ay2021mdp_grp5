@@ -3,7 +3,9 @@ import 'model/arena.dart';
 
 // ignore: missing_return
 bool executeCommand(String command, [List<String> args]) {
-  command = command.replaceAll("[^a-zA-Z0-9]+", "").toUpperCase();
+  command = command.replaceAllMapped(RegExp(r'[^a-zA-Z0-9]+'), (match) {
+    return '';
+  }).toUpperCase();
 
   Arena arena = globals.arena;
   switch (command) {
@@ -48,7 +50,7 @@ bool executeCommand(String command, [List<String> args]) {
       break;
     case "GRID":
       if (args.isNotEmpty) {
-        String descriptor = args[0].replaceAll("[^a-zA-Z0-9]+", "");
+        String descriptor = cleanCommand(args[0]);
 
         arena.updateMapFromDescriptors(mapDescriptor2: descriptor);
       }
@@ -56,4 +58,9 @@ bool executeCommand(String command, [List<String> args]) {
     default:
       break;
   }
+}
+String cleanCommand(String command) {
+  return command.replaceAllMapped(RegExp(r'[^a-zA-Z0-9]+'), (match) {
+    return '';
+  }).trim();
 }
