@@ -81,6 +81,7 @@ class _MyHomePageState extends State<MyHomePage> {
   void initState() {
     consoleController = ItemScrollController();
     super.initState();
+
     // _streamSubscription =
     //     accelerometerEvents.listen((AccelerometerEvent event) {
     //       setState(() {
@@ -88,20 +89,32 @@ class _MyHomePageState extends State<MyHomePage> {
     //       });
     //     });
 
-
     widget.stream.listen((message) {
       mySetState(message);
     });
-    globals.arena = Arena();
+    globals.arena = Arena('1111');
     // globals.arena.displayRobot();
     if (globals.btController == null)
       globals.btController = BluetoothController();
     globals.btController.init();
   }
 
-  Future<void> moveControls(String commandString, String globalString) async {
+  Future<void> moveControls(String commandString) async {
     //commandString = 'FW','RR'
     //globalString = globals.strForward
+    String globalString = '';
+    switch (commandString) {
+      case 'FW':
+        globalString = globals.strForward;
+        break;
+      case 'RR':
+        globalString = globals.strRotateRight;
+        break;
+      case 'RL':
+        globalString = globals.strRotateLeft;
+        break;
+    }
+
     if (globals.debugMode) {
       globals.arena.moveRobot(commandString);
     } else if (globals.btController.isConnected && !globals.debugMode) {
@@ -109,10 +122,7 @@ class _MyHomePageState extends State<MyHomePage> {
         await globals.btController.sendMessage(globalString);
       }
     }
-    if (!globals.updateMode)
-      setState(() {
-        //globals.arena.setRobotPos();
-      });
+    if (!globals.updateMode) setState(() {});
   }
 
   void _motionControl() {
@@ -121,14 +131,14 @@ class _MyHomePageState extends State<MyHomePage> {
       if (currentAcceleration.x.truncateToDouble() < -2) {
         setState(() {
           //rotate right
-          moveControls('RR', globals.strRotateRight);
+          moveControls('RR');
         });
       } else if (currentAcceleration.x.truncateToDouble() > 2) {
         //rotate left
-        moveControls('RL', globals.strRotateLeft);
+        moveControls('RL');
       } else if (currentAcceleration.y.truncateToDouble() < -2) {
         //move forward
-        moveControls('FW', globals.strForward);
+        moveControls('FW');
       }
     }
   }
@@ -192,11 +202,11 @@ class _MyHomePageState extends State<MyHomePage> {
                   MediaQuery.of(context).size.width - 175, 43, 0, 0),
               child: IconButton(
                   icon: Icon(
-
                     Icons.refresh,
                     color: Colors.blueAccent,
                     size: 30.0,
                   ),
+                  tooltip: 'Sync',
                   onPressed: () {
                     setState(() {});
                   }),
@@ -208,6 +218,7 @@ class _MyHomePageState extends State<MyHomePage> {
                   child: IconButton(
                     icon: Icon(Icons.stay_current_landscape),
                     color: (globals.gyroMode) ? Colors.greenAccent : Colors.red,
+                    tooltip: 'Motion Control',
                     onPressed: () {
                       setState(() {
                         if (globals.btController.isConnected ||
@@ -220,12 +231,12 @@ class _MyHomePageState extends State<MyHomePage> {
                           } else {
                             globals.gyroMode = true;
                             addConsoleAndScroll("Motion Control Enabled.");
-                            _streamSubscription =
-                                accelerometerEvents.listen((AccelerometerEvent event) {
-                                  setState(() {
-                                    acceleration = event;
-                                  });
-                                });
+                            _streamSubscription = accelerometerEvents
+                                .listen((AccelerometerEvent event) {
+                              setState(() {
+                                acceleration = event;
+                              });
+                            });
                             _timer = Timer.periodic(
                                 const Duration(milliseconds: 800), (_) {
                               setState(() {
@@ -249,11 +260,11 @@ class _MyHomePageState extends State<MyHomePage> {
                   alignment: Alignment(1, 0.07),
                   child: IconButton(
                     icon: Icon(Icons.cached),
+                    tooltip: 'Reset Robot',
                     color: Colors.blueAccent,
                     onPressed: () {
                       setState(() {
                         globals.arena.resetRobotPos();
-
                       });
                     },
                   ),
@@ -336,11 +347,11 @@ class _MyHomePageState extends State<MyHomePage> {
                   onChanged: (value) {
                     setState(() {
                       globals.updateMode = value;
-                      if (value) {
+                      /*if (value) {
                         _streamSubscription.pause();
                       } else {
                         _streamSubscription.resume();
-                      }
+                      }*/
                     });
                   },
                 ),
@@ -364,6 +375,13 @@ class _MyHomePageState extends State<MyHomePage> {
                     });
                   },
                 ),
+              ),
+              ListTile(
+                leading: Icon(Icons.cleaning_services),
+                title: Text('Clear state'),
+                onTap: () {
+                  setState(() => globals.arena = new Arena('1110'));
+                },
               ),
               ListTile(
                 leading: Icon(Icons.info_outline),
@@ -421,8 +439,12 @@ class _MyHomePageState extends State<MyHomePage> {
     void onTapFunction() {
       if (_setWayPoint) {
         _setWayPoint = false;
-        globals.arena.setWayPoint(x, y);
-        addConsoleAndScroll('WayPoint set at [$x,$y]');
+        if (globals.arena.setWayPoint(x, y)) {
+          addConsoleAndScroll('WayPoint set at [$x,$y].');
+        } else {
+          addConsoleAndScroll('WayPoint[$x,$y] removed.');
+        }
+
       }
     }
 
@@ -469,6 +491,7 @@ class _MyHomePageState extends State<MyHomePage> {
                               Align(
                                 alignment: Alignment.topRight,
                                 child: IconButton(
+                                  tooltip: 'Clear console log.',
                                   icon: Icon(Icons.delete),
                                   onPressed: () {
                                     setState(() {
@@ -485,6 +508,7 @@ class _MyHomePageState extends State<MyHomePage> {
                               Align(
                                 alignment: Alignment.bottomRight,
                                 child: IconButton(
+                                  tooltip: 'View console log.',
                                   icon: Icon(Icons.bookmarks),
                                   onPressed: () {
                                     Navigator.of(context).push(PageRouteBuilder(
@@ -588,17 +612,9 @@ class _MyHomePageState extends State<MyHomePage> {
                                 Expanded(
                                   child: IconButton(
                                     icon: Icon(Icons.arrow_circle_up),
+                                    tooltip: 'Move Forward',
                                     onPressed: () async {
-                                      if (globals.debugMode) {
-                                        globals.arena.moveRobot('FW');
-                                      } else if (globals
-                                              .btController.isConnected &&
-                                          !globals.debugMode) {
-                                        if (globals.arena.moveRobot('FW')) {
-                                          await globals.btController
-                                              .sendMessage(globals.strForward);
-                                        }
-                                      }
+                                      moveControls('FW');
                                     },
                                   ),
                                 ),
@@ -612,15 +628,7 @@ class _MyHomePageState extends State<MyHomePage> {
                                     icon: Icon(Icons.rotate_left),
                                     tooltip: 'Rotate Left',
                                     onPressed: () {
-                                      if (globals.debugMode) {
-                                        globals.arena.moveRobot('RL');
-                                      } else if (globals
-                                              .btController.isConnected &&
-                                          !globals.debugMode) {
-                                        if (globals.arena.moveRobot('RL'))
-                                          globals.btController.sendMessage(
-                                              globals.strRotateLeft);
-                                      }
+                                      moveControls('RL');
                                     },
                                   ),
                                 ),
@@ -632,15 +640,7 @@ class _MyHomePageState extends State<MyHomePage> {
                                     tooltip: 'Rotate Right',
                                     icon: Icon(Icons.rotate_right),
                                     onPressed: () {
-                                      if (globals.debugMode) {
-                                        globals.arena.moveRobot('RR');
-                                      } else if (globals
-                                              .btController.isConnected &&
-                                          !globals.debugMode) {
-                                        if (globals.arena.moveRobot('RR'))
-                                          globals.btController.sendMessage(
-                                              globals.strRotateRight);
-                                      }
+                                      moveControls('RR');
                                     },
                                   ),
                                 ),

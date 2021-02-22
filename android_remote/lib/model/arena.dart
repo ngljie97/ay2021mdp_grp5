@@ -1,4 +1,3 @@
-import 'package:android_remote/globals.dart' as globals;
 import 'package:android_remote/main.dart';
 import 'package:android_remote/model/robot.dart';
 import 'package:android_remote/model/waypoint.dart';
@@ -6,24 +5,37 @@ import 'package:convert/convert.dart';
 import 'package:flutter/material.dart';
 
 class Arena {
-  Arena();
+  List<List<int>> _explorationStatus, _obstaclesRecords;
+  WayPoint _wayPoint;
+  Robot _robot;
 
-  List<List<int>> _explorationStatus = List.generate(
-    20,
-    (index) => List.generate(15, (index) => 0, growable: false),
-    growable: false,
-  );
-  List<List<int>> _obstaclesRecords = List.generate(
-    20,
-    (index) => List.generate(15, (index) => 0, growable: false),
-    growable: false,
-  );
+  Arena(String selector) {
+    if (selector[0] == '1')
+      this._explorationStatus = List.generate(
+        20,
+        (index) => List.generate(15, (index) => 0, growable: false),
+        growable: false,
+      );
+    if (selector[1] == '1')
+      this._obstaclesRecords = List.generate(
+        20,
+        (index) => List.generate(15, (index) => 0, growable: false),
+        growable: false,
+      );
+    if (selector[2] == '1') this._robot = Robot(18, 1, 18, 1, 0);
+    if (selector[3] == '1') this._wayPoint = WayPoint(-1, -1);
+  }
 
-  WayPoint _wayPoint = WayPoint(-1, -1);
-  Robot _robot = Robot(18, 1, 18, 1, 0);
-
-  void setWayPoint(int x, int y) {
-    this._wayPoint.update(x, y);
+  bool setWayPoint(int x, int y) {
+    if (WayPoint.isWayPoint(x, y) == 0) {
+      // Sets the waypoint if the tile is not already a waypoint;
+      this._wayPoint.update(x, y);
+      return true;
+    } else {
+      // Remove the waypoint if is already there.
+      this._wayPoint.update(-1, -1);
+      return false;
+    }
   }
 
   void updateMapWithDescriptors(String mapDescriptor1, String mapDescriptor2) {
@@ -40,23 +52,26 @@ class Arena {
     }
   }
 
+  void convertDescriptor(String entry, String mapDescriptor) {
+    List<int> exploration = hex.decode(mapDescriptor);
+  }
+
   bool moveRobot(String operation) {
     bool isRotate = false;
 
-    if (globals.debugMode)
-      switch (operation) {
-        case 'FW':
-          _robot.moveForward();
-          break;
-        case 'RL':
-          _robot.rotate(-1);
-          isRotate = true;
-          break;
-        case 'RR':
-          _robot.rotate(1);
-          isRotate = true;
-          break;
-      }
+    switch (operation) {
+      case 'FW':
+        _robot.moveForward();
+        break;
+      case 'RL':
+        _robot.rotate(-1);
+        isRotate = true;
+        break;
+      case 'RR':
+        _robot.rotate(1);
+        isRotate = true;
+        break;
+    }
 
     return isRotate || (_robot.isDisplaced() != 0);
   }
