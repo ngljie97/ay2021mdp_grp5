@@ -1,9 +1,10 @@
+import 'package:android_remote/globals.dart' as globals;
 import 'package:flutter/material.dart';
 import 'package:scrollable_positioned_list/scrollable_positioned_list.dart';
-import 'package:android_remote/globals.dart' as globals;
 
 class ConsoleBackupPage extends StatefulWidget {
   ConsoleBackupPage();
+
   @override
   _ConsoleBackupPageState createState() => _ConsoleBackupPageState();
 }

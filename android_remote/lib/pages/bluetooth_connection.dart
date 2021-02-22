@@ -20,6 +20,7 @@ class ConnectionPage extends StatefulWidget {
 }
 
 enum _DeviceAvailability {
+  // ignore: unused_field
   no,
   maybe,
   yes,
@@ -35,9 +36,17 @@ class _DeviceWithAvailability extends BluetoothDevice {
 
 class _ConnectionPage extends State<ConnectionPage> {
   BluetoothState _bluetoothState = BluetoothState.UNKNOWN;
+
+  // ignore: unused_field
   String _address = "...";
+
+  // ignore: unused_field
   String _name = "...";
+
+  // ignore: unused_field
   Timer _discoverableTimeoutTimer;
+
+  // ignore: unused_field
   int _discoverableTimeoutSecondsLeft = 0;
 
   List<_DeviceWithAvailability> devices = List<_DeviceWithAvailability>();
@@ -153,7 +162,8 @@ class _ConnectionPage extends State<ConnectionPage> {
                 if (_device.device != null) {
                   String name = _device.device.name;
                   streamController = StreamController<String>();
-                  streamController.add('Trying to connect to Device: [$name]....');
+                  streamController
+                      .add('Trying to connect to Device: [$name]....');
                   print('Connect -> selected ' + _device.device.address);
                   globals.btController.isConnecting = true;
                   _startChat(context, _device.device);
@@ -253,7 +263,7 @@ class _ConnectionPage extends State<ConnectionPage> {
 }
 
 void _startChat(BuildContext context, BluetoothDevice server) {
-  globals.lastdevice=server;
+  globals.lastdevice = server;
   globals.btController.server = server;
   Navigator.of(context).push(
     MaterialPageRoute(

@@ -11,7 +11,7 @@ bool updateMode = false;
 bool debugMode = false;
 bool controlMode = false;
 bool gyroMode = false;
-String robotStatus ='IDLE';
+String robotStatus = 'IDLE';
 String Datetimeformat = 'yyyy/MM/dd, kk:mm:ss';
 String formattedDate = DateFormat(Datetimeformat).format(DateTime.now()) +
     " | " +
@@ -22,9 +22,9 @@ List<String> strArr = [
 ]; // To store the console log outputs.
 List<String> BackupstrArr = [formattedDate];
 
-
 BluetoothController btController;
 Arena arena;
+Arena backupArena;
 
 // Command strings (sending)
 final String strStartExplore = 'EX_START';

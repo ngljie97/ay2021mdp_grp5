@@ -59,24 +59,22 @@ class _MyHomePageState extends State<MyHomePage> {
   void mySetState(String message) {
     addConsoleAndScroll(message);
     if (message.contains('Disconnected remotely!')) {
+      globals.backupArena = globals.arena;
       globals.arena = Arena('1110');
     }
   }
 
   void addConsoleAndScroll(String message) {
-
-      globals.strArr.add(message);
-      globals.BackupstrArr.add(
-          DateFormat(globals.Datetimeformat).format(DateTime.now()) +
-              " | " +
-              message);
-      consoleController.scrollTo(
-          index: globals.strArr.length,
-          duration: Duration(milliseconds: 333),
-          curve: Curves.easeInOutCubic);
-      if(!globals.updateMode)
-        setState(() {}
-    );
+    globals.strArr.add(message);
+    globals.BackupstrArr.add(
+        DateFormat(globals.Datetimeformat).format(DateTime.now()) +
+            " | " +
+            message);
+    consoleController.scrollTo(
+        index: globals.strArr.length,
+        duration: Duration(milliseconds: 333),
+        curve: Curves.easeInOutCubic);
+    if (!globals.updateMode) setState(() {});
   }
 
   @override
@@ -104,7 +102,6 @@ class _MyHomePageState extends State<MyHomePage> {
   Future<void> moveControls(String commandString) async {
     //commandString = 'FW','RR'
     //globalString = globals.strForward
-
 
     String globalString = '';
     switch (commandString) {
@@ -169,132 +166,119 @@ class _MyHomePageState extends State<MyHomePage> {
             ),
             Visibility(
               visible: !_setWayPoint,
-              child:
-            Container(
-              child: Positioned(
-                //Place it at the top, and not use the entire screen
-                top: 5.0,
-                left: 0.0,
-                right: 0.0,
-                child: AppBar(
-                  title: Text(''),
-                  backgroundColor: Colors.transparent, //No more green
-                  elevation: 0.0,
-                  iconTheme: IconThemeData(color: Colors.blueAccent),
+              child: Container(
+                child: Positioned(
+                  //Place it at the top, and not use the entire screen
+                  top: 5.0,
+                  left: 0.0,
+                  right: 0.0,
+                  child: AppBar(
+                    title: Text(''),
+                    backgroundColor: Colors.transparent, //No more green
+                    elevation: 0.0,
+                    iconTheme: IconThemeData(color: Colors.blueAccent),
+                  ),
                 ),
               ),
             ),
-            ),
             Visibility(
               visible: !_setWayPoint,
-              child:
-            Container(
-              padding: EdgeInsets.fromLTRB(
-                  MediaQuery.of(context).size.width - 110, 50, 0, 0),
-              child: Icon(
-                Icons.adb_outlined,
-                color: (globals.debugMode) ? Colors.green : Colors.red,
-                size: 30.0,
-              ),
-            ),
-            ),
-      Visibility(
-        visible: !_setWayPoint,
-        child:
-            Container(
-              padding: EdgeInsets.fromLTRB(
-                  MediaQuery.of(context).size.width - 55, 50, 0, 0),
-              child: Icon(
-                Icons.bluetooth,
-                color: (globals.btController.isConnected)
-                    ? Colors.greenAccent
-                    : Colors.red,
-                size: 30.0,
-              ),
-            ),),
-      Visibility(
-        visible: !_setWayPoint,
-        child:
-            Container(
-              padding: EdgeInsets.fromLTRB(
-                  MediaQuery.of(context).size.width - 175, 43, 0, 0),
-              child: IconButton(
-                  icon: Icon(
-                    Icons.refresh,
-                    color: Colors.blueAccent,
-                    size: 30.0,
-                  ),
-                  tooltip: 'Sync',
-                  onPressed: () {
-                    setState(() {});
-                  }),
-            ),),
-            Visibility(
-              visible: !_setWayPoint,
-              child:
-            Center(
               child: Container(
-                child: Align(
-                  alignment: Alignment(1, 0),
-                  child: IconButton(
-                    icon: Icon(Icons.stay_current_landscape),
-                    color: (globals.gyroMode) ? Colors.greenAccent : Colors.red,
-                    tooltip: 'Motion Control',
+                padding: EdgeInsets.fromLTRB(
+                    MediaQuery.of(context).size.width - 55, 50, 0, 0),
+                child: Icon(
+                  Icons.bluetooth,
+                  color: (globals.btController.isConnected)
+                      ? Colors.greenAccent
+                      : Colors.red,
+                  size: 30.0,
+                ),
+              ),
+            ),
+            Visibility(
+              visible: !_setWayPoint,
+              child: Container(
+                padding: EdgeInsets.fromLTRB(
+                    MediaQuery.of(context).size.width - 175, 43, 0, 0),
+                child: IconButton(
+                    icon: Icon(
+                      Icons.refresh,
+                      color: Colors.blueAccent,
+                      size: 30.0,
+                    ),
+                    tooltip: 'Sync',
                     onPressed: () {
-                      setState(() {
-                        if (globals.btController.isConnected ||
-                            globals.debugMode) {
-                          if (globals.gyroMode) {
-                            globals.gyroMode = false;
-                            addConsoleAndScroll("Motion Control Disabled.");
-                            _streamSubscription.cancel();
-                            _timer.cancel();
+                      setState(() {});
+                    }),
+              ),
+            ),
+            Visibility(
+              visible: !_setWayPoint,
+              child: Center(
+                child: Container(
+                  child: Align(
+                    alignment: Alignment(1, 0),
+                    child: IconButton(
+                      icon: Icon(Icons.stay_current_landscape),
+                      color:
+                          (globals.gyroMode) ? Colors.greenAccent : Colors.red,
+                      tooltip: 'Motion Control',
+                      onPressed: () {
+                        setState(() {
+                          if (globals.btController.isConnected ||
+                              globals.debugMode) {
+                            if (globals.gyroMode) {
+                              globals.gyroMode = false;
+                              addConsoleAndScroll("Motion Control Disabled.");
+                              _streamSubscription.cancel();
+                              _timer.cancel();
+                            } else {
+                              globals.gyroMode = true;
+                              addConsoleAndScroll("Motion Control Enabled.");
+                              _streamSubscription = accelerometerEvents
+                                  .listen((AccelerometerEvent event) {
+                                setState(() {
+                                  acceleration = event;
+                                });
+                              });
+                              _timer = Timer.periodic(
+                                  const Duration(milliseconds: 800), (_) {
+                                setState(() {
+                                  _motionControl();
+                                });
+                              });
+                            }
                           } else {
-                            globals.gyroMode = true;
-                            addConsoleAndScroll("Motion Control Enabled.");
-                            _streamSubscription = accelerometerEvents
-                                .listen((AccelerometerEvent event) {
-                              setState(() {
-                                acceleration = event;
-                              });
-                            });
-                            _timer = Timer.periodic(
-                                const Duration(milliseconds: 800), (_) {
-                              setState(() {
-                                _motionControl();
-                              });
-                            });
+                            addConsoleAndScroll(
+                                "Device need to be connected or in debug mode!");
                           }
-                        } else {
-                          addConsoleAndScroll(
-                              "Device need to be connected or in debug mode!");
-                        }
-                      });
-                    },
+                        });
+                      },
+                    ),
                   ),
                 ),
               ),
-            ),),
+            ),
             Visibility(
               visible: !_setWayPoint,
-              child:
-            Center(
-              child: Container(
-                child: Align(
-                  alignment: Alignment(1, 0.07),
-                  child: IconButton(
-                    icon: Icon(Icons.cached),
-                    tooltip: 'Reset Robot',
-                    color: Colors.blueAccent,
-                    onPressed: () {
-                      setState(() {
-                        globals.arena.resetRobotPos();
-                      });
-                    },
+              child: Center(
+                child: Container(
+                  child: Align(
+                    alignment: Alignment(1, 0.07),
+                    child: IconButton(
+                      icon: Icon(Icons.cached),
+                      tooltip: 'Reset Robot',
+                      color: Colors.blueAccent,
+                      onPressed: () {
+                        setState(() {
+                          globals.arena.resetRobotPos();
+                        });
+                      },
+                    ),
                   ),
                 ),
               ),
-            ),),
+            ),
           ],
         ),
         drawer: Drawer(
@@ -325,8 +309,9 @@ class _MyHomePageState extends State<MyHomePage> {
                   if (globals.btController.isConnected) {
                     addConsoleAndScroll('Disconnecting locally!');
                     globals.btController.disconnect();
-                    globals.btController.isReconnecting=false;
+                    globals.btController.isReconnecting = false;
                     addConsoleAndScroll('Disconnected locally!');
+                    globals.backupArena = globals.arena;
                     globals.arena = Arena('1110');
                   }
                   if (!globals.btController.isConnected) {
@@ -396,7 +381,6 @@ class _MyHomePageState extends State<MyHomePage> {
                   onChanged: (value) {
                     setState(() {
                       globals.debugMode = value;
-
                     });
                   },
                 ),
@@ -405,6 +389,7 @@ class _MyHomePageState extends State<MyHomePage> {
                 leading: Icon(Icons.cleaning_services),
                 title: Text('Clear state'),
                 onTap: () {
+                  globals.backupArena = globals.arena;
                   setState(() => globals.arena = new Arena('1110'));
                 },
               ),
@@ -469,7 +454,6 @@ class _MyHomePageState extends State<MyHomePage> {
         } else {
           addConsoleAndScroll('WayPoint[$x,$y] removed.');
         }
-
       }
     }
 
@@ -489,19 +473,26 @@ class _MyHomePageState extends State<MyHomePage> {
                 mainAxisAlignment: MainAxisAlignment.start,
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: <Widget>[
-                  Row( children:[
-                  Text(
-                    'Console output:',
-                    textAlign: TextAlign.left,
-                  ),
-                  Padding(padding: EdgeInsets.fromLTRB(0, 0, 130, 0),),
-                  Text(
-                    'Robot Status',
-                    textAlign: TextAlign.left,
-                    style: TextStyle(fontWeight: FontWeight.bold, color: (globals.btController.isConnected) ? Colors.green : Colors.red,),
-                  ),
+                  Row(children: [
                     Text(
-                      ' : '+globals.robotStatus,
+                      'Console output:',
+                      textAlign: TextAlign.left,
+                    ),
+                    Padding(
+                      padding: EdgeInsets.fromLTRB(0, 0, 130, 0),
+                    ),
+                    Text(
+                      'Robot Status',
+                      textAlign: TextAlign.left,
+                      style: TextStyle(
+                        fontWeight: FontWeight.bold,
+                        color: (globals.btController.isConnected)
+                            ? Colors.green
+                            : Colors.red,
+                      ),
+                    ),
+                    Text(
+                      ' : ' + globals.robotStatus,
                       textAlign: TextAlign.left,
                     ),
                   ]),

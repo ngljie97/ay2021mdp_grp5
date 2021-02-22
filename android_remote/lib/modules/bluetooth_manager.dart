@@ -17,6 +17,8 @@ class BluetoothController {
   BluetoothDevice server;
   bool isConnected = false;
   List<_Message> messages = List<_Message>();
+
+  // ignore: unused_field
   String _messageBuffer = '';
 
   BluetoothController();
@@ -38,19 +40,18 @@ class BluetoothController {
         isDisconnecting = false;
 
         connection.input.listen(_onDataReceived).onDone(() {
-
           if (isDisconnecting) {
             print('Disconnecting locally!');
             streamController.add('Disconnecting locally!');
             this.disconnect();
           } else {
-            this.isReconnecting=true;
+            this.isReconnecting = true;
             streamController.add('Disconnecting remotely!');
             streamController.add('Retrying in 3 seconds.');
             this.disconnect();
-            new Future.delayed(const Duration(seconds: 3), () => this.reconnect());
-            if(isConnected)
-              isReconnecting=false;
+            new Future.delayed(
+                const Duration(seconds: 3), () => this.reconnect());
+            if (isConnected) isReconnecting = false;
           }
         });
       }).catchError((error) async {
@@ -58,13 +59,11 @@ class BluetoothController {
         print('Cannot connect, exception occurred');
         streamController.add('Cannot connect, Socket not opened..');
         this.disconnect();
-        if(isReconnecting) {
+        if (isReconnecting) {
           streamController.add('Retrying in 3 seconds.');
           new Future.delayed(
               const Duration(seconds: 3), () => this.reconnect());
-          if(isConnected)
-            isReconnecting=false;
-
+          if (isConnected) isReconnecting = false;
         }
       });
     }

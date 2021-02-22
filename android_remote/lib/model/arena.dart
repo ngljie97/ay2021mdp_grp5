@@ -12,20 +12,39 @@ class Arena {
   Robot _robot;
 
   Arena(String selector) {
-    if (selector[0] == '1')
+    if (selector[0] == '1') {
       this._explorationStatus = List.generate(
         20,
         (index) => List.generate(15, (index) => 0, growable: false),
         growable: false,
       );
-    if (selector[1] == '1')
+    } else if (backupArena != null) {
+      this._explorationStatus = backupArena._explorationStatus;
+    }
+
+    if (selector[1] == '1') {
       this._obstaclesRecords = List.generate(
         20,
         (index) => List.generate(15, (index) => 0, growable: false),
         growable: false,
       );
-    if (selector[2] == '1') this._robot = Robot(18, 1, 18, 1, 0);
-    if (selector[3] == '1') this._wayPoint = WayPoint(-1, -1);
+    } else if (backupArena != null) {
+      this._obstaclesRecords = backupArena._obstaclesRecords;
+    }
+
+    if (selector[2] == '1') {
+      this._robot = Robot(18, 1, 18, 1, 0);
+    } else if (backupArena != null) {
+      this._robot = backupArena._robot;
+    }
+
+    if (selector[3] == '1') {
+      this._wayPoint = WayPoint(-1, -1);
+    } else if (backupArena != null) {
+      this._wayPoint = backupArena._wayPoint;
+    }
+
+    backupArena = null;
   }
 
   bool setWayPoint(int x, int y) {
@@ -35,7 +54,7 @@ class Arena {
       return true;
     } else {
       // Remove the waypoint if is already there.
-      this._wayPoint=WayPoint(-1, -1);
+      this._wayPoint.update(-1, -1);
       return false;
     }
   }
@@ -43,24 +62,24 @@ class Arena {
   void updateMapFromDescriptors(
       {String mapDescriptor1, String mapDescriptor2}) {
     List<int> exploration, obstacles;
-    if (mapDescriptor1!=null) exploration = hex.decode(mapDescriptor1);
-    if (mapDescriptor2!=null) obstacles = hex.decode(mapDescriptor2);
+    if (mapDescriptor1 != null) exploration = hex.decode(mapDescriptor1);
+    if (mapDescriptor2 != null) obstacles = hex.decode(mapDescriptor2);
 
     int x, y = 0;
 
     for (int i = 0; i < 300; i++) {
       x = (i / 15).floor();
       y = (i % 15);
-      if (mapDescriptor1!=null)
+      if (exploration != null)
         this._explorationStatus[x][y] = exploration[i + 2];
-      if (mapDescriptor2!=null)
+      if (obstacles != null)
         this._obstaclesRecords[x][y] = obstacles[i + 2];
     }
   }
 
   bool moveRobot(String operation) {
     bool isRotate = false;
-    robotStatus='Moving';
+    robotStatus = 'Moving';
     switch (operation) {
       case 'FW':
         _robot.moveForward();
@@ -84,7 +103,7 @@ class Arena {
   }
 
   void setRobotPos(int x, int y, int dir) {
-    dir = ((dir / 90).floor())%4; //amdtool
+    dir = ((dir / 90).floor()) % 4; // amdtool
     _robot.prevX = _robot.x;
     _robot.prevY = _robot.y;
 
