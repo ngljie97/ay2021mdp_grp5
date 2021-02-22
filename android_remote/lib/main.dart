@@ -210,7 +210,7 @@ class _MyHomePageState extends State<MyHomePage> {
                     tooltip: 'Sync',
                     onPressed: () {
                       setState(() {
-                        if (!globals.debugMode)
+                        if (!globals.debugMode && globals.btController.isConnected)
                           globals.btController.sendMessage('sendArena');
                       });
                     }),
@@ -448,6 +448,8 @@ class _MyHomePageState extends State<MyHomePage> {
     void onTapFunction() {
       if (_setWayPoint) {
         _setWayPoint = false;
+        _setRobotStart = false;
+
         if (globals.arena.setWayPoint(x, y)) {
           addConsoleAndScroll('WayPoint set at [$x,$y].');
         } else {
@@ -455,6 +457,7 @@ class _MyHomePageState extends State<MyHomePage> {
         }
       }
       if (_setRobotStart) {
+        _setWayPoint = false;
         _setRobotStart = false;
         if (globals.arena.setRobotPos(x, y, 0)) {
           addConsoleAndScroll('Robot position set.');
@@ -771,10 +774,12 @@ class _MyHomePageState extends State<MyHomePage> {
                                   onPressed: () {
                                     if (_setWayPoint) {
                                       _setWayPoint = false;
+                                      _setRobotStart = false;
                                       addConsoleAndScroll(
                                           'Stop setting WayPoint.');
                                     } else {
                                       _setWayPoint = true;
+                                      _setRobotStart = false;
                                       addConsoleAndScroll(
                                           'Tap on the map to set WayPoint.');
                                     }
@@ -795,10 +800,12 @@ class _MyHomePageState extends State<MyHomePage> {
                                   onPressed: () {
                                     if (_setRobotStart) {
                                       _setRobotStart = false;
+                                      _setWayPoint = false;
                                       addConsoleAndScroll(
                                           'Stop setting position.');
                                     } else {
                                       _setRobotStart = true;
+                                      _setWayPoint = false;
                                       addConsoleAndScroll(
                                           'Tap on the map to set start position for robot.');
                                     }
