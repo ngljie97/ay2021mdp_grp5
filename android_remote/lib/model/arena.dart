@@ -9,6 +9,7 @@ class Arena {
   List<List<int>> _explorationStatus, _obstaclesRecords;
   WayPoint _wayPoint;
   Robot _robot;
+  int imagedirection =0;
 
   Arena(String selector) {
     if (selector[0] == '1') {
@@ -193,10 +194,14 @@ class Arena {
     this._obstaclesRecords[x][y] = 1;
   }
 
+
   void removeObstacle(int x, int y) {
     this._obstaclesRecords[x][y] = 0;
   }
-
+  void setImage(int x, int y, int imageid, int dir) {
+    this._obstaclesRecords[x][y] = imageid;
+    this.imagedirection = dir;
+  }
   void setExplored(int x, int y) {
     this._explorationStatus[x][y] = 1;
   }
@@ -214,8 +219,27 @@ class Arena {
       item = _inSpecialZone(x, y);
 
       if (item == '0') {
-        if (_obstaclesRecords[x][y] == 1) {
-          item = 'O';
+        if (_obstaclesRecords[x][y] >= 1) {
+          switch (_obstaclesRecords[x][y]) {
+            case 101:
+              item = 'n1';
+              break;
+            case 102:
+              item = 'n2';
+              break;
+            case 103:
+              item = 'n3';
+              break;
+            case 104:
+              item = 'n4';
+              break;
+            case 105:
+              item = 'n5';
+              break;
+            default:
+              item = 'O';
+              break;
+          }
         } else {
           switch (_explorationStatus[x][y] + WayPoint.isWayPoint(x, y)) {
             case 0:
@@ -427,7 +451,9 @@ class Arena {
           ),
         );
       case 'n1':
-        return Container(
+        return RotatedBox(
+            quarterTurns: this.imagedirection,
+            child:Container(
           decoration: BoxDecoration(
             image: DecorationImage(
               image: AssetImage('assets/number_one.PNG'),
@@ -435,9 +461,11 @@ class Arena {
             ),
             shape: BoxShape.rectangle,
           ),
-        );
+        ));
       case 'n2':
-        return Container(
+        return RotatedBox(
+            quarterTurns: this.imagedirection,
+            child:Container(
           decoration: BoxDecoration(
             image: DecorationImage(
               image: AssetImage('assets/number_two.PNG'),
@@ -445,9 +473,11 @@ class Arena {
             ),
             shape: BoxShape.rectangle,
           ),
-        );
+        ));
       case 'n3':
-        return Container(
+        return RotatedBox(
+            quarterTurns: this.imagedirection,
+            child:Container(
           decoration: BoxDecoration(
             image: DecorationImage(
               image: AssetImage('assets/number_three.PNG'),
@@ -455,9 +485,11 @@ class Arena {
             ),
             shape: BoxShape.rectangle,
           ),
-        );
+        ));
       case 'n4':
-        return Container(
+        return RotatedBox(
+            quarterTurns: this.imagedirection,
+            child:Container(
           decoration: BoxDecoration(
             image: DecorationImage(
               image: AssetImage('assets/number_four.PNG'),
@@ -465,9 +497,11 @@ class Arena {
             ),
             shape: BoxShape.rectangle,
           ),
-        );
+        ));
       case 'n5':
-        return Container(
+        return RotatedBox(
+            quarterTurns: this.imagedirection,
+            child:Container(
           decoration: BoxDecoration(
             image: DecorationImage(
               image: AssetImage('assets/number_five.PNG'),
@@ -475,7 +509,7 @@ class Arena {
             ),
             shape: BoxShape.rectangle,
           ),
-        );
+        ));
         break;
       // End of Image Recognition
 
