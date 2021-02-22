@@ -38,22 +38,22 @@ class Arena {
     }
   }
 
-  void updateMapWithDescriptors(String mapDescriptor1, String mapDescriptor2) {
-    List<int> exploration = hex.decode(mapDescriptor1);
-    List<int> obstacles = hex.decode(mapDescriptor2);
+  void updateMapFromDescriptors(
+      {String mapDescriptor1, String mapDescriptor2}) {
+    List<int> exploration, obstacles;
+    if (mapDescriptor1.isNotEmpty) exploration = hex.decode(mapDescriptor1);
+    if (mapDescriptor2.isNotEmpty) obstacles = hex.decode(mapDescriptor2);
+
     int x, y = 0;
 
     for (int i = 0; i < 300; i++) {
       x = (i / 15).floor();
       y = (i % 15);
-
-      this._explorationStatus[x][y] = exploration[i + 2];
-      this._obstaclesRecords[x][y] = obstacles[i + 2];
+      if (mapDescriptor1.isNotEmpty)
+        this._explorationStatus[x][y] = exploration[i + 2];
+      if (mapDescriptor2.isNotEmpty)
+        this._obstaclesRecords[x][y] = obstacles[i + 2];
     }
-  }
-
-  void convertDescriptor(String entry, String mapDescriptor) {
-    List<int> exploration = hex.decode(mapDescriptor);
   }
 
   bool moveRobot(String operation) {

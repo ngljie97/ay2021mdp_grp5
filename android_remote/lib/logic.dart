@@ -18,7 +18,8 @@ bool executeCommand(String command, [List<String> args]) {
         String mapDescriptor1 = args[0];
         String mapDescriptor2 = args[2];
 
-        arena.updateMapWithDescriptors(mapDescriptor1, mapDescriptor2);
+        arena.updateMapFromDescriptors(
+            mapDescriptor1: mapDescriptor1, mapDescriptor2: mapDescriptor2);
       }
       break;
     case 'ADDOBSTACLE':
@@ -41,11 +42,9 @@ bool executeCommand(String command, [List<String> args]) {
       break;
     case 'grid':
       if (args.isNotEmpty) {
-        List<String> coord = args[0].split(',');
-        int x = coord[0].trim() as int;
-        int y = coord[1].trim() as int;
+        String descriptor = args[0];
 
-        arena.removeObstacle(x, y);
+        arena.updateMapFromDescriptors(mapDescriptor2: descriptor);
       }
       break;
     default:
