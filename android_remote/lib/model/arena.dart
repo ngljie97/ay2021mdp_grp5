@@ -75,13 +75,15 @@ class Arena {
 
       if (bitNumber % 4 == 0) {
         if (mapDescriptor1 != null) {
-          exploration =
-              int.parse(mapDescriptor1[hexNumber], radix: 16).toRadixString(2).padLeft(4, '0');
+          exploration = int.parse(mapDescriptor1[hexNumber], radix: 16)
+              .toRadixString(2)
+              .padLeft(4, '0');
         }
 
         if (mapDescriptor2 != null) {
-          obstacles =
-              int.parse(mapDescriptor2[hexNumber], radix: 16).toRadixString(2).padLeft(4, '0');
+          obstacles = int.parse(mapDescriptor2[hexNumber], radix: 16)
+              .toRadixString(2)
+              .padLeft(4, '0');
         }
         hexNumber += 1;
         bitNumber = 0;
@@ -128,14 +130,21 @@ class Arena {
     this._robot = Robot(18, 1, 18, 1, 0);
   }
 
-  void setRobotPos(int x, int y, int dir) {
-    dir = ((dir / 90).floor()) % 4; // amdtool
-    _robot.prevX = _robot.x;
-    _robot.prevY = _robot.y;
+  bool setRobotPos(int x, int y, int dir) {
+    dir = ((dir / 90).floor()) % 4; // @TODO remove line. Meant for amdtool.
 
-    _robot.x = x;
-    _robot.y = y;
-    _robot.direction = dir;
+    if (y == 0 || y == 14 || x == 0 || x == 19) {
+      return false;
+    } else {
+      _robot.prevX = _robot.x;
+      _robot.prevY = _robot.y;
+
+      _robot.x = x;
+      _robot.y = y;
+      _robot.direction = dir;
+
+      return true;
+    }
   }
 
   String isRobot(int x, int y) {

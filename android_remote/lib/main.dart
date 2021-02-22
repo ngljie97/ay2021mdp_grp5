@@ -55,6 +55,7 @@ class MyHomePage extends StatefulWidget {
 
 class _MyHomePageState extends State<MyHomePage> {
   bool _setWayPoint = false;
+  bool _setRobotStart = false;
 
   void mySetState(String message) {
     addConsoleAndScroll(message);
@@ -165,11 +166,11 @@ class _MyHomePageState extends State<MyHomePage> {
               ],
             ),
             Visibility(
-              visible: !_setWayPoint,
+              visible: !_setWayPoint && !_setRobotStart,
               child: Container(
                 child: Positioned(
                   //Place it at the top, and not use the entire screen
-                  top: 5.0,
+                  top: 12.0,
                   left: 0.0,
                   right: 0.0,
                   child: AppBar(
@@ -182,7 +183,7 @@ class _MyHomePageState extends State<MyHomePage> {
               ),
             ),
             Visibility(
-              visible: !_setWayPoint,
+              visible: !_setWayPoint && !_setRobotStart,
               child: Container(
                 padding: EdgeInsets.fromLTRB(
                     MediaQuery.of(context).size.width - 55, 50, 0, 0),
@@ -196,7 +197,7 @@ class _MyHomePageState extends State<MyHomePage> {
               ),
             ),
             Visibility(
-              visible: !_setWayPoint,
+              visible: !_setWayPoint && !_setRobotStart,
               child: Container(
                 padding: EdgeInsets.fromLTRB(
                     MediaQuery.of(context).size.width - 175, 43, 0, 0),
@@ -216,7 +217,7 @@ class _MyHomePageState extends State<MyHomePage> {
               ),
             ),
             Visibility(
-              visible: !_setWayPoint,
+              visible: !_setWayPoint && !_setRobotStart,
               child: Center(
                 child: Container(
                   child: Align(
@@ -263,7 +264,7 @@ class _MyHomePageState extends State<MyHomePage> {
               ),
             ),
             Visibility(
-              visible: !_setWayPoint,
+              visible: !_setWayPoint && !_setRobotStart,
               child: Center(
                 child: Container(
                   child: Align(
@@ -360,11 +361,6 @@ class _MyHomePageState extends State<MyHomePage> {
                   onChanged: (value) {
                     setState(() {
                       globals.updateMode = value;
-                      /*if (value) {
-                        _streamSubscription.pause();
-                      } else {
-                        _streamSubscription.resume();
-                      }*/
                     });
                   },
                 ),
@@ -456,6 +452,14 @@ class _MyHomePageState extends State<MyHomePage> {
           addConsoleAndScroll('WayPoint set at [$x,$y].');
         } else {
           addConsoleAndScroll('WayPoint[$x,$y] removed.');
+        }
+      }
+      if (_setRobotStart) {
+        _setRobotStart = false;
+        if (globals.arena.setRobotPos(x, y, 0)) {
+          addConsoleAndScroll('Robot position set.');
+        } else {
+          addConsoleAndScroll('Robot cannot be place at the edge of arena!');
         }
       }
     }
@@ -598,7 +602,7 @@ class _MyHomePageState extends State<MyHomePage> {
                             Expanded(
                               flex: 1,
                               child: RaisedButton(
-                                color: Colors.blue[400],
+                                color: Colors.indigo,
                                 onPressed: () async {
                                   if (globals.btController.isConnected) {
                                     await globals.btController.sendMessage(
@@ -616,6 +620,7 @@ class _MyHomePageState extends State<MyHomePage> {
                             Expanded(
                               flex: 1,
                               child: RaisedButton(
+                                color: Colors.indigo[400],
                                 onPressed: () async {
                                   if (globals.btController.isConnected) {
                                     await globals.btController.sendMessage(
@@ -683,7 +688,7 @@ class _MyHomePageState extends State<MyHomePage> {
                       Expanded(
                         flex: 2,
                         child: RaisedButton(
-                          color: Colors.indigo[200],
+                          color: Colors.indigo[300],
                           onPressed: () {
                             setState(() {
                               globals.controlMode = false;
@@ -754,31 +759,61 @@ class _MyHomePageState extends State<MyHomePage> {
                       ),
                       Expanded(
                         flex: 2,
-                        child: RaisedButton(
-                          color:
-                              (_setWayPoint) ? Colors.grey : Colors.indigo[600],
-                          onPressed: () {
-                            if (_setWayPoint) {
-                              _setWayPoint = false;
-                              addConsoleAndScroll('Stop setting WayPoint.');
-                            } else {
-                              _setWayPoint = true;
-                              addConsoleAndScroll(
-                                  'Tap on the map to set WayPoint.');
-                            }
-                          },
-                          child: Container(
-                            child: const Text(
-                              'Set WayPoint',
-                              overflow: TextOverflow.ellipsis,
+                        child: Row(
+                          children: <Widget>[
+                            Expanded(
+                              flex: 1,
+                              child: Container(
+                                color: (_setWayPoint)
+                                    ? Colors.grey
+                                    : Colors.indigo[600],
+                                child: IconButton(
+                                  onPressed: () {
+                                    if (_setWayPoint) {
+                                      _setWayPoint = false;
+                                      addConsoleAndScroll(
+                                          'Stop setting WayPoint.');
+                                    } else {
+                                      _setWayPoint = true;
+                                      addConsoleAndScroll(
+                                          'Tap on the map to set WayPoint.');
+                                    }
+                                  },
+                                  icon: Icon(Icons.pin_drop),
+                                  tooltip: 'Set WayPoint',
+                                ),
+                              ),
                             ),
-                          ),
+                            Expanded(
+                              flex: 1,
+                              child: Container(
+                                color: (_setRobotStart)
+                                    ? Colors.grey
+                                    : Colors.indigo,
+                                child: IconButton(
+                                  icon: Icon(Icons.android),
+                                  onPressed: () {
+                                    if (_setRobotStart) {
+                                      _setRobotStart = false;
+                                      addConsoleAndScroll(
+                                          'Stop setting position.');
+                                    } else {
+                                      _setRobotStart = true;
+                                      addConsoleAndScroll(
+                                          'Tap on the map to set start position for robot.');
+                                    }
+                                  },
+                                  tooltip: 'Set robot start position',
+                                ),
+                              ),
+                            )
+                          ],
                         ),
                       ),
                       Expanded(
                         flex: 2,
                         child: RaisedButton(
-                          color: Colors.indigo[200],
+                          color: Colors.indigo[300],
                           onPressed: () {
                             setState(() {
                               globals.controlMode = true;

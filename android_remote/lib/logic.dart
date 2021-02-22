@@ -24,7 +24,6 @@ bool executeCommand(String command, [List<String> args]) {
         arena.setRobotPos(x, y, dir);
       }
       break;
-
     case 'MAP':
       if (args.isNotEmpty) {
         String mapDescriptor1 = cleanCommand(args[0]);
@@ -57,6 +56,14 @@ bool executeCommand(String command, [List<String> args]) {
         String descriptor = cleanCommand(args[0]);
 
         arena.updateMapFromDescriptors(mapDescriptor2: descriptor);
+      }
+      break;
+    case 'SET_WAYPOINT':
+      if (args.isNotEmpty) {
+        int x = int.parse(args[0].trim());
+        int y = int.parse(args[1].trim());
+
+        arena.setWayPoint(x, y);
       }
       break;
     default:
