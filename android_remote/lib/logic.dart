@@ -59,6 +59,18 @@ bool executeCommand(String command, [List<String> args]) {
         arena.updateMapFromDescriptors(mapDescriptor2: descriptor);
       }
       break;
+    case 'IMAGE':
+      int image = int.parse(args[0].trim())+100;
+      int x = int.parse(args[1].trim());
+      int y = int.parse(args[2].trim());
+      int dir = int.parse(args[3].trim());
+      arena.setImage(x, y, image, dir);
+      break;
+    case 'DELETEIMAGE':
+      int x = int.parse(args[1].trim());
+      int y = int.parse(args[2].trim());
+      arena.removeObstacle(x, y);
+      break;
     default:
       break;
   }

@@ -199,7 +199,7 @@ class _MyHomePageState extends State<MyHomePage> {
               visible: !_setWayPoint,
               child: Container(
                 padding: EdgeInsets.fromLTRB(
-                    MediaQuery.of(context).size.width - 175, 43, 0, 0),
+                    MediaQuery.of(context).size.width - 115, 43, 0, 0),
                 child: IconButton(
                     icon: Icon(
                       Icons.refresh,
