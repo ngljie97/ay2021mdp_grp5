@@ -1,11 +1,15 @@
 import 'globals.dart' as globals;
 import 'model/arena.dart';
 
+String cleanCommand(String command) {
+  return command.replaceAllMapped(RegExp(r'[^a-zA-Z0-9]+'), (match) {
+    return '';
+  }).trim();
+}
+
 // ignore: missing_return
 bool executeCommand(String command, [List<String> args]) {
-  command = command.replaceAllMapped(RegExp(r'[^a-zA-Z0-9]+'), (match) {
-    return '';
-  }).toUpperCase();
+  command = cleanCommand(command).toUpperCase();
 
   Arena arena = globals.arena;
   switch (command) {
@@ -23,8 +27,8 @@ bool executeCommand(String command, [List<String> args]) {
 
     case 'MAP':
       if (args.isNotEmpty) {
-        String mapDescriptor1 = args[0].replaceAll("[^a-zA-Z0-9]+", "");
-        String mapDescriptor2 = args[1].replaceAll("[^a-zA-Z0-9]+", "");
+        String mapDescriptor1 = cleanCommand(args[0]);
+        String mapDescriptor2 = cleanCommand(args[1]);
 
         arena.updateMapFromDescriptors(
             mapDescriptor1: mapDescriptor1, mapDescriptor2: mapDescriptor2);
@@ -48,7 +52,7 @@ bool executeCommand(String command, [List<String> args]) {
         arena.removeObstacle(x, y);
       }
       break;
-    case "GRID":
+    case 'GRID':
       if (args.isNotEmpty) {
         String descriptor = cleanCommand(args[0]);
 
@@ -58,9 +62,4 @@ bool executeCommand(String command, [List<String> args]) {
     default:
       break;
   }
-}
-String cleanCommand(String command) {
-  return command.replaceAllMapped(RegExp(r'[^a-zA-Z0-9]+'), (match) {
-    return '';
-  }).trim();
 }

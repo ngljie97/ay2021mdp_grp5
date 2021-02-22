@@ -208,7 +208,10 @@ class _MyHomePageState extends State<MyHomePage> {
                     ),
                     tooltip: 'Sync',
                     onPressed: () {
-                      setState(() {});
+                      setState(() {
+                        if (!globals.debugMode)
+                          globals.btController.sendMessage('sendArena');
+                      });
                     }),
               ),
             ),
@@ -802,7 +805,7 @@ class _MyHomePageState extends State<MyHomePage> {
 
   Future<String> _getFunctionString(int i) async {
     final prefs = await SharedPreferences.getInstance();
-    final value = prefs.getString('function$i') ?? 0;
+    final value = prefs.getString('function$i') ?? '0';
 
     return value;
   }

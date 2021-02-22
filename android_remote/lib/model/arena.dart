@@ -1,7 +1,6 @@
 import 'package:android_remote/main.dart';
 import 'package:android_remote/model/robot.dart';
 import 'package:android_remote/model/waypoint.dart';
-import 'package:convert/convert.dart';
 import 'package:flutter/material.dart';
 
 import '../globals.dart';
@@ -61,19 +60,46 @@ class Arena {
 
   void updateMapFromDescriptors(
       {String mapDescriptor1, String mapDescriptor2}) {
-    List<int> exploration, obstacles;
-    if (mapDescriptor1 != null) exploration = hex.decode(mapDescriptor1);
-    if (mapDescriptor2 != null) obstacles = hex.decode(mapDescriptor2);
-
+    String exploration, obstacles;
     int x, y = 0;
+    int bitNumber = 0;
+    int hexNumber = 0;
 
     for (int i = 0; i < 300; i++) {
       x = (i / 15).floor();
       y = (i % 15);
-      if (exploration != null)
-        this._explorationStatus[x][y] = exploration[i + 2];
-      if (obstacles != null)
-        this._obstaclesRecords[x][y] = obstacles[i + 2];
+
+      if (x == 19 && y == 14) {
+        break;
+      }
+
+      if (bitNumber % 4 == 0) {
+        if (mapDescriptor1 != null) {
+          exploration =
+              int.parse(mapDescriptor1[hexNumber], radix: 16).toRadixString(2).padLeft(4, '0');
+        }
+
+        if (mapDescriptor2 != null) {
+          obstacles =
+              int.parse(mapDescriptor2[hexNumber], radix: 16).toRadixString(2).padLeft(4, '0');
+        }
+        hexNumber += 1;
+        bitNumber = 0;
+      }
+
+      if (x == 0 && y == 0) {
+        bitNumber += 2;
+      }
+
+      if (exploration != null) {
+        this._explorationStatus[x][y] = int.parse(exploration[bitNumber]);
+      }
+
+      if (obstacles != null) {
+        this._obstaclesRecords[x][y] = int.parse(obstacles[bitNumber]);
+      }
+
+      bitNumber += 1;
     }
   }
 
@@ -286,7 +312,7 @@ class Arena {
           padding: const EdgeInsets.all(1),
           child: Container(
             color: Colors.black,
-            child: Text('X'),
+            child: Text(''),
           ),
         );
         break;
@@ -303,6 +329,7 @@ class Arena {
           ),
         );
         break;
+
       case 'B':
         return Container(
           decoration: BoxDecoration(
