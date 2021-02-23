@@ -11,7 +11,7 @@ class QueueSys {
 
   QueueSys() {
     _timer =
-        Timer.periodic(Duration(milliseconds: 1500), (timer) => checkQueue());
+        Timer.periodic(Duration(milliseconds: 500), (timer) => checkQueue());
   }
 
   static Future<void> checkQueue() async {
@@ -30,6 +30,8 @@ class QueueSys {
     List<String> command = task.split(':');
 
     try {
+      streamController
+          .add('Dequeuing: ${command[0]}');
       await executeCommand(command[0], command.sublist(1));
     } catch (e) {
       streamController
@@ -46,6 +48,6 @@ class QueueSys {
     _queue.addAll(taskList);
 
     checkQueue(); // checks if any task running. if system is free, execute first task.
-    QueueSys(); // reset timer.
+
   }
 }

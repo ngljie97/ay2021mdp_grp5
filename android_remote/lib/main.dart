@@ -13,6 +13,7 @@ import 'package:shared_preferences/shared_preferences.dart';
 
 import 'globals.dart' as globals;
 import 'model/arena.dart';
+import 'model/queueSystem.dart';
 
 StreamController<String> streamController =
     StreamController<String>.broadcast();
@@ -71,10 +72,13 @@ class _MyHomePageState extends State<MyHomePage> {
         DateFormat(globals.Datetimeformat).format(DateTime.now()) +
             " | " +
             message);
+    if(globals.strArr.length>7&&!globals.updateMode)
+      consoleController.jumpTo(index: globals.strArr.length-7);
     consoleController.scrollTo(
         index: globals.strArr.length,
-        duration: Duration(milliseconds: 333),
+        duration: Duration(milliseconds: 1000),
         curve: Curves.easeInOutCubic);
+
     if (!globals.updateMode) setState(() {});
   }
 
@@ -82,13 +86,7 @@ class _MyHomePageState extends State<MyHomePage> {
   void initState() {
     consoleController = ItemScrollController();
     super.initState();
-
-    // _streamSubscription =
-    //     accelerometerEvents.listen((AccelerometerEvent event) {
-    //       setState(() {
-    //         acceleration = event;
-    //       });
-    //     });
+    QueueSys(); // reset timer.
 
     widget.stream.listen((message) {
       mySetState(message);
