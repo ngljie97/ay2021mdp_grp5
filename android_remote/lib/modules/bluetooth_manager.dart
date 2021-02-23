@@ -1,8 +1,8 @@
 import 'dart:convert';
 import 'dart:typed_data';
 
-import 'package:android_remote/logic.dart' as logic;
 import 'package:android_remote/main.dart';
+import 'package:android_remote/model/queueSystem.dart';
 import 'package:flutter_bluetooth_serial/flutter_bluetooth_serial.dart';
 
 import '../globals.dart';
@@ -130,10 +130,7 @@ class BluetoothController {
 
     String sdataString = dataString.trim();
 
-    List<String> tmp = sdataString.split(':');
-    String command = tmp.removeAt(0);
-
-    logic.executeCommand(command, tmp);
+    if (sdataString.contains(':')) QueueSys.queueTask(sdataString);
 
     streamController.add('Message Received from [$name]: [$sdataString]');
   }

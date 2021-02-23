@@ -8,7 +8,7 @@ String cleanCommand(String command) {
 }
 
 // ignore: missing_return
-bool executeCommand(String command, [List<String> args]) {
+Future<bool> executeCommand(String command, [List<String> args]) {
   command = cleanCommand(command).toUpperCase();
 
   Arena arena = globals.arena;
@@ -34,6 +34,7 @@ bool executeCommand(String command, [List<String> args]) {
             mapDescriptor1: mapDescriptor1, mapDescriptor2: mapDescriptor2);
       }
       break;
+
     case 'ADDOBSTACLE':
       if (args.isNotEmpty) {
         List<String> coord = args[0].split(',');
@@ -43,6 +44,7 @@ bool executeCommand(String command, [List<String> args]) {
         arena.setObstacle(x, y);
       }
       break;
+
     case 'REMOVEOBSTACLE':
       if (args.isNotEmpty) {
         List<String> coord = args[0].split(',');
@@ -52,6 +54,7 @@ bool executeCommand(String command, [List<String> args]) {
         arena.removeObstacle(x, y);
       }
       break;
+
     case 'GRID':
       if (args.isNotEmpty) {
         String descriptor = cleanCommand(args[0]);
@@ -59,6 +62,7 @@ bool executeCommand(String command, [List<String> args]) {
         arena.updateMapFromDescriptors(mapDescriptor2: descriptor);
       }
       break;
+
     case 'SETWAYPOINT':
       if (args.isNotEmpty) {
         int x = int.parse(args[0].trim());
@@ -67,6 +71,7 @@ bool executeCommand(String command, [List<String> args]) {
         arena.setWayPoint(x, y);
       }
       break;
+
     case 'IMAGE':
       int image = int.parse(args[0].trim()) + 100;
       int x = int.parse(args[1].trim());
@@ -74,11 +79,13 @@ bool executeCommand(String command, [List<String> args]) {
       int dir = int.parse(args[3].trim());
       arena.setImage(x, y, image, dir);
       break;
+
     case 'DELETEIMAGE':
       int x = int.parse(args[1].trim());
       int y = int.parse(args[2].trim());
       arena.removeObstacle(x, y);
       break;
+
     default:
       break;
   }

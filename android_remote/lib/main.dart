@@ -459,6 +459,7 @@ class _MyHomePageState extends State<MyHomePage> {
           globals.btController.sendMessage('RM_WAYPOINT:$x,$y');
         }
       }
+
       if (_setRobotStart) {
         globals.backupArena = globals.arena;
         globals.arena = Arena('1000');
