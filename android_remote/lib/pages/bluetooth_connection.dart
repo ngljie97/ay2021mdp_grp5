@@ -263,7 +263,6 @@ class _ConnectionPage extends State<ConnectionPage> {
 }
 
 void _startChat(BuildContext context, BluetoothDevice server) {
-  globals.lastdevice = server;
   globals.btController.server = server;
   Navigator.of(context).push(
     MaterialPageRoute(
