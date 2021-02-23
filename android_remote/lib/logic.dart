@@ -59,7 +59,7 @@ bool executeCommand(String command, [List<String> args]) {
         arena.updateMapFromDescriptors(mapDescriptor2: descriptor);
       }
       break;
-    case 'SET_WAYPOINT':
+    case 'SETWAYPOINT':
       if (args.isNotEmpty) {
         int x = int.parse(args[0].trim());
         int y = int.parse(args[1].trim());

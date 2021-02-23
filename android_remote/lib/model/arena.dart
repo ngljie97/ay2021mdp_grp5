@@ -9,7 +9,7 @@ class Arena {
   List<List<int>> _explorationStatus, _obstaclesRecords;
   WayPoint _wayPoint;
   Robot _robot;
-  int imagedirection = 0;
+  int _imagedirection = 0;
 
   Arena(String selector) {
     if (selector[0] == '1') {
@@ -199,8 +199,7 @@ class Arena {
   }
 
   void setImage(int x, int y, int imageid, int dir) {
-    this._obstaclesRecords[x][y] = imageid;
-    this.imagedirection = dir;
+    this._obstaclesRecords[x][y] = imageid*10+dir;
   }
 
   void setExplored(int x, int y) {
@@ -221,21 +220,28 @@ class Arena {
 
       if (item == '0') {
         if (_obstaclesRecords[x][y] >= 1) {
-          switch (_obstaclesRecords[x][y]) {
+          int first = (_obstaclesRecords[x][y]/10).floor();
+          int second = (_obstaclesRecords[x][y]%10);
+          switch (first) {
             case 101:
               item = 'n1';
+              this._imagedirection = second;
               break;
             case 102:
               item = 'n2';
+              this._imagedirection = second;
               break;
             case 103:
               item = 'n3';
+              this._imagedirection = second;
               break;
             case 104:
               item = 'n4';
+              this._imagedirection = second;
               break;
             case 105:
               item = 'n5';
+              this._imagedirection = second;
               break;
             default:
               item = 'O';
@@ -453,7 +459,7 @@ class Arena {
         );
       case 'n1':
         return RotatedBox(
-            quarterTurns: this.imagedirection,
+            quarterTurns: this._imagedirection,
             child: Container(
               decoration: BoxDecoration(
                 image: DecorationImage(
@@ -465,7 +471,7 @@ class Arena {
             ));
       case 'n2':
         return RotatedBox(
-            quarterTurns: this.imagedirection,
+            quarterTurns: this._imagedirection,
             child: Container(
               decoration: BoxDecoration(
                 image: DecorationImage(
@@ -477,7 +483,7 @@ class Arena {
             ));
       case 'n3':
         return RotatedBox(
-            quarterTurns: this.imagedirection,
+            quarterTurns: this._imagedirection,
             child: Container(
               decoration: BoxDecoration(
                 image: DecorationImage(
@@ -489,7 +495,7 @@ class Arena {
             ));
       case 'n4':
         return RotatedBox(
-            quarterTurns: this.imagedirection,
+            quarterTurns: this._imagedirection,
             child: Container(
               decoration: BoxDecoration(
                 image: DecorationImage(
@@ -501,7 +507,7 @@ class Arena {
             ));
       case 'n5':
         return RotatedBox(
-            quarterTurns: this.imagedirection,
+            quarterTurns: this._imagedirection,
             child: Container(
               decoration: BoxDecoration(
                 image: DecorationImage(

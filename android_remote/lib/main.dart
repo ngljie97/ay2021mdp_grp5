@@ -447,20 +447,26 @@ class _MyHomePageState extends State<MyHomePage> {
 
     void onTapFunction() {
       if (_setWayPoint) {
+
         _setWayPoint = false;
         _setRobotStart = false;
 
         if (globals.arena.setWayPoint(x, y)) {
           addConsoleAndScroll('WayPoint set at [$x,$y].');
+          globals.btController.sendMessage('WAYPOINT:$x,$y');
         } else {
           addConsoleAndScroll('WayPoint[$x,$y] removed.');
+          globals.btController.sendMessage('RM_WAYPOINT:$x,$y');
         }
       }
       if (_setRobotStart) {
+        globals.backupArena = globals.arena;
+        globals.arena = Arena('1000');
         _setWayPoint = false;
         _setRobotStart = false;
         if (globals.arena.setRobotPos(x, y, 0)) {
           addConsoleAndScroll('Robot position set.');
+          globals.btController.sendMessage('ROBOT:$x,$y');
         } else {
           addConsoleAndScroll('Robot cannot be place at the edge of arena!');
         }
