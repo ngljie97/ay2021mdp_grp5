@@ -1,3 +1,5 @@
+import 'package:android_remote/main.dart';
+
 import 'globals.dart' as globals;
 import 'model/arena.dart';
 
@@ -73,11 +75,18 @@ Future<bool> executeCommand(String command, [List<String> args]) {
       break;
 
     case 'IMAGE':
-      int image = int.parse(cleanCommand(args[0]).trim()) + 100;
-      int x = int.parse(cleanCommand(args[1]).trim());
-      int y = int.parse(cleanCommand(args[2]).trim());
-      int dir = int.parse(cleanCommand(args[3]).trim());
-      arena.setImage(x, y, image, dir);
+      int checker =int.parse(cleanCommand(args[0]).trim());
+      if(checker >0&&checker<16){
+        int image = checker + 100;
+        int x = int.parse(cleanCommand(args[1]).trim());
+        int y = int.parse(cleanCommand(args[2]).trim());
+        int dir = int.parse(cleanCommand(args[3]).trim());
+        arena.setImage(x, y, image, dir);
+      }
+      else{
+        streamController.add("Invalid id range. id = $checker");
+      }
+
       break;
 
     case 'DELETEIMAGE':
