@@ -216,8 +216,8 @@ class Arena {
     String item = isRobot(x, y);
 
     if (item == '0') {
-      item = _inSpecialZone(x, y);
-
+      // item = _inSpecialZone(x, y);
+      item = '0';
       if (item == '0') {
         if (_obstaclesRecords[x][y] >= 1) {
           int first = (_obstaclesRecords[x][y]/10).floor();
