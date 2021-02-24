@@ -10,8 +10,8 @@ class QueueSys {
   static bool queueStatus = false;
 
   QueueSys() {
-    _timer =
-        Timer.periodic(Duration(milliseconds: 500), (timer) => checkQueue());
+    _timer = Timer.periodic(Duration(seconds: 1),
+        (timer) => {if ((_timer.tick % 3) == 0) checkQueue()});
   }
 
   static Future<void> checkQueue() async {
@@ -28,18 +28,19 @@ class QueueSys {
   static Future<void> _runTask(String task) async {
     queueStatus = true;
     List<String> command = task.split(':');
+    _timer.cancel();
 
     try {
-      streamController
-          .add('Dequeuing: ${command[0]}');
+      streamController.add('Dequeuing: ${command[0]}');
       await executeCommand(command[0], command.sublist(1));
     } catch (e) {
-      streamController
-          .add('Failed to execute a previously queued command: ${command[0]}');
+      streamController.add(
+          'Failed to execute a previously queued command: ${command[0]} with parameters ${command[1]}');
       print(e);
     }
 
     command = [];
+    _timer = Timer.periodic(Duration(seconds: 1), (timer) => checkQueue());
     queueStatus = false;
   }
 
@@ -47,7 +48,7 @@ class QueueSys {
     List<String> taskList = task.split('\n');
     _queue.addAll(taskList);
 
-    checkQueue(); // checks if any task running. if system is free, execute first task.
-
+    if (!queueStatus)
+      checkQueue(); // checks if any task running. if system is free, execute first task
   }
 }
