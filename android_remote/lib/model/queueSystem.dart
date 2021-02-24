@@ -28,7 +28,6 @@ class QueueSys {
   static Future<void> _runTask(String task) async {
     queueStatus = true;
     List<String> command = task.split(':');
-    _timer.cancel();
 
     try {
       streamController.add('Dequeuing: ${command[0]}');
@@ -40,7 +39,6 @@ class QueueSys {
     }
 
     command = [];
-    _timer = Timer.periodic(Duration(seconds: 1), (timer) => checkQueue());
     queueStatus = false;
   }
 
