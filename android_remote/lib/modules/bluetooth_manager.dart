@@ -40,6 +40,7 @@ class BluetoothController {
         isDisconnecting = false;
 
         connection.input.listen(_onDataReceived).onDone(() {
+          lastDevice = server;
           if (isDisconnecting) {
             print('Disconnecting locally!');
             streamController.add('Disconnecting locally!');
@@ -69,34 +70,28 @@ class BluetoothController {
     }
   }
 
-  void dispose() {
-    // Avoid memory leak (`setState` after dispose) and disconnect
-    if (isConnected) {
-      isDisconnecting = true;
-      try {
-        this.connection.output.close();
-        this.connection.finish();
-        this.connection.close();
-        this.connection.dispose();
-      } catch (e) {
-        // do nothing}
-        connection = null;
-      }
-    }
-  }
-
   void reconnect() {
+    btController = new BluetoothController();
     this.isConnecting = true;
-    this.server = lastdevice;
+    this.selectedDevice = lastSelectedDevice;
+    this.server = lastDevice;
     init();
   }
 
   void disconnect() {
     sendMessage('Disconnecting from remote host...');
 
-    this.dispose();
-    isConnecting = false;
-    isConnected = false;
+    if (isConnected) {
+      isDisconnecting = true;
+      try {
+        this.connection.output.close();
+        this.connection.finish();
+      } catch (e) {
+        connection = null;
+      }
+    }
+
+    btController = new BluetoothController();
   }
 
   Future _onDataReceived(Uint8List data) async {

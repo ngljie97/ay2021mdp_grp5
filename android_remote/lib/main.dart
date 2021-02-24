@@ -72,8 +72,8 @@ class _MyHomePageState extends State<MyHomePage> {
         DateFormat(globals.Datetimeformat).format(DateTime.now()) +
             " | " +
             message);
-    if(globals.strArr.length>7&&!globals.updateMode)
-      consoleController.jumpTo(index: globals.strArr.length-7);
+    if (globals.strArr.length > 7 && !globals.updateMode)
+      consoleController.jumpTo(index: globals.strArr.length - 7);
     consoleController.scrollTo(
         index: globals.strArr.length,
         duration: Duration(milliseconds: 1000),
@@ -86,22 +86,20 @@ class _MyHomePageState extends State<MyHomePage> {
   void initState() {
     consoleController = ItemScrollController();
     super.initState();
-    QueueSys(); // reset timer.
+    QueueSys(); // starts timer.
 
     widget.stream.listen((message) {
       mySetState(message);
     });
+
     globals.arena = Arena('1111');
-    // globals.arena.displayRobot();
+
     if (globals.btController == null)
       globals.btController = BluetoothController();
     globals.btController.init();
   }
 
   Future<void> moveControls(String commandString) async {
-    //commandString = 'FW','RR'
-    //globalString = globals.strForward
-
     String globalString = '';
     switch (commandString) {
       case 'FW':
@@ -208,7 +206,8 @@ class _MyHomePageState extends State<MyHomePage> {
                     tooltip: 'Sync',
                     onPressed: () {
                       setState(() {
-                        if (!globals.debugMode && globals.btController.isConnected)
+                        if (!globals.debugMode &&
+                            globals.btController.isConnected)
                           globals.btController.sendMessage('sendArena');
                       });
                     }),
@@ -315,18 +314,18 @@ class _MyHomePageState extends State<MyHomePage> {
                     addConsoleAndScroll('Disconnected locally!');
                     globals.backupArena = globals.arena;
                     globals.arena = Arena('1110');
-                  }
-                  if (!globals.btController.isConnected) {
+                  } else {
                     streamController.close();
+                    globals.btController.selectedDevice =
+                        await Navigator.of(context).push(
+                      MaterialPageRoute(
+                        builder: (context) {
+                          return ConnectionPage(checkAvailability: false);
+                        },
+                      ),
+                    );
                   }
-                  globals.btController.selectedDevice =
-                      await Navigator.of(context).push(
-                    MaterialPageRoute(
-                      builder: (context) {
-                        return ConnectionPage(checkAvailability: false);
-                      },
-                    ),
-                  );
+                  setState(() {}());
                 },
               ),
               Divider(),
@@ -445,7 +444,6 @@ class _MyHomePageState extends State<MyHomePage> {
 
     void onTapFunction() {
       if (_setWayPoint) {
-
         _setWayPoint = false;
         _setRobotStart = false;
 
