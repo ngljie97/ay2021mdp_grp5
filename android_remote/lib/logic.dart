@@ -18,9 +18,9 @@ Future<bool> executeCommand(String command, [List<String> args]) {
       globals.robotStatus = 'IDLE';
       if (args.isNotEmpty) {
         List<String> coord = args[0].split(',');
-        int x = int.parse(coord[1].trim()) + 1;
-        int y = int.parse(coord[0].trim()) + 1;
-        int dir = int.parse(coord[2].trim());
+        int x = int.parse(cleanCommand(coord[1]).trim()) + 1;
+        int y = int.parse(cleanCommand(coord[0]).trim()) + 1;
+        int dir = int.parse(cleanCommand(coord[2]).trim());
         arena.setRobotPos(x, y, dir);
       }
       break;
@@ -38,8 +38,8 @@ Future<bool> executeCommand(String command, [List<String> args]) {
     case 'ADDOBSTACLE':
       if (args.isNotEmpty) {
         List<String> coord = args[0].split(',');
-        int x = int.parse(coord[1].trim());
-        int y = int.parse(coord[0].trim());
+        int x = int.parse(cleanCommand(coord[1]).trim());
+        int y = int.parse(cleanCommand(coord[0]).trim());
 
         arena.setObstacle(x, y);
       }
@@ -48,8 +48,8 @@ Future<bool> executeCommand(String command, [List<String> args]) {
     case 'REMOVEOBSTACLE':
       if (args.isNotEmpty) {
         List<String> coord = args[0].split(',');
-        int x = int.parse(coord[1].trim());
-        int y = int.parse(coord[0].trim());
+        int x = int.parse(cleanCommand(coord[1]).trim());
+        int y = int.parse(cleanCommand(coord[0]).trim());
 
         arena.removeObstacle(x, y);
       }
@@ -65,24 +65,24 @@ Future<bool> executeCommand(String command, [List<String> args]) {
 
     case 'SETWAYPOINT':
       if (args.isNotEmpty) {
-        int x = int.parse(args[0].trim());
-        int y = int.parse(args[1].trim());
+        int x = int.parse(cleanCommand(args[0]).trim());
+        int y = int.parse(cleanCommand(args[1]).trim());
 
         arena.setWayPoint(x, y);
       }
       break;
 
     case 'IMAGE':
-      int image = int.parse(args[0].trim()) + 100;
-      int x = int.parse(args[1].trim());
-      int y = int.parse(args[2].trim());
-      int dir = int.parse(args[3].trim());
+      int image = int.parse(cleanCommand(args[0]).trim()) + 100;
+      int x = int.parse(cleanCommand(args[1]).trim());
+      int y = int.parse(cleanCommand(args[2]).trim());
+      int dir = int.parse(cleanCommand(args[3]).trim());
       arena.setImage(x, y, image, dir);
       break;
 
     case 'DELETEIMAGE':
-      int x = int.parse(args[1].trim());
-      int y = int.parse(args[2].trim());
+      int x = int.parse(cleanCommand(args[1]).trim());
+      int y = int.parse(cleanCommand(args[2]).trim());
       arena.removeObstacle(x, y);
       break;
 
