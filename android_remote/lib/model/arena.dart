@@ -106,6 +106,10 @@ class Arena {
     }
   }
 
+  int getRobotDir() {
+    return _robot.direction;
+  }
+
   bool moveRobot(String operation) {
     bool isRotate = false;
     robotStatus = 'Moving';
@@ -199,7 +203,7 @@ class Arena {
   }
 
   void setImage(int x, int y, int imageid, int dir) {
-    this._obstaclesRecords[x][y] = imageid*10+dir;
+    this._obstaclesRecords[x][y] = imageid * 10 + dir;
   }
 
   void setExplored(int x, int y) {
@@ -220,8 +224,8 @@ class Arena {
       item = '0';
       if (item == '0') {
         if (_obstaclesRecords[x][y] >= 1) {
-          int first = (_obstaclesRecords[x][y]/10).floor();
-          int second = (_obstaclesRecords[x][y]%10);
+          int first = (_obstaclesRecords[x][y] / 10).floor();
+          int second = (_obstaclesRecords[x][y] % 10);
           switch (first) {
             case 101:
               item = 'n1';
@@ -263,10 +267,10 @@ class Arena {
               item = 'n10';
               this._imagedirection = second;
               break;
-              case 111:
-            item = 'n11';
-            this._imagedirection = second;
-            break;
+            case 111:
+              item = 'n11';
+              this._imagedirection = second;
+              break;
             case 112:
               item = 'n12';
               this._imagedirection = second;
@@ -569,31 +573,31 @@ class Arena {
       case 'n13':
       case 'n14':
       case 'n15':
-      return Padding(
-        padding: const EdgeInsets.all(1),
-        child: RotatedBox(
-          quarterTurns: this._imagedirection,
-          child:Container(
-          color: Colors.black,
-          child: Text(item.substring(1),
-              textAlign: TextAlign.center,
-          style: TextStyle(
-              fontSize: 30.0, fontWeight: FontWeight.w500)),
-        ),),
-        )
-      ;
-      break;
-      return RotatedBox(
-          quarterTurns: this._imagedirection,
-          child: Container(
-            decoration: BoxDecoration(
-              image: DecorationImage(
-                image: AssetImage('assets/number_five.PNG'),
-                fit: BoxFit.fill,
-              ),
-              shape: BoxShape.rectangle,
+        return Padding(
+          padding: const EdgeInsets.all(1),
+          child: RotatedBox(
+            quarterTurns: this._imagedirection,
+            child: Container(
+              color: Colors.black,
+              child: Text(item.substring(1),
+                  textAlign: TextAlign.center,
+                  style:
+                      TextStyle(fontSize: 30.0, fontWeight: FontWeight.w500)),
             ),
-          ));
+          ),
+        );
+        break;
+        return RotatedBox(
+            quarterTurns: this._imagedirection,
+            child: Container(
+              decoration: BoxDecoration(
+                image: DecorationImage(
+                  image: AssetImage('assets/number_five.PNG'),
+                  fit: BoxFit.fill,
+                ),
+                shape: BoxShape.rectangle,
+              ),
+            ));
         break;
       case 'S':
         return Icon(Icons.play_arrow);
