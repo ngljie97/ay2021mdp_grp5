@@ -11,7 +11,10 @@ String cleanCommand(String command) {
 // ignore: missing_return
 Future<bool> executeCommand(String command, [List<String> args]) {
   command = cleanCommand(command).toUpperCase();
+  command = (command.startsWith('B')) ? command.substring(1) : command;
+
   int x, y, dir;
+
   Arena arena = globals.arena;
   switch (command) {
     case globals.amdRobotPos:
@@ -101,6 +104,13 @@ Future<bool> executeCommand(String command, [List<String> args]) {
       arena.removeObstacle(x, y);
       break;
 
+    case globals.strFinishedEx:
+    case globals.strFinishedFP:
+    case globals.strFinishedIR:
+      globals.robotStatus = 'IDLE';
+      streamController
+          .add('Robot has finished executing the command: $command');
+      break;
     default:
       streamController.add('Command not resolved. $command');
       break;

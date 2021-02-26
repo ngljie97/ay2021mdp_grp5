@@ -141,33 +141,27 @@ class _MyHomePageState extends State<MyHomePage> {
         //rotate left
         if (globals.arena.getRobotDir() == 3)
           moveControls('FW');
-        else if(globals.arena.getRobotDir() == 2)
+        else if (globals.arena.getRobotDir() == 2)
           moveControls('RR');
         else
           moveControls('RL');
-
       } else if (currentAcceleration.y.truncateToDouble() < -2) {
         //move forward
         if (globals.arena.getRobotDir() == 0)
           moveControls('FW');
-        else if(globals.arena.getRobotDir() == 3)
-          {
-            moveControls('RR');
-          }
-        else {
+        else if (globals.arena.getRobotDir() == 3) {
+          moveControls('RR');
+        } else {
           moveControls('RL');
         }
-      }
-      else if (currentAcceleration.y.truncateToDouble() > 2) {
+      } else if (currentAcceleration.y.truncateToDouble() > 2) {
         //move forward
         //TILT bottom
         if (globals.arena.getRobotDir() == 2)
           moveControls('FW');
-        else if(globals.arena.getRobotDir() == 1)
-          {
-            moveControls('RR');
-          }
-        else
+        else if (globals.arena.getRobotDir() == 1) {
+          moveControls('RR');
+        } else
           moveControls('RL');
       }
     }
@@ -240,7 +234,8 @@ class _MyHomePageState extends State<MyHomePage> {
                       setState(() {
                         if (!globals.debugMode &&
                             globals.btController.isConnected)
-                          globals.btController.sendMessage('sendArena');
+                          globals.btController
+                              .sendMessage(globals.strRefreshArena);
                       });
                     }),
               ),
@@ -471,7 +466,7 @@ class _MyHomePageState extends State<MyHomePage> {
 
   Widget _resolveGridItem(BuildContext context, int index) {
     int x, y = 0;
-    x = (index / 15).floor();
+    x = 19 - (index / 15).floor();
     y = (index % 15);
 
     void onTapFunction() {
@@ -481,10 +476,11 @@ class _MyHomePageState extends State<MyHomePage> {
 
         if (globals.arena.setWayPoint(x, y)) {
           addConsoleAndScroll('WayPoint set at [$x,$y].');
-          globals.btController.sendMessage('WAYPOINT:$x,$y');
+          globals.btController.sendMessage('${globals.strWayPoint}:$x:$y');
         } else {
           addConsoleAndScroll('WayPoint[$x,$y] removed.');
-          globals.btController.sendMessage('RM_WAYPOINT:$x,$y');
+          globals.btController
+              .sendMessage('${globals.strRemoveWayPoint}:$x:$y');
         }
       }
 
@@ -495,7 +491,7 @@ class _MyHomePageState extends State<MyHomePage> {
         _setRobotStart = false;
         if (globals.arena.setRobotPos(x, y, 0)) {
           addConsoleAndScroll('Robot position set.');
-          globals.btController.sendMessage('ROBOT:$x,$y');
+          globals.btController.sendMessage('ROBOT:$x:$y');
         } else {
           addConsoleAndScroll('Robot cannot be place at the edge of arena!');
         }
@@ -518,29 +514,29 @@ class _MyHomePageState extends State<MyHomePage> {
                 mainAxisAlignment: MainAxisAlignment.start,
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: <Widget>[
-                  Row(children: [
-                    Text(
-                      'Console output:',
-                      textAlign: TextAlign.left,
-                    ),
-                    Padding(
-                      padding: EdgeInsets.fromLTRB(0, 0, 40, 0),
-                    ),
-                    Text(
-                      'Robot Status',
-                      textAlign: TextAlign.left,
-                      style: TextStyle(
-                        fontWeight: FontWeight.bold,
-                        color: (globals.btController.isConnected)
-                            ? Colors.green
-                            : Colors.red,
-                      ),
-                    ),
-                    Text(
-                      ' : ' + globals.robotStatus,
-                      textAlign: TextAlign.left,
-                    ),
-                  ]),
+                  Row(
+                      mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                      children: [
+                        RichText(
+                          text: TextSpan(text: 'Console output:'),
+                        ),
+                        RichText(
+                          text: TextSpan(
+                            children: [
+                              TextSpan(
+                                text: 'Robot Status',
+                                style: TextStyle(
+                                  fontWeight: FontWeight.bold,
+                                  color: (globals.btController.isConnected)
+                                      ? Colors.green
+                                      : Colors.red,
+                                ),
+                              ),
+                              TextSpan(text: ': ${globals.robotStatus}'),
+                            ],
+                          ),
+                        ),
+                      ]),
                   Expanded(
                     child: Flex(
                       direction: Axis.horizontal,
@@ -754,50 +750,72 @@ class _MyHomePageState extends State<MyHomePage> {
                     crossAxisAlignment: CrossAxisAlignment.stretch,
                     children: <Widget>[
                       Expanded(
-                        flex: 2,
-                        child: RaisedButton(
-                          color: Colors.indigo[800],
-                          onPressed: () {
-                            if (globals.btController.isConnected) {
-                              globals.btController
-                                  .sendMessage(globals.strStartExplore);
-                              setState(() {
-                                globals.robotStatus = 'Moving';
-                              });
-                            }
-                          },
-                          child: Container(
-                            child: const Text(
-                              'Start Exploration',
-                              overflow: TextOverflow.ellipsis,
-                            ),
-                          ),
-                        ),
-                      ),
-                      Expanded(
-                        flex: 2,
-                        child: RaisedButton(
-                          color: Colors.indigo[700],
-                          onPressed: () {
-                            if (globals.btController.isConnected) {
-                              globals.btController
-                                  .sendMessage(globals.strFastestPath);
-                              setState(() {
-                                globals.robotStatus = 'Moving';
-                              });
-                            }
-                          },
-                          child: Container(
-                            child: const Text(
-                              'Run Fastest Path',
-                              overflow: TextOverflow.ellipsis,
-                            ),
-                          ),
-                        ),
-                      ),
-                      Expanded(
-                        flex: 2,
                         child: Row(
+                          crossAxisAlignment: CrossAxisAlignment.stretch,
+                          children: <Widget>[
+                            Expanded(
+                              flex: 1,
+                              child: Container(
+                                color: Colors.indigo[800],
+                                child: IconButton(
+                                  onPressed: () {
+                                    if (globals.btController.isConnected) {
+                                      globals.btController
+                                          .sendMessage(globals.strStartExplore);
+                                      setState(() {
+                                        globals.robotStatus = 'EXPLORING';
+                                      });
+                                    }
+                                  },
+                                  icon: Icon(Icons.explore),
+                                  tooltip: 'Start Exploration',
+                                ),
+                              ),
+                            ),
+                            Expanded(
+                              flex: 1,
+                              child: Container(
+                                color: Colors.indigo[700],
+                                child: IconButton(
+                                  onPressed: () {
+                                    if (globals.btController.isConnected) {
+                                      globals.btController
+                                          .sendMessage(globals.strFastestPath);
+                                      setState(() {
+                                        globals.robotStatus = 'RUNNING';
+                                      });
+                                    }
+                                  },
+                                  icon: Icon(Icons.directions_run),
+                                  tooltip: 'Start Fastest Path',
+                                ),
+                              ),
+                            ),
+                            Expanded(
+                              flex: 1,
+                              child: Container(
+                                color: Colors.indigo[600],
+                                child: IconButton(
+                                  onPressed: () {
+                                    if (globals.btController.isConnected) {
+                                      globals.btController
+                                          .sendMessage(globals.strImgFind);
+                                      setState(() {
+                                        globals.robotStatus = 'SCANNING';
+                                      });
+                                    }
+                                  },
+                                  icon: Icon(Icons.camera_alt),
+                                  tooltip: 'Start Image Recognition',
+                                ),
+                              ),
+                            ),
+                          ],
+                        ),
+                      ),
+                      Expanded(
+                        child: Row(
+                          crossAxisAlignment: CrossAxisAlignment.stretch,
                           children: <Widget>[
                             Expanded(
                               flex: 1,
@@ -853,20 +871,27 @@ class _MyHomePageState extends State<MyHomePage> {
                         ),
                       ),
                       Expanded(
-                        flex: 2,
-                        child: RaisedButton(
-                          color: Colors.indigo[300],
-                          onPressed: () {
-                            setState(() {
-                              globals.controlMode = true;
-                            });
-                          },
-                          child: Container(
-                            child: const Text(
-                              'Show controls',
-                              overflow: TextOverflow.ellipsis,
+                        child: Row(
+                          crossAxisAlignment: CrossAxisAlignment.stretch,
+                          children: [
+                            Expanded(
+                              flex: 1,
+                              child: RaisedButton(
+                                color: Colors.indigo[300],
+                                onPressed: () {
+                                  setState(() {
+                                    globals.controlMode = true;
+                                  });
+                                },
+                                child: Container(
+                                  child: const Text(
+                                    'Show controls 🎮',
+                                    overflow: TextOverflow.ellipsis,
+                                  ),
+                                ),
+                              ),
                             ),
-                          ),
+                          ],
                         ),
                       ),
                     ],

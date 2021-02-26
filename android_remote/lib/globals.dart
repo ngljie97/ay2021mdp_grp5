@@ -11,7 +11,7 @@ bool updateMode = false;
 bool debugMode = false;
 bool controlMode = false;
 bool gyroMode = false;
-String robotStatus = 'MOVING';
+String robotStatus = 'IDLE';
 String Datetimeformat = 'yyyy/MM/dd, kk:mm:ss';
 String formattedDate = DateFormat(Datetimeformat).format(DateTime.now()) +
     " | " +
@@ -28,17 +28,20 @@ Arena arena;
 Arena backupArena;
 
 // Command strings (sending)
-final String strStartExplore = 'EX_START';
-final String strFastestPath = 'FP_START';
-final String strImgFind = 'IF_START';
+final String strStartExplore = 'PR|EX_START';
+final String strFastestPath = 'PR|FP_START';
+final String strImgFind = 'PR|IF_START';
 
 // Move robot
-final String strForward = 'ROBOT_FW';
-final String strRotateLeft = 'ROBOT_RL';
-final String strRotateRight = 'ROBOT_RR';
+final String strForward = 'R|ROBOT_FW';
+final String strRotateLeft = 'R|ROBOT_RL';
+final String strRotateRight = 'R|ROBOT_RR';
 
-const String strSetWayPoint = 'SET_WAYPOINT';
-const String strRemoveWayPoint = 'RM_WAYPOINT';
+// Waypoint operations
+const String strSetWayPoint = 'P|SET_WAYPOINT';
+const String strRemoveWayPoint = 'P|RM_WAYPOINT';
+
+const String strRefreshArena = 'P|SEND_ARENA';
 
 // Command list (receiving)
 const String strRobotPos = 'ROBOT_POS';
