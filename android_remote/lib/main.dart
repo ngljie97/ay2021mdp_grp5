@@ -129,14 +129,30 @@ class _MyHomePageState extends State<MyHomePage> {
       if (currentAcceleration.x.truncateToDouble() < -2) {
         setState(() {
           //rotate right
-          moveControls('RR');
+          if (globals.arena.getRobotDir() == 1)
+            moveControls('FW');
+          else
+            moveControls('RR');
         });
       } else if (currentAcceleration.x.truncateToDouble() > 2) {
         //rotate left
-        moveControls('RL');
+        if (globals.arena.getRobotDir() == 3)
+          moveControls('FW');
+        else
+          moveControls('RL');
       } else if (currentAcceleration.y.truncateToDouble() < -2) {
         //move forward
-        moveControls('FW');
+        if (globals.arena.getRobotDir() == 0)
+          moveControls('FW');
+        else
+        moveControls('RL');
+      }
+      else if (currentAcceleration.y.truncateToDouble() > 2) {
+        //move forward
+        if (globals.arena.getRobotDir() == 2)
+          moveControls('FW');
+        else
+          moveControls('RR');
       }
     }
   }
