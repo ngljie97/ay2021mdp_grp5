@@ -124,6 +124,7 @@ class _MyHomePageState extends State<MyHomePage> {
   }
 
   void _motionControl() {
+    //
     if (globals.gyroMode) {
       final AccelerometerEvent currentAcceleration = acceleration;
       if (currentAcceleration.x.truncateToDouble() < -2) {
@@ -131,6 +132,8 @@ class _MyHomePageState extends State<MyHomePage> {
           //rotate right
           if (globals.arena.getRobotDir() == 1)
             moveControls('FW');
+          else if (globals.arena.getRobotDir() == 2)
+            moveControls('RL');
           else
             moveControls('RR');
         });
@@ -138,21 +141,34 @@ class _MyHomePageState extends State<MyHomePage> {
         //rotate left
         if (globals.arena.getRobotDir() == 3)
           moveControls('FW');
+        else if(globals.arena.getRobotDir() == 2)
+          moveControls('RR');
         else
           moveControls('RL');
+
       } else if (currentAcceleration.y.truncateToDouble() < -2) {
         //move forward
         if (globals.arena.getRobotDir() == 0)
           moveControls('FW');
-        else
-        moveControls('RL');
+        else if(globals.arena.getRobotDir() == 3)
+          {
+            moveControls('RR');
+          }
+        else {
+          moveControls('RL');
+        }
       }
       else if (currentAcceleration.y.truncateToDouble() > 2) {
         //move forward
+        //TILT bottom
         if (globals.arena.getRobotDir() == 2)
           moveControls('FW');
+        else if(globals.arena.getRobotDir() == 1)
+          {
+            moveControls('RR');
+          }
         else
-          moveControls('RR');
+          moveControls('RL');
       }
     }
   }
@@ -508,7 +524,7 @@ class _MyHomePageState extends State<MyHomePage> {
                       textAlign: TextAlign.left,
                     ),
                     Padding(
-                      padding: EdgeInsets.fromLTRB(0, 0, 130, 0),
+                      padding: EdgeInsets.fromLTRB(0, 0, 40, 0),
                     ),
                     Text(
                       'Robot Status',

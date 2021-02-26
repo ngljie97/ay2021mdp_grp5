@@ -11,7 +11,7 @@ bool updateMode = false;
 bool debugMode = false;
 bool controlMode = false;
 bool gyroMode = false;
-String robotStatus = 'IDLE';
+String robotStatus = 'MOVING';
 String Datetimeformat = 'yyyy/MM/dd, kk:mm:ss';
 String formattedDate = DateFormat(Datetimeformat).format(DateTime.now()) +
     " | " +
