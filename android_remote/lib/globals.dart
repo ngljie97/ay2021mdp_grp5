@@ -30,11 +30,35 @@ Arena backupArena;
 // Command strings (sending)
 final String strStartExplore = 'EX_START';
 final String strFastestPath = 'FP_START';
+final String strImgFind = 'IF_START';
+
+// Move robot
 final String strForward = 'ROBOT_FW';
 final String strRotateLeft = 'ROBOT_RL';
 final String strRotateRight = 'ROBOT_RR';
-final String strReverse = 'ROBOT_RV';
-final String strImgFind = 'IF_START';
+
+const String strSetWayPoint = 'SET_WAYPOINT';
+const String strRemoveWayPoint = 'RM_WAYPOINT';
+
+// Command list (receiving)
+const String strRobotPos = 'ROBOT_POS';
+const String strAddObs = 'ADD_OBSTACLE';
+const String strRmObs = 'RM_OBSTACLE';
+
+const String strAddImage = 'IMAGE';
+const String strDelImage = 'DELETE_IMAGE';
+
+const String strUpdateMap = 'MAP';
+
+// Command list to indicate robot status
+const String strFinishedIR = 'FINISH_IR';
+const String strFinishedEx = 'FINISH_EX';
+const String strFinishedFP = 'FINISH_FP';
+const String strWayPoint = 'WAYPOINT';
+
+// Command list (from AMDTOOLS)
+const String amdRobotPos = 'ROBOTPOSITION';
+const String amdUpdateObs = 'GRID';
 
 // Command prefixes (receive)
 final String strCommand1 = '';

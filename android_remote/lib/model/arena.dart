@@ -33,7 +33,7 @@ class Arena {
     }
 
     if (selector[2] == '1') {
-      this._robot = Robot(18, 1, 18, 1, 0);
+      this._robot = Robot(1, 1, 1, 1, 0);
     } else if (backupArena != null) {
       this._robot = backupArena._robot;
     }
@@ -59,20 +59,16 @@ class Arena {
     }
   }
 
-  void updateMapFromDescriptors(
+  void updateMapFromDescriptors(bool isAMDT,
       {String mapDescriptor1, String mapDescriptor2}) {
     String exploration, obstacles;
     int x, y = 0;
     int bitNumber = 0;
     int hexNumber = 0;
 
-    for (int i = 0; i < 300; i++) {
+    for (int i = 0; i <= 300; i++) {
       x = (i / 15).floor();
       y = (i % 15);
-
-      if (x == 19 && y == 14) {
-        break;
-      }
 
       if (bitNumber % 4 == 0) {
         if (mapDescriptor1 != null) {
@@ -95,11 +91,17 @@ class Arena {
       }
 
       if (exploration != null) {
-        this._explorationStatus[x][y] = int.parse(exploration[bitNumber]);
+        if (isAMDT)
+          this._explorationStatus[19-x][y] = int.parse(exploration[bitNumber]);
+        else
+          this._explorationStatus[x][y] = int.parse(exploration[bitNumber]);
       }
 
       if (obstacles != null) {
-        this._obstaclesRecords[x][y] = int.parse(obstacles[bitNumber]);
+        if (isAMDT)
+          this._obstaclesRecords[19-x][y] = int.parse(obstacles[bitNumber]);
+        else
+          this._obstaclesRecords[x][y] = int.parse(obstacles[bitNumber]);
       }
 
       bitNumber += 1;
@@ -136,7 +138,7 @@ class Arena {
   }
 
   bool setRobotPos(int x, int y, int dir) {
-    dir = ((dir / 90).floor()) % 4; // @TODO remove line. Meant for amdtool.
+    dir = ((dir / 90).floor()) % 4; // for amdtool compatibility.
 
     if (y == 0 || y == 14 || x == 0 || x == 19) {
       return false;
@@ -160,9 +162,10 @@ class Arena {
       for (int j = -1; j <= 1; j++) {
         if ((this._robot.x + i) == x && (this._robot.y + j) == y) {
           if (xi + yj == 0) {
+            // directions
             switch (this._robot.direction) {
               case 0:
-                xi = this._robot.x - 1;
+                xi = this._robot.x + 1;
                 yj = this._robot.y;
                 break;
               case 1:
@@ -170,7 +173,7 @@ class Arena {
                 yj = this._robot.y + 1;
                 break;
               case 2:
-                xi = this._robot.x + 1;
+                xi = this._robot.x - 1;
                 yj = this._robot.y;
                 break;
               case 3:

@@ -30,7 +30,7 @@ class QueueSys {
     List<String> command = task.split(':');
 
     try {
-      streamController.add('Dequeuing: ${command[0]}');
+      streamController.add('Dequeuing: ${cleanCommand(command[0])}');
       await executeCommand(command[0], command.sublist(1));
     } catch (e) {
       streamController.add(

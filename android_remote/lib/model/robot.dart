@@ -14,11 +14,11 @@ class Robot {
 
     switch (this.direction) {
       case 0:
-        newPos = this.x - 1;
+        newPos = this.x + 1;
         this.x = (newPos > 0 && newPos < 19) ? newPos : x;
         break;
       case 2:
-        newPos = this.x + 1;
+        newPos = this.x - 1;
         this.x = (newPos > 0 && newPos < 19) ? newPos : x;
         break;
       case 1:

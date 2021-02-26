@@ -3,7 +3,7 @@ import 'main.dart';
 import 'model/arena.dart';
 
 String cleanCommand(String command) {
-  return command.replaceAllMapped(RegExp(r'[^a-zA-Z0-9]+'), (match) {
+  return command.replaceAllMapped(RegExp(r'[^a-zA-Z0-9_]+'), (match) {
     return '';
   }).trim();
 }
@@ -11,32 +11,39 @@ String cleanCommand(String command) {
 // ignore: missing_return
 Future<bool> executeCommand(String command, [List<String> args]) {
   command = cleanCommand(command).toUpperCase();
-
+  int x, y, dir;
   Arena arena = globals.arena;
   switch (command) {
-    case 'ROBOT_POS':
-    case 'ROBOTPOSITION': // for checklist
+    case globals.amdRobotPos:
+      List<String> coord = args[0].split(',');
+      x = (int.parse(cleanCommand(coord[1]).trim()) + 1 - 19).abs();
+      y = int.parse(cleanCommand(coord[0]).trim()) + 1;
+      dir = int.parse(cleanCommand(coord[2]).trim());
+      continue setRobotPos;
+    case globals.strRobotPos:
+      x = int.parse(cleanCommand(args[0]).trim());
+      y = int.parse(cleanCommand(args[1]).trim());
+      dir = int.parse(cleanCommand(args[2]).trim());
+      continue setRobotPos;
+    setRobotPos:
+    case 'setRobotPos':
       globals.robotStatus = 'IDLE';
       if (args.isNotEmpty) {
-        List<String> coord = args[0].split(',');
-        int x = int.parse(cleanCommand(coord[1]).trim()) + 1;
-        int y = int.parse(cleanCommand(coord[0]).trim()) + 1;
-        int dir = int.parse(cleanCommand(coord[2]).trim());
         arena.setRobotPos(x, y, dir);
       }
       break;
 
-    case 'MAP':
+    case globals.strUpdateMap:
       if (args.isNotEmpty) {
         String mapDescriptor1 = cleanCommand(args[0]);
         String mapDescriptor2 = cleanCommand(args[1]);
 
-        arena.updateMapFromDescriptors(
+        arena.updateMapFromDescriptors(false,
             mapDescriptor1: mapDescriptor1, mapDescriptor2: mapDescriptor2);
       }
       break;
 
-    case 'ADDOBSTACLE':
+    case globals.strAddObs:
       if (args.isNotEmpty) {
         List<String> coord = args[0].split(',');
         int x = int.parse(cleanCommand(coord[1]).trim());
@@ -46,7 +53,7 @@ Future<bool> executeCommand(String command, [List<String> args]) {
       }
       break;
 
-    case 'REMOVEOBSTACLE':
+    case globals.strRmObs:
       if (args.isNotEmpty) {
         List<String> coord = args[0].split(',');
         int x = int.parse(cleanCommand(coord[1]).trim());
@@ -56,15 +63,16 @@ Future<bool> executeCommand(String command, [List<String> args]) {
       }
       break;
 
-    case 'GRID':
+    case globals.amdUpdateObs:
       if (args.isNotEmpty) {
         String descriptor = cleanCommand(args[0]);
 
-        arena.updateMapFromDescriptors(mapDescriptor2: descriptor);
+        arena.updateMapFromDescriptors(true, mapDescriptor2: descriptor);
       }
       break;
 
-    case 'SETWAYPOINT':
+    case globals.strWayPoint:
+    case globals.strSetWayPoint:
       if (args.isNotEmpty) {
         int x = int.parse(cleanCommand(args[0]).trim());
         int y = int.parse(cleanCommand(args[1]).trim());
@@ -73,7 +81,7 @@ Future<bool> executeCommand(String command, [List<String> args]) {
       }
       break;
 
-    case 'IMAGE':
+    case globals.strAddImage:
       int checker = int.parse(cleanCommand(args[0]).trim());
       if (checker > 0 && checker < 16) {
         int image = checker + 100;
@@ -87,13 +95,14 @@ Future<bool> executeCommand(String command, [List<String> args]) {
 
       break;
 
-    case 'DELETEIMAGE':
+    case globals.strDelImage:
       int x = int.parse(cleanCommand(args[1]).trim());
       int y = int.parse(cleanCommand(args[2]).trim());
       arena.removeObstacle(x, y);
       break;
 
     default:
+      streamController.add('Command not resolved. $command');
       break;
   }
 }
