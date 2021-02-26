@@ -1,4 +1,5 @@
 import 'globals.dart' as globals;
+import 'main.dart';
 import 'model/arena.dart';
 
 String cleanCommand(String command) {
@@ -73,15 +74,14 @@ Future<bool> executeCommand(String command, [List<String> args]) {
       break;
 
     case 'IMAGE':
-      int checker =int.parse(cleanCommand(args[0]).trim());
-      if(checker >0&&checker<16){
+      int checker = int.parse(cleanCommand(args[0]).trim());
+      if (checker > 0 && checker < 16) {
         int image = checker + 100;
         int x = int.parse(cleanCommand(args[1]).trim());
         int y = int.parse(cleanCommand(args[2]).trim());
         int dir = int.parse(cleanCommand(args[3]).trim());
         arena.setImage(x, y, image, dir);
-      }
-      else{
+      } else {
         streamController.add("Invalid id range. id = $checker");
       }
 

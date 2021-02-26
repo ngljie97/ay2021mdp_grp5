@@ -71,9 +71,7 @@ class BluetoothController {
   }
 
   void reconnect() {
-    btController = new BluetoothController();
     this.isConnecting = true;
-    this.selectedDevice = lastSelectedDevice;
     this.server = lastDevice;
     init();
   }
@@ -83,6 +81,7 @@ class BluetoothController {
 
     if (isConnected) {
       isDisconnecting = true;
+      isConnected = false;
       try {
         this.connection.output.close();
         this.connection.finish();
@@ -90,8 +89,6 @@ class BluetoothController {
         connection = null;
       }
     }
-
-    btController = new BluetoothController();
   }
 
   Future _onDataReceived(Uint8List data) async {

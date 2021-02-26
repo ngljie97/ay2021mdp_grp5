@@ -17,7 +17,7 @@ String formattedDate = DateFormat(Datetimeformat).format(DateTime.now()) +
     " | " +
     "Console initialized";
 BluetoothDevice lastDevice;
-BluetoothDevice lastSelectedDevice;
+
 List<String> strArr = [
   "Console initialized"
 ]; // To store the console log outputs.
