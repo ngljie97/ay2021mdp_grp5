@@ -1,10 +1,11 @@
 import 'dart:async';
 import 'dart:ui';
-
+import 'package:flutter_unity_widget/flutter_unity_widget.dart';
 import 'package:android_remote/modules/bluetooth_manager.dart';
 import 'package:android_remote/pages/about.dart';
 import 'package:android_remote/pages/bluetooth_connection.dart';
 import 'package:android_remote/pages/consoleBackupPage.dart';
+import 'package:android_remote/pages/unity.dart';
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
 import 'package:scrollable_positioned_list/scrollable_positioned_list.dart';
@@ -20,7 +21,8 @@ StreamController<String> streamController =
 AccelerometerEvent acceleration;
 StreamSubscription<AccelerometerEvent> _streamSubscription;
 Timer _timer;
-
+UnityWidgetController _unityWidgetController;
+double _sliderValue = 0.0;
 void main() {
   runApp(MyApp());
 }
@@ -183,7 +185,7 @@ class _MyHomePageState extends State<MyHomePage> {
           children: <Widget>[
             Column(
               children: <Widget>[
-                _buildArena(),
+                _buildchecker(),
                 _buildBottomPanel(),
               ],
             ),
@@ -300,6 +302,29 @@ class _MyHomePageState extends State<MyHomePage> {
                       onPressed: () {
                         setState(() {
                           globals.arena.resetRobotPos();
+                        });
+                      },
+                    ),
+                  ),
+                ),
+              ),
+            ),
+            Visibility(
+              visible: !_setWayPoint && !_setRobotStart,
+              child: Center(
+                child: Container(
+                  child: Align(
+                    alignment: Alignment(1, 0.15),
+                    child: IconButton(
+                      icon: Icon(Icons.view_in_ar),
+                      tooltip: 'Reset Robot',
+                      color: Colors.blueAccent,
+                      onPressed: () {
+                        setState(() {
+                          if(globals.arena2d)
+                          globals.arena2d =false;
+                          else
+                            globals.arena2d =true;
                         });
                       },
                     ),
@@ -427,13 +452,90 @@ class _MyHomePageState extends State<MyHomePage> {
                   ));
                 },
               ),
+              ListTile(
+                leading: Icon(Icons.info_outline),
+                title: Text('Unity test'),
+                onTap: () {
+                  Navigator.of(context).push((MaterialPageRoute(builder: (BuildContext context) => UnityTestingWrapper() )));
+                },
+              ),
             ],
           ),
         ),
       ),
     );
   }
+  void onUnityCreated(controller) {
+    _unityWidgetController = controller;
+  }
 
+  void setRotationSpeed(String speed) {
+    _unityWidgetController.postMessage(
+      'Cube',
+      'SetRotationSpeed',
+      speed,
+    );
+  }
+  Widget  _buildchecker()
+  {
+    if(globals.arena2d)
+      {
+        return _buildArena();
+      }
+    else{
+      return _buildUnity();
+    }
+  }
+  Widget _buildUnity(){
+    return new Expanded(
+        flex: 10,
+        child:Scaffold(
+
+      body: Card(
+        margin: const EdgeInsets.all(8),
+        clipBehavior: Clip.antiAlias,
+        shape: RoundedRectangleBorder(
+          borderRadius: BorderRadius.circular(20.0),
+        ),
+        child: Stack(
+          children: <Widget>[
+            UnityWidget(
+              onUnityCreated: onUnityCreated,
+              isARScene: true,
+              fullscreen: false,
+            ),
+            Positioned(
+              bottom: 20,
+              left: 20,
+              right: 20,
+              child: Card(
+                elevation: 10,
+                child: Column(
+                  children: <Widget>[
+                    Padding(
+                      padding: const EdgeInsets.only(top: 20),
+                      child: Text("Rotation speed:"),
+                    ),
+                    Slider(
+                      onChanged: (value) {
+                        setState(() {
+                          _sliderValue = value;
+                        });
+                        setRotationSpeed(value.toString());
+                      },
+                      value: _sliderValue,
+                      min: 0,
+                      max: 20,
+                    ),
+                  ],
+                ),
+              ),
+            ),
+          ],
+        ),
+      ),
+    ));
+  }
   Widget _buildArena() {
     return new Expanded(
       flex: 10,
