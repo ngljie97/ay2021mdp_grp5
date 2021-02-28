@@ -129,7 +129,7 @@ void movePIDController() {
   M2_speed = M2_PID_speed;
 
   md.setSpeeds(M1_speed, M2_speed);
-  //printSpeeds(M1_speed, M2_speed);
+  printSpeeds(M1_speed, M2_speed);
 
   E1_ticks_moved += E1_ticks;
   E2_ticks_moved += E2_ticks;
