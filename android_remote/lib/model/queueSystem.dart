@@ -1,5 +1,4 @@
 import 'dart:async';
-import 'dart:collection';
 import 'dart:io';
 
 import 'package:android_remote/logic.dart';
@@ -7,57 +6,69 @@ import 'package:android_remote/main.dart';
 import 'package:path_provider/path_provider.dart';
 
 class QueueSys {
-  static Queue<String> _queue = new Queue<String>();
+  static List<String> _queue = new List<String>();
   static Timer _timer;
-  static bool queueStatus = false;
+  static bool running = false;
+  static int taskNo = 0;
 
   QueueSys() {
-    _timer = Timer.periodic(Duration(seconds: 1),
-        (timer) => {if ((_timer.tick % 3) == 0) checkQueue()});
+    _timer = Timer.periodic(Duration(seconds: 1), (timer) => {checkQueue()});
+    prepareFile();
   }
 
   static Future<void> checkQueue() async {
     // checks if system occupied.
-    if (!queueStatus) {
+    if (!running) {
       // if system is free, check if any task is queued.
-      if (_queue.isNotEmpty) {
-        String task = _queue.removeFirst();
+      if (_queue.isNotEmpty && ((taskNo % 2) == (_timer.tick % 2))) {
+        String task = _queue[taskNo];
         await _runTask(task);
+      }
+      if (taskNo == _queue.length && taskNo != 0) {
+        taskNo = 0;
+        _queue.clear();
       }
     }
   }
 
   static Future<void> _runTask(String task) async {
-    queueStatus = true;
-    List<String> command = task.split(':');
-    String cmdClean = cleanCommand(command[0]);
-    List params = command.sublist(1);
+    running = true;
+    List<String> tmp = task.split(':');
+    String command = cleanCommand(tmp[0]);
+    command = (command.startsWith('B')) ? command.substring(1) : command;
+    List params = tmp.sublist(1);
+
     try {
-      streamController.add('Dequeuing: $cmdClean');
-      logToFile(cmdClean, params, executeCommand(cmdClean, params));
+      streamController.add('Dequeuing: $command');
+      bool success = await _executionStatus(command, params);
+      await logToFile(command, params, success);
+      streamController.add('Task finished: $command');
     } catch (e) {
-      logToFile(cmdClean, params, false);
+      await logToFile(command, params, false);
       streamController.add(
-          'Failed to execute a previously queued command: $cmdClean with parameters $params');
+          'Failed to execute a previously queued command: $command with parameters $params');
       print(e);
     }
 
-    command = [];
-    queueStatus = false;
+    tmp = [];
+    taskNo++;
+    running = false;
+  }
+
+  static Future<bool> _executionStatus(String cmd, List params) async {
+    return await executeCommand(cmd, params);
   }
 
   static void queueTask(String task) {
     List<String> taskList = task.split('\n');
     _queue.addAll(taskList);
-/*
-    if (!queueStatus)
-      checkQueue(); */ // checks if any task running. if system is free, execute first task
   }
 
   static Future<String> get _localPath async {
-    final directory = await getExternalStorageDirectory();
+    final directory =
+        await getExternalStorageDirectories(type: StorageDirectory.documents);
 
-    return directory.path;
+    return directory.first.path;
   }
 
   static Future<File> get _localFile async {
@@ -65,10 +76,22 @@ class QueueSys {
     return File('$path/MDPGrp5_log.txt');
   }
 
-  static Future<File> logToFile(String cmd, List params, bool status) async {
+  static Future<File> _writeToFile(String toWrite) async {
     final file = await _localFile;
 
+    return file.writeAsString(toWrite, mode: FileMode.append, flush: true);
+  }
+
+  static Future<File> logToFile(String cmd, List params, bool status) async {
     // Write the file
-    return file.writeAsString('${_timer.tick}||$cmd||$params');
+    return _writeToFile('${_timer.tick}||$cmd||$params\n');
+  }
+
+  static Future<void> prepareFile() async {
+    DateTime _now = DateTime.now();
+
+    // Write the file
+    return _writeToFile(
+        '==========================================================\nApplication started at ${_now.day}/${_now.month}/${_now.year} ${_now.hour}:${_now.minute}:${_now.second}\n==========================================================\n');
   }
 }

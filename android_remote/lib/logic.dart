@@ -5,12 +5,11 @@ import 'model/arena.dart';
 String cleanCommand(String command) {
   return command.replaceAllMapped(RegExp(r'[^a-zA-Z0-9_]+'), (match) {
     return '';
-  }).trim();
+  }).trim().toUpperCase();
 }
 
-bool executeCommand(String command, [List<String> args]) {
-  command = cleanCommand(command).toUpperCase();
-  command = (command.startsWith('B')) ? command.substring(1) : command;
+Future<bool> executeCommand(String command, [List<String> args]) async {
+  command = cleanCommand(command);
 
   int x, y, dir;
 

@@ -59,39 +59,6 @@ class Arena {
     }
   }
 
-  void updateExploration(bool isAMDTool, String mapDescriptor1) {
-    String exploration;
-    int x = 0, y = 0;
-    int bitNumber = 0;
-    int hexNumber = 0;
-
-    for (int i = 0; i <= 300; i++) {
-      x = (i / 15).floor();
-      y = (i % 15);
-
-      if (x == 0 && y == 0) {
-        bitNumber += 2;
-        break;
-      }
-
-      if (bitNumber % 4 == 0) {
-        exploration = int.parse(mapDescriptor1[hexNumber], radix: 16)
-            .toRadixString(2)
-            .padLeft(4, '0');
-
-        hexNumber += 1;
-        bitNumber = 0;
-      }
-
-      if (isAMDTool)
-        this._explorationStatus[19 - x][y] = int.parse(exploration[bitNumber]);
-      else
-        this._explorationStatus[x][y] = int.parse(exploration[bitNumber]);
-
-      bitNumber += 1;
-    }
-  }
-
   void updateMapFromDescriptors(
       bool isAMDTool, String mapDescriptor1, String mapDescriptor2) {
     String exploration, obstacle;
@@ -108,12 +75,6 @@ class Arena {
       if (isAMDTool) {
         x = 19 - x;
       }
-
-      if (x == 0 && y == 0) {
-        explorationBit += 2;
-        break;
-      }
-
       if (explorationBit % 4 == 0) {
         exploration = int.parse(mapDescriptor1[explorationHex], radix: 16)
             .toRadixString(2)
@@ -123,9 +84,13 @@ class Arena {
         explorationBit = 0;
       }
 
+      if (x == 0 && y == 0) {
+        explorationBit += 2;
+      }
+
       bool checkerBit = (int.parse(exploration[explorationBit]) == 1);
 
-      if (checkerBit) {
+      if (checkerBit && obstacleHex < _obstaclesRecords.length) {
         if (obstacleBit % 4 == 0) {
           obstacle = int.parse(mapDescriptor2[obstacleHex], radix: 16)
               .toRadixString(2)
@@ -135,7 +100,7 @@ class Arena {
           obstacleBit = 0;
         }
 
-        this._obstaclesRecords[x][y] = int.parse(obstacle[explorationBit]);
+        this._obstaclesRecords[x][y] = int.parse(obstacle[obstacleBit]);
         obstacleBit++;
       }
 
@@ -175,7 +140,7 @@ class Arena {
   }
 
   bool setRobotPos(int x, int y, int dir) {
-    dir = ((dir / 90).floor()) % 4; // for amdtool compatibility.
+    if (dir >= 90) dir = ((dir / 90).floor()) % 4; // for amdtool compatibility.
 
     if (y == 0 || y == 14 || x == 0 || x == 19) {
       return false;

@@ -58,15 +58,15 @@ class _MyHomePageState extends State<MyHomePage> {
   bool _setWayPoint = false;
   bool _setRobotStart = false;
 
-  void mySetState(String message) {
-    addConsoleAndScroll(message);
+  Future<void> mySetState(String message) async {
+    await addConsoleAndScroll(message);
     if (message.contains('Disconnected remotely!')) {
       globals.backupArena = globals.arena;
       globals.arena = Arena('1110');
     }
   }
 
-  void addConsoleAndScroll(String message) {
+  void addConsoleAndScroll(String message) async {
     globals.strArr.add(message);
     globals.BackupstrArr.add(
         DateFormat(globals.Datetimeformat).format(DateTime.now()) +
@@ -322,7 +322,7 @@ class _MyHomePageState extends State<MyHomePage> {
                     Positioned(
                         bottom: 12.0,
                         left: 16.0,
-                        child: Text('Remote Controller Module',
+                        child: Text('Remote Controller\nModule',
                             style: TextStyle(
                                 fontSize: 20.0, fontWeight: FontWeight.w500))),
                   ],
@@ -676,45 +676,50 @@ class _MyHomePageState extends State<MyHomePage> {
                         flex: 6,
                         child: Column(
                           children: [
-                            Row(
-                              mainAxisAlignment: MainAxisAlignment.center,
-                              children: [
-                                Expanded(
-                                  child: IconButton(
-                                    icon: Icon(Icons.arrow_circle_up),
-                                    tooltip: 'Move Forward',
-                                    onPressed: () async {
-                                      moveControls('FW');
-                                    },
+                            Expanded(
+                              child: Row(
+                                mainAxisAlignment: MainAxisAlignment.center,
+                                children: [
+                                  Expanded(
+                                    child: IconButton(
+                                      icon: Icon(Icons.arrow_circle_up),
+                                      tooltip: 'Move Forward',
+                                      onPressed: () async {
+                                        moveControls('FW');
+                                      },
+                                    ),
                                   ),
-                                ),
-                              ],
+                                ],
+                              ),
                             ),
-                            Row(
-                              mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                              children: [
-                                Expanded(
-                                  child: IconButton(
-                                    icon: Icon(Icons.rotate_left),
-                                    tooltip: 'Rotate Left',
-                                    onPressed: () {
-                                      moveControls('RL');
-                                    },
+                            Expanded(
+                              child: Row(
+                                mainAxisAlignment:
+                                    MainAxisAlignment.spaceBetween,
+                                children: [
+                                  Expanded(
+                                    child: IconButton(
+                                      icon: Icon(Icons.rotate_left),
+                                      tooltip: 'Rotate Left',
+                                      onPressed: () {
+                                        moveControls('RL');
+                                      },
+                                    ),
                                   ),
-                                ),
-                                Expanded(
-                                  child: Icon(Icons.circle),
-                                ),
-                                Expanded(
-                                  child: IconButton(
-                                    tooltip: 'Rotate Right',
-                                    icon: Icon(Icons.rotate_right),
-                                    onPressed: () {
-                                      moveControls('RR');
-                                    },
+                                  Expanded(
+                                    child: Icon(Icons.circle),
                                   ),
-                                ),
-                              ],
+                                  Expanded(
+                                    child: IconButton(
+                                      tooltip: 'Rotate Right',
+                                      icon: Icon(Icons.rotate_right),
+                                      onPressed: () {
+                                        moveControls('RR');
+                                      },
+                                    ),
+                                  ),
+                                ],
+                              ),
                             ),
                           ],
                         ),
