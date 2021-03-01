@@ -8,8 +8,7 @@ String cleanCommand(String command) {
   }).trim();
 }
 
-// ignore: missing_return
-Future<bool> executeCommand(String command, [List<String> args]) {
+bool executeCommand(String command, [List<String> args]) {
   command = cleanCommand(command).toUpperCase();
   command = (command.startsWith('B')) ? command.substring(1) : command;
 
@@ -41,8 +40,7 @@ Future<bool> executeCommand(String command, [List<String> args]) {
         String mapDescriptor1 = cleanCommand(args[0]);
         String mapDescriptor2 = cleanCommand(args[1]);
 
-        arena.updateMapFromDescriptors(false,
-            mapDescriptor1: mapDescriptor1, mapDescriptor2: mapDescriptor2);
+        arena.updateMapFromDescriptors(false, mapDescriptor1, mapDescriptor2);
       }
       break;
 
@@ -70,7 +68,8 @@ Future<bool> executeCommand(String command, [List<String> args]) {
       if (args.isNotEmpty) {
         String descriptor = cleanCommand(args[0]);
 
-        arena.updateMapFromDescriptors(true, mapDescriptor2: descriptor);
+        arena.updateMapFromDescriptors(
+            true, List.generate(38, (index) => 'F').toString(), descriptor);
       }
       break;
 
@@ -113,6 +112,7 @@ Future<bool> executeCommand(String command, [List<String> args]) {
       break;
     default:
       streamController.add('Command not resolved. $command');
-      break;
+      return false;
   }
+  return true;
 }

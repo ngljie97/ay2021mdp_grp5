@@ -1,8 +1,10 @@
 import 'dart:async';
 import 'dart:collection';
+import 'dart:io';
 
 import 'package:android_remote/logic.dart';
 import 'package:android_remote/main.dart';
+import 'package:path_provider/path_provider.dart';
 
 class QueueSys {
   static Queue<String> _queue = new Queue<String>();
@@ -28,13 +30,15 @@ class QueueSys {
   static Future<void> _runTask(String task) async {
     queueStatus = true;
     List<String> command = task.split(':');
-
+    String cmdClean = cleanCommand(command[0]);
+    List params = command.sublist(1);
     try {
-      streamController.add('Dequeuing: ${cleanCommand(command[0])}');
-      await executeCommand(command[0], command.sublist(1));
+      streamController.add('Dequeuing: $cmdClean');
+      logToFile(cmdClean, params, executeCommand(cmdClean, params));
     } catch (e) {
+      logToFile(cmdClean, params, false);
       streamController.add(
-          'Failed to execute a previously queued command: ${command[0]} with parameters ${command[1]}');
+          'Failed to execute a previously queued command: $cmdClean with parameters $params');
       print(e);
     }
 
@@ -45,8 +49,26 @@ class QueueSys {
   static void queueTask(String task) {
     List<String> taskList = task.split('\n');
     _queue.addAll(taskList);
-
+/*
     if (!queueStatus)
-      checkQueue(); // checks if any task running. if system is free, execute first task
+      checkQueue(); */ // checks if any task running. if system is free, execute first task
+  }
+
+  static Future<String> get _localPath async {
+    final directory = await getExternalStorageDirectory();
+
+    return directory.path;
+  }
+
+  static Future<File> get _localFile async {
+    final path = await _localPath;
+    return File('$path/MDPGrp5_log.txt');
+  }
+
+  static Future<File> logToFile(String cmd, List params, bool status) async {
+    final file = await _localFile;
+
+    // Write the file
+    return file.writeAsString('${_timer.tick}||$cmd||$params');
   }
 }

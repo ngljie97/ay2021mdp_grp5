@@ -59,10 +59,9 @@ class Arena {
     }
   }
 
-  void updateMapFromDescriptors(bool isAMDT,
-      {String mapDescriptor1, String mapDescriptor2}) {
-    String exploration, obstacles;
-    int x, y = 0;
+  void updateExploration(bool isAMDTool, String mapDescriptor1) {
+    String exploration;
+    int x = 0, y = 0;
     int bitNumber = 0;
     int hexNumber = 0;
 
@@ -70,41 +69,79 @@ class Arena {
       x = (i / 15).floor();
       y = (i % 15);
 
-      if (bitNumber % 4 == 0) {
-        if (mapDescriptor1 != null) {
-          exploration = int.parse(mapDescriptor1[hexNumber], radix: 16)
-              .toRadixString(2)
-              .padLeft(4, '0');
-        }
+      if (x == 0 && y == 0) {
+        bitNumber += 2;
+        break;
+      }
 
-        if (mapDescriptor2 != null) {
-          obstacles = int.parse(mapDescriptor2[hexNumber], radix: 16)
-              .toRadixString(2)
-              .padLeft(4, '0');
-        }
+      if (bitNumber % 4 == 0) {
+        exploration = int.parse(mapDescriptor1[hexNumber], radix: 16)
+            .toRadixString(2)
+            .padLeft(4, '0');
+
         hexNumber += 1;
         bitNumber = 0;
       }
 
-      if (x == 0 && y == 0) {
-        bitNumber += 2;
-      }
-
-      if (exploration != null) {
-        if (isAMDT)
-          this._explorationStatus[19-x][y] = int.parse(exploration[bitNumber]);
-        else
-          this._explorationStatus[x][y] = int.parse(exploration[bitNumber]);
-      }
-
-      if (obstacles != null) {
-        if (isAMDT)
-          this._obstaclesRecords[19-x][y] = int.parse(obstacles[bitNumber]);
-        else
-          this._obstaclesRecords[x][y] = int.parse(obstacles[bitNumber]);
-      }
+      if (isAMDTool)
+        this._explorationStatus[19 - x][y] = int.parse(exploration[bitNumber]);
+      else
+        this._explorationStatus[x][y] = int.parse(exploration[bitNumber]);
 
       bitNumber += 1;
+    }
+  }
+
+  void updateMapFromDescriptors(
+      bool isAMDTool, String mapDescriptor1, String mapDescriptor2) {
+    String exploration, obstacle;
+    int x = 0, y = 0;
+    int explorationBit = 0,
+        explorationHex = 0,
+        obstacleBit = 0,
+        obstacleHex = 0;
+
+    for (int i = 0; i <= 300; i++) {
+      x = (i / 15).floor();
+      y = (i % 15);
+
+      if (isAMDTool) {
+        x = 19 - x;
+      }
+
+      if (x == 0 && y == 0) {
+        explorationBit += 2;
+        break;
+      }
+
+      if (explorationBit % 4 == 0) {
+        exploration = int.parse(mapDescriptor1[explorationHex], radix: 16)
+            .toRadixString(2)
+            .padLeft(4, '0');
+
+        explorationHex++;
+        explorationBit = 0;
+      }
+
+      bool checkerBit = (int.parse(exploration[explorationBit]) == 1);
+
+      if (checkerBit) {
+        if (obstacleBit % 4 == 0) {
+          obstacle = int.parse(mapDescriptor2[obstacleHex], radix: 16)
+              .toRadixString(2)
+              .padLeft(4, '0');
+
+          obstacleHex++;
+          obstacleBit = 0;
+        }
+
+        this._obstaclesRecords[x][y] = int.parse(obstacle[explorationBit]);
+        obstacleBit++;
+      }
+
+      this._explorationStatus[x][y] = int.parse(exploration[explorationBit]);
+
+      explorationBit++;
     }
   }
 
