@@ -11,7 +11,7 @@ import 'package:intl/intl.dart';
 import 'package:scrollable_positioned_list/scrollable_positioned_list.dart';
 import 'package:sensors/sensors.dart';
 import 'package:shared_preferences/shared_preferences.dart';
-
+import 'dart:math';
 import 'globals.dart' as globals;
 import 'model/arena.dart';
 import 'model/queueSystem.dart';
@@ -468,12 +468,23 @@ class _MyHomePageState extends State<MyHomePage> {
   void onUnityCreated(controller) {
     _unityWidgetController = controller;
   }
+  void onUnityMessage(message) {
+    print('Received message from unity: ${message.toString()}');
+  }
 
   void setRotationSpeed(String speed) {
     _unityWidgetController.postMessage(
       'Cube',
       'SetRotationSpeed',
       speed,
+    );
+  }
+  void unityMove(String xyz) {
+
+    _unityWidgetController.postMessage(
+      'Player_Isometric_Witch',
+      'moveWitch',
+      xyz,
     );
   }
   Widget  _buildchecker()
@@ -512,21 +523,21 @@ class _MyHomePageState extends State<MyHomePage> {
                 elevation: 10,
                 child: Column(
                   children: <Widget>[
-                    Padding(
-                      padding: const EdgeInsets.only(top: 20),
-                      child: Text("Rotation speed:"),
-                    ),
-                    Slider(
-                      onChanged: (value) {
-                        setState(() {
-                          _sliderValue = value;
-                        });
-                        setRotationSpeed(value.toString());
-                      },
-                      value: _sliderValue,
-                      min: 0,
-                      max: 20,
-                    ),
+                    // Padding(
+                    //   padding: const EdgeInsets.only(top: 20),
+                    //   child: Text("Rotation speed:"),
+                    // ),
+                    // Slider(
+                    //   onChanged: (value) {
+                    //     setState(() {
+                    //       _sliderValue = value;
+                    //     });
+                    //     setRotationSpeed(value.toString());
+                    //   },
+                    //   value: _sliderValue,
+                    //   min: 0,
+                    //   max: 20,
+                    // ),
                   ],
                 ),
               ),
@@ -787,6 +798,7 @@ class _MyHomePageState extends State<MyHomePage> {
                                     tooltip: 'Move Forward',
                                     onPressed: () async {
                                       moveControls('FW');
+                                      unityMove('w');
                                     },
                                   ),
                                 ),
@@ -801,6 +813,7 @@ class _MyHomePageState extends State<MyHomePage> {
                                     tooltip: 'Rotate Left',
                                     onPressed: () {
                                       moveControls('RL');
+                                      unityMove('a');
                                     },
                                   ),
                                 ),
@@ -813,6 +826,7 @@ class _MyHomePageState extends State<MyHomePage> {
                                     icon: Icon(Icons.rotate_right),
                                     onPressed: () {
                                       moveControls('RR');
+                                      unityMove('d');
                                     },
                                   ),
                                 ),
