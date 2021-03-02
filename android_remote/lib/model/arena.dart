@@ -219,8 +219,6 @@ class Arena {
     this._explorationStatus[x][y] = 0;
   }
 
-  void refreshArena() {}
-
   Widget getArenaState(int x, int y, Function onTapFunction) {
     String item = isRobot(x, y);
 

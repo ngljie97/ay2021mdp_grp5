@@ -142,8 +142,8 @@ class BluetoothController {
         streamController.add('Message sent to Bluetooth device: [$text]');
       } catch (e) {
         // Ignore error, but notify state
-        streamController.add('Disconnected remotely!');
-
+        streamController.add(
+            'Could not send to remote Bluetooth device! Please check connection.');
         //this.disconnect();
       }
     }

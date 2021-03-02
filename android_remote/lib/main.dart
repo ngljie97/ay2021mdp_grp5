@@ -447,14 +447,14 @@ class _MyHomePageState extends State<MyHomePage> {
             padding: EdgeInsets.fromLTRB(0, 0, 0, 0),
             child: GridView.builder(
                 gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
-                  crossAxisCount: 15,
+                  crossAxisCount: 16,
                   childAspectRatio: MediaQuery.of(context).size.width /
                       (MediaQuery.of(context).size.height / 1.8),
                   crossAxisSpacing: 0,
                   mainAxisSpacing: 0,
                 ),
                 shrinkWrap: true,
-                itemCount: 15 * 20,
+                itemCount: 16 * 21,
                 itemBuilder: (BuildContext context, int index) {
                   return _resolveGridItem(context, index);
                 }),
@@ -466,8 +466,8 @@ class _MyHomePageState extends State<MyHomePage> {
 
   Widget _resolveGridItem(BuildContext context, int index) {
     int x, y = 0;
-    x = 19 - (index / 15).floor();
-    y = (index % 15);
+    x = 20 - (index / 16).floor();
+    y = (index % 16);
 
     void onTapFunction() {
       if (_setWayPoint) {
@@ -498,6 +498,15 @@ class _MyHomePageState extends State<MyHomePage> {
       }
     }
 
+    if (x == 20 && y == 15) return Text('');
+    if (x == 20)
+      return Center(
+        child: Text('$y'),
+      );
+    if (y == 15)
+      return Center(
+        child: Text('$x'),
+      );
     return globals.arena.getArenaState(x, y, onTapFunction);
   }
 
@@ -1027,4 +1036,26 @@ class _MyHomePageState extends State<MyHomePage> {
           );
         });
   }
+}
+
+List<Widget> _getLabels(int i, bool isX) {
+  List<Widget> labels = new List<Widget>();
+
+  if (isX)
+    labels.add(Container(
+      child: Text(''),
+    ));
+
+  while (i >= 0) {
+    labels.add(Container(
+      child: (isX)
+          ? Text(
+              '$i',
+            )
+          : Text('${14 - i}'),
+    ));
+    i--;
+  }
+
+  return labels;
 }
