@@ -112,7 +112,7 @@ void autoForwardPID() {
 }
 
 //void rotatePID(float degree) {
-void rotatePid(int ticksToTurn, int Direction){
+void rotatePID(int ticksToTurn, int Direction){
   //float dist = degreeToDist(abs(degree));
   //float travel_ticks = distToTick(dist);
   float travel_ticks = ticksToTurn;
