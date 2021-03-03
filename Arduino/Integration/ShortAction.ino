@@ -6,7 +6,8 @@
  * Left: 'L', Right: 'R'
  */
 void rotateShort(char dir, float arc) {
-  float offset = 0.9;
+  float offset = 0.8;
+//  float offset = 1;
   float travel_ticks = distToTick(abs(arc * offset));
   E1_ticks = 0;
   E2_ticks = 0;

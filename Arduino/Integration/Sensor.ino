@@ -45,19 +45,19 @@ float getSensorDist(short sensorPin) {
 
 /************* SRFL - PS1 *************/
 float getSRFLdist() {
-//  short analogSignal = readSensor(Constants::SRFL_PIN);
-//  return calculatePS1(analogSignal);
   short analogSignal = readSensor(Constants::SRFL_PIN);
-  float volt = analogSignal * (5.0 / 1023.0);
-  return calculateSRDistance(volt);
+  return calculatePS1(analogSignal);
+//  short analogSignal = readSensor(Constants::SRFL_PIN);
+//  float volt = analogSignal * (5.0 / 1023.0);
+//  return calculateSRDistance(volt);
 }
 
 float getSRFLdistInstant() {
-//  short analogSignal = readSensor(Constants::SRFL_PIN);
-//  return calculatePS1(analogSignal);
   short analogSignal = readSensorInstant(Constants::SRFL_PIN);
-  float volt = analogSignal * (5.0 / 1023.0);
-  return calculateSRDistance(volt);
+  return calculatePS1(analogSignal);
+//  short analogSignal = readSensorInstant(Constants::SRFL_PIN);
+//  float volt = analogSignal * (5.0 / 1023.0);
+//  return calculateSRDistance(volt);
 }
 
 short getSRFLblockAway() {
@@ -66,25 +66,29 @@ short getSRFLblockAway() {
 //  Serial.print("SRFL distInCm: ");
 //  Serial.println(distInCm);
   for (short i = 0 ; i < Constants::SR_UPPER_RANGE ; i++) {
-    if (distInCm <= Constants::SRFL_MIN_DIST + i * Constants::BLOCK_SIZE + Constants::BLOCK_SIZE / 2)
+    if (distInCm <= Constants::MIN_DIST + i * Constants::BLOCK_SIZE + Constants::BLOCK_SIZE / 2)
       return i + 1;
   }
-  if (distInCm <= Constants::SR_MAX_DIST)
-    return Constants::SR_UPPER_RANGE;
+//  if (distInCm <= Constants::SR_MAX_DIST)
+//    return Constants::SR_UPPER_RANGE;
   return -1; //No obstacle in the range
 }
 
 /************* SRFC - PS4 *************/
 float getSRFCdist() {
   short analogSignal = readSensor(Constants::SRFC_PIN);
-  float volt = analogSignal * (5.0 / 1023.0);
-  return calculateSRDistance(volt);
+  return calculatePS4(analogSignal);
+//  short analogSignal = readSensor(Constants::SRFC_PIN);
+//  float volt = analogSignal * (5.0 / 1023.0);
+//  return calculateSRDistance(volt);
 }
 
 float getSRFCdistInstant() {
   short analogSignal = readSensorInstant(Constants::SRFC_PIN);
-  float volt = analogSignal * (5.0 / 1023.0);
-  return calculateSRDistance(volt);
+  return calculatePS4(analogSignal);
+//  short analogSignal = readSensorInstant(Constants::SRFC_PIN);
+//  float volt = analogSignal * (5.0 / 1023.0);
+//  return calculateSRDistance(volt);
 }
 
 short getSRFCblockAway() {
@@ -93,29 +97,29 @@ short getSRFCblockAway() {
 //  Serial.print("SRFC distInCm: ");
 //  Serial.println(distInCm);
   for (short i = 0 ; i < Constants::SR_UPPER_RANGE ; i++) {
-    if (distInCm <= Constants::SRFC_MIN_DIST + i * Constants::BLOCK_SIZE + Constants::BLOCK_SIZE / 2)
+    if (distInCm <= Constants::MIN_DIST + i * Constants::BLOCK_SIZE + Constants::BLOCK_SIZE / 2)
       return i + 1;
   }
-  if (distInCm <= Constants::SR_MAX_DIST)
-    return Constants::SR_UPPER_RANGE;
+//  if (distInCm <= Constants::SR_MAX_DIST)
+//    return Constants::SR_UPPER_RANGE;
   return -1; //No obstacle in the range
 }
 
 /************* SRFR - PS3 *************/
 float getSRFRdist() {
-//  short analogSignal = readSensor(Constants::SRFR_PIN);
-//  return calculatePS3(analogSignal);
   short analogSignal = readSensor(Constants::SRFR_PIN);
-  float volt = analogSignal * (5.0 / 1023.0);
-  return calculateSRDistance(volt);
+  return calculatePS3(analogSignal);
+//  short analogSignal = readSensor(Constants::SRFR_PIN);
+//  float volt = analogSignal * (5.0 / 1023.0);
+//  return calculateSRDistance(volt);
 }
 
 float getSRFRdistInstant() {
-//  short analogSignal = readSensor(Constants::SRFR_PIN);
-//  return calculatePS3(analogSignal);
   short analogSignal = readSensorInstant(Constants::SRFR_PIN);
-  float volt = analogSignal * (5.0 / 1023.0);
-  return calculateSRDistance(volt);
+  return calculatePS3(analogSignal);
+//  short analogSignal = readSensorInstant(Constants::SRFR_PIN);
+//  float volt = analogSignal * (5.0 / 1023.0);
+//  return calculateSRDistance(volt);
 }
 
 short getSRFRblockAway() {
@@ -124,29 +128,29 @@ short getSRFRblockAway() {
 //  Serial.print("SRFR distInCm: ");
 //  Serial.println(distInCm);
   for (short i = 0 ; i < Constants::SR_UPPER_RANGE ; i++) {
-    if (distInCm <= Constants::SRFR_MIN_DIST + i * Constants::BLOCK_SIZE + Constants::BLOCK_SIZE / 2)
+    if (distInCm <= Constants::MIN_DIST + i * Constants::BLOCK_SIZE + Constants::BLOCK_SIZE / 2)
       return i + 1;
   }
-  if (distInCm <= Constants::SR_MAX_DIST)
-    return Constants::SR_UPPER_RANGE;
+//  if (distInCm <= Constants::SR_MAX_DIST)
+//    return Constants::SR_UPPER_RANGE;
   return -1; //No obstacle in the range
 }
 
 /************* SRLH - PS5 *************/
 float getSRLHdist() {
-//  short analogSignal = readSensor(Constants::SRLH_PIN);
-//  return calculatePS5(analogSignal);
   short analogSignal = readSensor(Constants::SRLH_PIN);
-  float volt = analogSignal * (5.0 / 1023.0);
-  return calculateSRDistance(volt);
+  return calculatePS5(analogSignal);
+//  short analogSignal = readSensor(Constants::SRLH_PIN);
+//  float volt = analogSignal * (5.0 / 1023.0);
+//  return calculateSRDistance(volt);
 }
 
 float getSRLHdistInstant() {
-//  short analogSignal = readSensor(Constants::SRLH_PIN);
-//  return calculatePS5(analogSignal);
   short analogSignal = readSensorInstant(Constants::SRLH_PIN);
-  float volt = analogSignal * (5.0 / 1023.0);
-  return calculateSRDistance(volt);
+  return calculatePS5(analogSignal);
+//  short analogSignal = readSensorInstant(Constants::SRLH_PIN);
+//  float volt = analogSignal * (5.0 / 1023.0);
+//  return calculateSRDistance(volt);
 }
 
 short getSRLHblockAway() {
@@ -155,25 +159,29 @@ short getSRLHblockAway() {
 //  Serial.print("SRLH distInCm: ");
 //  Serial.println(distInCm);
   for (short i = 0 ; i < Constants::SR_UPPER_RANGE ; i++) {
-    if (distInCm <= Constants::SRLH_MIN_DIST + i * Constants::BLOCK_SIZE + Constants::BLOCK_SIZE / 2)
+    if (distInCm <= Constants::MIN_DIST + i * Constants::BLOCK_SIZE + Constants::BLOCK_SIZE / 2)
       return i + 1;
   }
-  if (distInCm <= Constants::SR_MAX_DIST)
-    return Constants::SR_UPPER_RANGE;
+//  if (distInCm <= Constants::SR_MAX_DIST)
+//    return Constants::SR_UPPER_RANGE;
   return -1; //No obstacle in the range
 }
 
 /************* SRLT - PS6 *************/
 float getSRLTdist() {
   short analogSignal = readSensor(Constants::SRLT_PIN);
-  float volt = analogSignal * (5.0 / 1023.0);
-  return calculateSRDistance(volt);
+  return calculatePS5(analogSignal);
+//  short analogSignal = readSensor(Constants::SRLT_PIN);
+//  float volt = analogSignal * (5.0 / 1023.0);
+//  return calculateSRDistance(volt);
 }
 
 float getSRLTdistInstant() {
   short analogSignal = readSensorInstant(Constants::SRLT_PIN);
-  float volt = analogSignal * (5.0 / 1023.0);
-  return calculateSRDistance(volt);
+  return calculatePS5(analogSignal);
+//  short analogSignal = readSensorInstant(Constants::SRLT_PIN);
+//  float volt = analogSignal * (5.0 / 1023.0);
+//  return calculateSRDistance(volt);
 }
 
 short getSRLTblockAway() {
@@ -182,29 +190,29 @@ short getSRLTblockAway() {
 //  Serial.print("SRLT distInCm: ");
 //  Serial.println(distInCm);
   for (short i = 0 ; i < Constants::SR_UPPER_RANGE ; i++) {
-    if (distInCm <= Constants::SRLT_MIN_DIST + i * Constants::BLOCK_SIZE + Constants::BLOCK_SIZE / 2)
+    if (distInCm <= Constants::MIN_DIST + i * Constants::BLOCK_SIZE + Constants::BLOCK_SIZE / 2)
       return i + 1;
   }
-  if (distInCm <= Constants::SR_MAX_DIST)
-    return Constants::SR_UPPER_RANGE;
+//  if (distInCm <= Constants::SR_MAX_DIST)
+//    return Constants::SR_UPPER_RANGE;
   return -1; //No obstacle in the range
 }
 
 /************* LRR - PS2 *************/
 float getLRRdist() {
-//  short analogSignal = readSensor(Constants::LRR_PIN);
-//  return calculatePS2(analogSignal);
   short analogSignal = readSensor(Constants::LRR_PIN);
-  float volt = analogSignal * (5.0 / 1023.0);
-  return calculateLRDistance(volt);
+  return calculatePS2(analogSignal);
+//  short analogSignal = readSensor(Constants::LRR_PIN);
+//  float volt = analogSignal * (5.0 / 1023.0);
+//  return calculateLRDistance(volt);
 }
 
 float getLRRdistInstant() {
-//  short analogSignal = readSensor(Constants::LRR_PIN);
-//  return calculatePS2(analogSignal);
   short analogSignal = readSensorInstant(Constants::LRR_PIN);
-  float volt = analogSignal * (5.0 / 1023.0);
-  return calculateLRDistance(volt);
+  return calculatePS2(analogSignal);
+//  short analogSignal = readSensorInstant(Constants::LRR_PIN);
+//  float volt = analogSignal * (5.0 / 1023.0);
+//  return calculateLRDistance(volt);
 }
 
 short getLRRblockAway() {
@@ -213,48 +221,76 @@ short getLRRblockAway() {
 //  Serial.print("LRR distInCm: ");
 //  Serial.println(distInCm);
   for (short i = 0 ; i < Constants::LR_UPPER_RANGE ; i++) {
-    if (distInCm <= Constants::LRR_MIN_DIST + i * Constants::BLOCK_SIZE + Constants::BLOCK_SIZE / 2)
+    if (distInCm <= Constants::MIN_DIST + i * Constants::BLOCK_SIZE + Constants::BLOCK_SIZE / 2)
       return i + 1;
   }
-//  if (distInCm <= Constants::SR_MAX_DIST)
-//    return SR_UPPER_RANGE
   return -1; //No obstacle in the range
 }
 
 // Short range PS1
 float calculatePS1(short y){
-  float a = 0.00015570056579094615;
-  float b = -0.17094290182630983;
-  float c = 57.00375888549351;
-
-  return ((a*y*y)+(b*y)+(c));
+  float a = 104.95390732865984;
+  float b = -0.7628434838429381;
+  float c = 0.0024951951507336785;
+  float d = -0.000003833539767108626;
+  float e = 2.220941122720654e-9;
+  float distFromTip = 3.5;
+  return ((e*y*y*y*y)+(d*y*y*y)+(c*y*y)+(b*y)+(a));
 }
 
 // Long range PS2
 float calculatePS2(short y){
-  float a = 0.0000889095153238526;
-  float b = -0.18380866864865125;
-  float c = 86.30364960580333;
-
-  return ((a*y*y)+(b*y)+(c));
+  float a = 104.95390732865984;
+  float b = -0.7628434838429381;
+  float c = 0.0024951951507336785;
+  float d = -0.000003833539767108626;
+  float e = 2.220941122720654e-9;
+  float distFromTip = 3.5;
+  return ((e*y*y*y*y)+(d*y*y*y)+(c*y*y)+(b*y)+(a));
 }
 
 // Short range PS3
 float calculatePS3(short y){
-  float a = 0.0003683757149475359;
-  float b = -0.355489407475571;
-  float c = 95.92101178385319;
+  float a = 77.17969059497881;
+  float b = -0.40813818271924773;
+  float c = 0.0009199097711358715;
+  float d = -9.232483512802136e-7;
+  float e = 3.1403547504425725e-10;
+  float distFromTip = 3.5;
+  return ((e*y*y*y*y)+(d*y*y*y)+(c*y*y)+(b*y)+(a));
+}
 
-  return ((a*y*y)+(b*y)+(c));
+// Short range PS4
+float calculatePS4(short y){
+  float a = 58.055716132069826;
+  float b = -0.2385246865019394;
+  float c = 0.00038508683536618126;
+  float d = -2.067876969195102e-7;
+  float e = -2.480214809028296e-11;
+  float distFromTip = 2.8;
+  return ((e*y*y*y*y)+(d*y*y*y)+(c*y*y)+(b*y)+(a));
 }
 
 // Short range PS5
 float calculatePS5(short y){
-  float a = 0.00022032383579706093;
-  float b = -0.23128743033250806;
-  float c = 70.95046330026884;
+  float a = 106.66951260105641;
+  float b = -0.6862081004105913;
+  float c = 0.0019619775363461404;
+  float d = -0.0000025911873441724526;
+  float e = 1.277960719392304e-9;
+  float distFromTip = 1;
+  return ((e*y*y*y*y)+(d*y*y*y)+(c*y*y)+(b*y)+(a));
+}
 
-  return ((a*y*y)+(b*y)+(c));
+// Short range PS6
+float calculatePS6(short y){
+  float a = 109.36338485581553;
+  float b = -0.727957651160299;
+  float c = 0.00214883616098274;
+  float d = -0.0000029237996346267947;
+  float e = 1.482334995624426e-9;
+  float distFromTip = 0;
+  return ((e*y*y*y*y)+(d*y*y*y)+(c*y*y)+(b*y)+(a));
 }
 
 // Short range PS4 and PS6
@@ -277,8 +313,8 @@ float avgFrontDist() {
     sum += getSRFLdist();
     cnt++;
   }
-  if (getSRFCdist() - (Constants::SRFL_MIN_DIST - Constants::SRFC_MIN_DIST) <= Constants::MAX_DIST_FOR_CALIBRATE) {
-    sum += getSRFCdist() - (Constants::SRFL_MIN_DIST - Constants::SRFC_MIN_DIST);
+  if (getSRFCdist() <= Constants::MAX_DIST_FOR_CALIBRATE) {
+    sum += getSRFCdist();
     cnt++;
   }
   if (getSRFRdist() <= Constants::MAX_DIST_FOR_CALIBRATE) {

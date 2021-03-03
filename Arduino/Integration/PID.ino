@@ -115,8 +115,8 @@ void rotatePID(float degree) {
   if (degree == 0)
     return;
   short offset = 0;
-  if (degree == 90)
-    offset = 3;
+  if (degree == -90)
+    offset = -2;
   float dist = degreeToDist(abs(degree - offset));
   float travel_ticks = distToTick(dist);
   float KP = 0.4;

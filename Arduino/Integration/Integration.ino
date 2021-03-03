@@ -113,20 +113,20 @@ void executeCmd(String cmd) {
     if (mode == 0)
       sendActionComplete();
   } else if (cmd.startsWith(RIGHT_CALIBRATE_CMD)) {
-    rightCalibrate();
+//    rightCalibrate();
     sendActionComplete();
   } else if (cmd.startsWith(TURN_LEFT_CMD)) {
-    frontCalibrate();
+//    frontCalibrate();
     rotateLeftPID(90);
-    leftAngleCalibrate();
+//    leftAngleCalibrate();
     sendMsg();
   } else if (cmd.startsWith(TURN_RIGHT_CMD)) {
-    frontCalibrate();
+//    frontCalibrate();
     rotateRightPID(90);
-    leftAngleCalibrate();
+//    leftAngleCalibrate();
     sendMsg();
   } else if (cmd.startsWith(CALIBRATE_CMD)) {
-    fullCalibrate();
+//    fullCalibrate();
     sendActionComplete();
   }
 }

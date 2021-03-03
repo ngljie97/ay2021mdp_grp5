@@ -14,30 +14,19 @@ class Constants
 
     static const short SENSOR_SAMPLING = 30;
 
-//    static constexpr float SRFL_MIN_DIST = 8.5;
-//    static constexpr float SRFC_MIN_DIST = 8;
-//    static constexpr float SRFR_MIN_DIST = 8.5;
-    static constexpr float SRFL_MIN_DIST = 9.5;
-    static constexpr float SRFC_MIN_DIST = 9;
-    static constexpr float SRFR_MIN_DIST = 9.5;
-    static constexpr float SRLH_MIN_DIST = 8;
-    static constexpr float SRLT_MIN_DIST = 8;
-    static constexpr float LRR_MIN_DIST = 17;
+    static constexpr float MIN_DIST = 5;
 
     static constexpr float BLOCK_SIZE = 10;
     static const short SR_UPPER_RANGE = 3;
     static const short LR_UPPER_RANGE = 5;
-    static const short SR_MAX_DIST = 37;
+    static const short SR_MAX_DIST = 37; //Consider changing
 
-    static constexpr float MAX_DIST_FOR_CALIBRATE = 12;
-    static constexpr float FRONT_MIN = 9.5;
-    static constexpr float LEFT_MIN = 9;
-    static constexpr float RIGHT_MIN = 18;
-    static constexpr float STOP_DIST = 17;
+    static constexpr float MAX_DIST_FOR_CALIBRATE = 10;
+    static constexpr float STOP_DIST = 8;
     
     static constexpr float THRESHOLD = 0.15;
 
-    static const short MAX_TRIAL = 10;
+    static const short MAX_TRIAL = 5;
 
     /******* Motor *******/
     static const short SPEED = 500;
