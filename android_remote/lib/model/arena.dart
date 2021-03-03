@@ -2,34 +2,34 @@ import 'package:android_remote/main.dart';
 import 'package:android_remote/model/robot.dart';
 import 'package:android_remote/model/waypoint.dart';
 import 'package:flutter/material.dart';
-
+import 'package:android_remote/modules/descriptor_decoder.dart';
 import '../globals.dart';
 
 class Arena {
-  List<List<int>> _explorationStatus, _obstaclesRecords;
+  List<List<int>> explorationStatus, obstaclesRecords;
   WayPoint _wayPoint;
   Robot _robot;
   int _imagedirection = 0;
 
   Arena(String selector) {
     if (selector[0] == '1') {
-      this._explorationStatus = List.generate(
+      this.explorationStatus = List.generate(
         20,
-        (index) => List.generate(15, (index) => 0, growable: false),
+            (index) => List.generate(15, (index) => 0, growable: false),
         growable: false,
       );
     } else if (backupArena != null) {
-      this._explorationStatus = backupArena._explorationStatus;
+      this.explorationStatus = backupArena.explorationStatus;
     }
 
     if (selector[1] == '1') {
-      this._obstaclesRecords = List.generate(
+      this.obstaclesRecords = List.generate(
         20,
-        (index) => List.generate(15, (index) => 0, growable: false),
+            (index) => List.generate(15, (index) => 0, growable: false),
         growable: false,
       );
     } else if (backupArena != null) {
-      this._obstaclesRecords = backupArena._obstaclesRecords;
+      this.obstaclesRecords = backupArena.obstaclesRecords;
     }
 
     if (selector[2] == '1') {
@@ -59,53 +59,13 @@ class Arena {
     }
   }
 
-  void updateMapFromDescriptors(bool isAMDT,
-      {String mapDescriptor1, String mapDescriptor2}) {
-    String exploration, obstacles;
-    int x, y = 0;
-    int bitNumber = 0;
-    int hexNumber = 0;
+  Future<void> updateMapFromDescriptors(
+      bool isAMDTool, String mapDescriptor1, String mapDescriptor2) async {
+    List<String> obstaclesCoords =
+    DescriptorDecoder.decodeDescriptor1(isAMDTool, mapDescriptor1);
 
-    for (int i = 0; i <= 300; i++) {
-      x = (i / 15).floor();
-      y = (i % 15);
-
-      if (bitNumber % 4 == 0) {
-        if (mapDescriptor1 != null) {
-          exploration = int.parse(mapDescriptor1[hexNumber], radix: 16)
-              .toRadixString(2)
-              .padLeft(4, '0');
-        }
-
-        if (mapDescriptor2 != null) {
-          obstacles = int.parse(mapDescriptor2[hexNumber], radix: 16)
-              .toRadixString(2)
-              .padLeft(4, '0');
-        }
-        hexNumber += 1;
-        bitNumber = 0;
-      }
-
-      if (x == 0 && y == 0) {
-        bitNumber += 2;
-      }
-
-      if (exploration != null) {
-        if (isAMDT)
-          this._explorationStatus[19-x][y] = int.parse(exploration[bitNumber]);
-        else
-          this._explorationStatus[x][y] = int.parse(exploration[bitNumber]);
-      }
-
-      if (obstacles != null) {
-        if (isAMDT)
-          this._obstaclesRecords[19-x][y] = int.parse(obstacles[bitNumber]);
-        else
-          this._obstaclesRecords[x][y] = int.parse(obstacles[bitNumber]);
-      }
-
-      bitNumber += 1;
-    }
+    DescriptorDecoder.decodeDescriptor2(
+        isAMDTool, obstaclesCoords, mapDescriptor2);
   }
 
   int getRobotDir() {
@@ -138,7 +98,7 @@ class Arena {
   }
 
   bool setRobotPos(int x, int y, int dir) {
-    dir = ((dir / 90).floor()) % 4; // for amdtool compatibility.
+    if (dir >= 90) dir = ((dir / 90).floor()) % 4; // for amdtool compatibility.
 
     if (y == 0 || y == 14 || x == 0 || x == 19) {
       return false;
@@ -183,7 +143,7 @@ class Arena {
             }
           }
 
-          _explorationStatus[x][y] = 1;
+          explorationStatus[x][y] = 1;
 
           if (xi == x && yj == y) {
             return 'RH';
@@ -198,23 +158,33 @@ class Arena {
   }
 
   void setObstacle(int x, int y) {
-    this._obstaclesRecords[x][y] = 1;
+    this.obstaclesRecords[x][y] = 1;
+    unityWidgetController.postMessage(
+      'Player_Isometric_Witch',
+      'setObstacles',
+      '$x:$y:2',
+    );
   }
 
   void removeObstacle(int x, int y) {
-    this._obstaclesRecords[x][y] = 0;
+    this.obstaclesRecords[x][y] = 0;
+    unityWidgetController.postMessage(
+      'Player_Isometric_Witch',
+      'setObstacles',
+      '$x:$y:0',
+    );
   }
 
   void setImage(int x, int y, int imageid, int dir) {
-    this._obstaclesRecords[x][y] = imageid * 10 + dir;
+    this.obstaclesRecords[x][y] = imageid * 10 + dir;
   }
 
   void setExplored(int x, int y) {
-    this._explorationStatus[x][y] = 1;
+    this.explorationStatus[x][y] = 1;
   }
 
   void removeExplored(int x, int y) {
-    this._explorationStatus[x][y] = 0;
+    this.explorationStatus[x][y] = 0;
   }
 
   void refreshArena() {}
@@ -226,9 +196,9 @@ class Arena {
       // item = _inSpecialZone(x, y);
       item = '0';
       if (item == '0') {
-        if (_obstaclesRecords[x][y] >= 1) {
-          int first = (_obstaclesRecords[x][y] / 10).floor();
-          int second = (_obstaclesRecords[x][y] % 10);
+        if (obstaclesRecords[x][y] >= 1) {
+          int first = (obstaclesRecords[x][y] / 10).floor();
+          int second = (obstaclesRecords[x][y] % 10);
           switch (first) {
             case 101:
               item = 'n1';
@@ -295,7 +265,7 @@ class Arena {
               break;
           }
         } else {
-          switch (_explorationStatus[x][y] + WayPoint.isWayPoint(x, y)) {
+          switch (explorationStatus[x][y] + WayPoint.isWayPoint(x, y)) {
             case 0:
               item = '0';
               break;
@@ -404,7 +374,7 @@ class Arena {
         );
         break;
 
-      // Image Recognition
+    // Image Recognition
       case 'A':
         return Container(
           decoration: BoxDecoration(
@@ -565,7 +535,7 @@ class Arena {
               ),
             ));
         break;
-      // End of Image Recognition
+    // End of Image Recognition
       case 'n6':
       case 'n7':
       case 'n8':
@@ -585,7 +555,7 @@ class Arena {
               child: Text(item.substring(1),
                   textAlign: TextAlign.center,
                   style:
-                      TextStyle(fontSize: 30.0, fontWeight: FontWeight.w500)),
+                  TextStyle(fontSize: 30.0, fontWeight: FontWeight.w500)),
             ),
           ),
         );

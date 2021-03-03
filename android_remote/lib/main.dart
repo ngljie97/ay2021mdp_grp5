@@ -11,7 +11,6 @@ import 'package:intl/intl.dart';
 import 'package:scrollable_positioned_list/scrollable_positioned_list.dart';
 import 'package:sensors/sensors.dart';
 import 'package:shared_preferences/shared_preferences.dart';
-import 'dart:math';
 import 'globals.dart' as globals;
 import 'model/arena.dart';
 import 'model/queueSystem.dart';
@@ -21,7 +20,7 @@ StreamController<String> streamController =
 AccelerometerEvent acceleration;
 StreamSubscription<AccelerometerEvent> _streamSubscription;
 Timer _timer;
-UnityWidgetController _unityWidgetController;
+UnityWidgetController unityWidgetController;
 double _sliderValue = 0.0;
 void main() {
   runApp(MyApp());
@@ -60,15 +59,15 @@ class _MyHomePageState extends State<MyHomePage> {
   bool _setWayPoint = false;
   bool _setRobotStart = false;
 
-  void mySetState(String message) {
-    addConsoleAndScroll(message);
+  Future<void> mySetState(String message) async {
+    await addConsoleAndScroll(message);
     if (message.contains('Disconnected remotely!')) {
       globals.backupArena = globals.arena;
       globals.arena = Arena('1110');
     }
   }
 
-  void addConsoleAndScroll(String message) {
+  void addConsoleAndScroll(String message) async {
     globals.strArr.add(message);
     globals.BackupstrArr.add(
         DateFormat(globals.Datetimeformat).format(DateTime.now()) +
@@ -321,10 +320,10 @@ class _MyHomePageState extends State<MyHomePage> {
                       color: Colors.blueAccent,
                       onPressed: () {
                         setState(() {
-                          if(globals.arena2d)
-                          globals.arena2d =false;
+                          if (globals.arena2d)
+                            globals.arena2d = false;
                           else
-                            globals.arena2d =true;
+                            globals.arena2d = true;
                         });
                       },
                     ),
@@ -347,7 +346,7 @@ class _MyHomePageState extends State<MyHomePage> {
                     Positioned(
                         bottom: 12.0,
                         left: 16.0,
-                        child: Text('Remote Controller Module',
+                        child: Text('Remote Controller\nModule',
                             style: TextStyle(
                                 fontSize: 20.0, fontWeight: FontWeight.w500))),
                   ],
@@ -455,9 +454,7 @@ class _MyHomePageState extends State<MyHomePage> {
               ListTile(
                 leading: Icon(Icons.info_outline),
                 title: Text('Unity test'),
-                onTap: () {
-                  Navigator.of(context).push((MaterialPageRoute(builder: (BuildContext context) => UnityTestingWrapper() )));
-                },
+                onTap: () {},
               ),
             ],
           ),
@@ -465,88 +462,98 @@ class _MyHomePageState extends State<MyHomePage> {
       ),
     );
   }
+
   void onUnityCreated(controller) {
-    _unityWidgetController = controller;
+    unityWidgetController = controller;
   }
+
   void onUnityMessage(message) {
     print('Received message from unity: ${message.toString()}');
   }
 
   void setRotationSpeed(String speed) {
-    _unityWidgetController.postMessage(
+    unityWidgetController.postMessage(
       'Cube',
       'SetRotationSpeed',
       speed,
     );
   }
-  void unityMove(String xyz) {
 
-    _unityWidgetController.postMessage(
+  void unityMove(String xyz) {
+    unityWidgetController.postMessage(
       'Player_Isometric_Witch',
       'moveWitch',
       xyz,
     );
   }
-  Widget  _buildchecker()
-  {
-    if(globals.arena2d)
-      {
-        return _buildArena();
-      }
-    else{
+
+  void setUnityObstacle(String xyz) {
+    //xyz = x:y
+    unityWidgetController.postMessage(
+      'Player_Isometric_Witch',
+      'setObstacles',
+      xyz,
+    );
+  }
+
+  Widget _buildchecker() {
+    if (globals.arena2d) {
+      return _buildArena();
+    } else {
       return _buildUnity();
     }
   }
-  Widget _buildUnity(){
+
+  Widget _buildUnity() {
     return new Expanded(
         flex: 10,
-        child:Scaffold(
-
-      body: Card(
-        margin: const EdgeInsets.all(8),
-        clipBehavior: Clip.antiAlias,
-        shape: RoundedRectangleBorder(
-          borderRadius: BorderRadius.circular(20.0),
-        ),
-        child: Stack(
-          children: <Widget>[
-            UnityWidget(
-              onUnityCreated: onUnityCreated,
-              isARScene: true,
-              fullscreen: false,
+        child: Scaffold(
+          body: Card(
+            margin: const EdgeInsets.all(8),
+            clipBehavior: Clip.antiAlias,
+            shape: RoundedRectangleBorder(
+              borderRadius: BorderRadius.circular(20.0),
             ),
-            Positioned(
-              bottom: 20,
-              left: 20,
-              right: 20,
-              child: Card(
-                elevation: 10,
-                child: Column(
-                  children: <Widget>[
-                    // Padding(
-                    //   padding: const EdgeInsets.only(top: 20),
-                    //   child: Text("Rotation speed:"),
-                    // ),
-                    // Slider(
-                    //   onChanged: (value) {
-                    //     setState(() {
-                    //       _sliderValue = value;
-                    //     });
-                    //     setRotationSpeed(value.toString());
-                    //   },
-                    //   value: _sliderValue,
-                    //   min: 0,
-                    //   max: 20,
-                    // ),
-                  ],
+            child: Stack(
+              children: <Widget>[
+                UnityWidget(
+                  onUnityCreated: onUnityCreated,
+                  isARScene: false,
+                  fullscreen: false,
                 ),
-              ),
+                Positioned(
+                  bottom: 20,
+                  left: 20,
+                  right: 20,
+                  child: Card(
+                    elevation: 10,
+                    child: Column(
+                      children: <Widget>[
+                        // Padding(
+                        //   padding: const EdgeInsets.only(top: 20),
+                        //   child: Text("Rotation speed:"),
+                        // ),
+                        // Slider(
+                        //   onChanged: (value) {
+                        //     setState(() {
+                        //       _sliderValue = value;
+                        //     });
+                        //     setRotationSpeed(value.toString());
+                        //   },
+                        //   value: _sliderValue,
+                        //   min: 0,
+                        //   max: 20,
+                        // ),
+                      ],
+                    ),
+                  ),
+                ),
+              ],
             ),
-          ],
-        ),
-      ),
-    ));
+          ),
+        ));
   }
+
   Widget _buildArena() {
     return new Expanded(
       flex: 10,
@@ -789,48 +796,50 @@ class _MyHomePageState extends State<MyHomePage> {
                         flex: 6,
                         child: Column(
                           children: [
-                            Row(
-                              mainAxisAlignment: MainAxisAlignment.center,
-                              children: [
-                                Expanded(
-                                  child: IconButton(
-                                    icon: Icon(Icons.arrow_circle_up),
-                                    tooltip: 'Move Forward',
-                                    onPressed: () async {
-                                      moveControls('FW');
-                                      unityMove('w');
-                                    },
+                            Expanded(
+                              child: Row(
+                                mainAxisAlignment: MainAxisAlignment.center,
+                                children: [
+                                  Expanded(
+                                    child: IconButton(
+                                      icon: Icon(Icons.arrow_circle_up),
+                                      tooltip: 'Move Forward',
+                                      onPressed: () async {
+                                        moveControls('FW');
+                                      },
+                                    ),
                                   ),
-                                ),
-                              ],
+                                ],
+                              ),
                             ),
-                            Row(
-                              mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                              children: [
-                                Expanded(
-                                  child: IconButton(
-                                    icon: Icon(Icons.rotate_left),
-                                    tooltip: 'Rotate Left',
-                                    onPressed: () {
-                                      moveControls('RL');
-                                      unityMove('a');
-                                    },
+                            Expanded(
+                              child: Row(
+                                mainAxisAlignment:
+                                    MainAxisAlignment.spaceBetween,
+                                children: [
+                                  Expanded(
+                                    child: IconButton(
+                                      icon: Icon(Icons.rotate_left),
+                                      tooltip: 'Rotate Left',
+                                      onPressed: () {
+                                        moveControls('RL');
+                                      },
+                                    ),
                                   ),
-                                ),
-                                Expanded(
-                                  child: Icon(Icons.circle),
-                                ),
-                                Expanded(
-                                  child: IconButton(
-                                    tooltip: 'Rotate Right',
-                                    icon: Icon(Icons.rotate_right),
-                                    onPressed: () {
-                                      moveControls('RR');
-                                      unityMove('d');
-                                    },
+                                  Expanded(
+                                    child: Icon(Icons.circle),
                                   ),
-                                ),
-                              ],
+                                  Expanded(
+                                    child: IconButton(
+                                      tooltip: 'Rotate Right',
+                                      icon: Icon(Icons.rotate_right),
+                                      onPressed: () {
+                                        moveControls('RR');
+                                      },
+                                    ),
+                                  ),
+                                ],
+                              ),
                             ),
                           ],
                         ),
