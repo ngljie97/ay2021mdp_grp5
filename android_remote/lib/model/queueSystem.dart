@@ -1,4 +1,5 @@
 import 'dart:async';
+import 'dart:convert';
 import 'dart:io';
 
 import 'package:android_remote/logic.dart';
@@ -60,7 +61,9 @@ class QueueSys {
   }
 
   static void queueTask(String task) {
-    List<String> taskList = task.split('\n');
+    LineSplitter ls = new LineSplitter();
+    List<String> taskList = ls.convert(task);
+
     _queue.addAll(taskList);
   }
 
@@ -92,6 +95,6 @@ class QueueSys {
 
     // Write the file
     return _writeToFile(
-        'Application started at ${_now.day}/${_now.month}/${_now.year} ${_now.hour}:${_now.minute}:${_now.second}|| || \n\n');
+        'Application started at ${_now.day}/${_now.month}/${_now.year} ${_now.hour}:${_now.minute}:${_now.second}|| || \n');
   }
 }
