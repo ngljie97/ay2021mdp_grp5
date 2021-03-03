@@ -1,35 +1,36 @@
 import 'package:android_remote/main.dart';
 import 'package:android_remote/model/robot.dart';
 import 'package:android_remote/model/waypoint.dart';
+import 'package:android_remote/modules/descriptor_decoder.dart';
 import 'package:flutter/material.dart';
 
 import '../globals.dart';
 
 class Arena {
-  List<List<int>> _explorationStatus, _obstaclesRecords;
+  List<List<int>> explorationStatus, obstaclesRecords;
   WayPoint _wayPoint;
   Robot _robot;
   int _imagedirection = 0;
 
   Arena(String selector) {
     if (selector[0] == '1') {
-      this._explorationStatus = List.generate(
+      this.explorationStatus = List.generate(
         20,
         (index) => List.generate(15, (index) => 0, growable: false),
         growable: false,
       );
     } else if (backupArena != null) {
-      this._explorationStatus = backupArena._explorationStatus;
+      this.explorationStatus = backupArena.explorationStatus;
     }
 
     if (selector[1] == '1') {
-      this._obstaclesRecords = List.generate(
+      this.obstaclesRecords = List.generate(
         20,
         (index) => List.generate(15, (index) => 0, growable: false),
         growable: false,
       );
     } else if (backupArena != null) {
-      this._obstaclesRecords = backupArena._obstaclesRecords;
+      this.obstaclesRecords = backupArena.obstaclesRecords;
     }
 
     if (selector[2] == '1') {
@@ -59,55 +60,13 @@ class Arena {
     }
   }
 
-  void updateMapFromDescriptors(
-      bool isAMDTool, String mapDescriptor1, String mapDescriptor2) {
-    String exploration, obstacle;
-    int x = 0, y = 0;
-    int explorationBit = 0,
-        explorationHex = 0,
-        obstacleBit = 0,
-        obstacleHex = 0;
+  Future<void> updateMapFromDescriptors(
+      bool isAMDTool, String mapDescriptor1, String mapDescriptor2) async {
+    List<String> obstaclesCoords =
+        DescriptorDecoder.decodeDescriptor1(isAMDTool, mapDescriptor1);
 
-    for (int i = 0; i <= 300; i++) {
-      x = (i / 15).floor();
-      y = (i % 15);
-
-      if (isAMDTool) {
-        x = 19 - x;
-      }
-      if (explorationBit % 4 == 0) {
-        exploration = int.parse(mapDescriptor1[explorationHex], radix: 16)
-            .toRadixString(2)
-            .padLeft(4, '0');
-
-        explorationHex++;
-        explorationBit = 0;
-      }
-
-      if (x == 0 && y == 0) {
-        explorationBit += 2;
-      }
-
-      bool checkerBit = (int.parse(exploration[explorationBit]) == 1);
-
-      if (checkerBit && obstacleHex < _obstaclesRecords.length) {
-        if (obstacleBit % 4 == 0) {
-          obstacle = int.parse(mapDescriptor2[obstacleHex], radix: 16)
-              .toRadixString(2)
-              .padLeft(4, '0');
-
-          obstacleHex++;
-          obstacleBit = 0;
-        }
-
-        this._obstaclesRecords[x][y] = int.parse(obstacle[obstacleBit]);
-        obstacleBit++;
-      }
-
-      this._explorationStatus[x][y] = int.parse(exploration[explorationBit]);
-
-      explorationBit++;
-    }
+    DescriptorDecoder.decodeDescriptor2(
+        isAMDTool, obstaclesCoords, mapDescriptor2);
   }
 
   int getRobotDir() {
@@ -185,7 +144,7 @@ class Arena {
             }
           }
 
-          _explorationStatus[x][y] = 1;
+          explorationStatus[x][y] = 1;
 
           if (xi == x && yj == y) {
             return 'RH';
@@ -200,23 +159,23 @@ class Arena {
   }
 
   void setObstacle(int x, int y) {
-    this._obstaclesRecords[x][y] = 1;
+    this.obstaclesRecords[x][y] = 1;
   }
 
   void removeObstacle(int x, int y) {
-    this._obstaclesRecords[x][y] = 0;
+    this.obstaclesRecords[x][y] = 0;
   }
 
   void setImage(int x, int y, int imageid, int dir) {
-    this._obstaclesRecords[x][y] = imageid * 10 + dir;
+    this.obstaclesRecords[x][y] = imageid * 10 + dir;
   }
 
   void setExplored(int x, int y) {
-    this._explorationStatus[x][y] = 1;
+    this.explorationStatus[x][y] = 1;
   }
 
   void removeExplored(int x, int y) {
-    this._explorationStatus[x][y] = 0;
+    this.explorationStatus[x][y] = 0;
   }
 
   Widget getArenaState(int x, int y, Function onTapFunction) {
@@ -226,9 +185,9 @@ class Arena {
       // item = _inSpecialZone(x, y);
       item = '0';
       if (item == '0') {
-        if (_obstaclesRecords[x][y] >= 1) {
-          int first = (_obstaclesRecords[x][y] / 10).floor();
-          int second = (_obstaclesRecords[x][y] % 10);
+        if (obstaclesRecords[x][y] >= 1) {
+          int first = (obstaclesRecords[x][y] / 10).floor();
+          int second = (obstaclesRecords[x][y] % 10);
           switch (first) {
             case 101:
               item = 'n1';
@@ -295,7 +254,7 @@ class Arena {
               break;
           }
         } else {
-          switch (_explorationStatus[x][y] + WayPoint.isWayPoint(x, y)) {
+          switch (explorationStatus[x][y] + WayPoint.isWayPoint(x, y)) {
             case 0:
               item = '0';
               break;

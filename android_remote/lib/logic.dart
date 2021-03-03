@@ -68,7 +68,7 @@ Future<bool> executeCommand(String command, [List<String> args]) async {
         String descriptor = cleanCommand(args[0]);
 
         arena.updateMapFromDescriptors(
-            true, List.generate(38, (index) => 'F').toString(), descriptor);
+            true, List.generate(76, (index) => 'F').join(), descriptor);
       }
       break;
 

@@ -73,7 +73,7 @@ class QueueSys {
 
   static Future<File> get _localFile async {
     final path = await _localPath;
-    return File('$path/MDPGrp5_log.txt');
+    return File('$path/MDPGrp5_log.csv');
   }
 
   static Future<File> _writeToFile(String toWrite) async {
@@ -92,6 +92,6 @@ class QueueSys {
 
     // Write the file
     return _writeToFile(
-        '==========================================================\nApplication started at ${_now.day}/${_now.month}/${_now.year} ${_now.hour}:${_now.minute}:${_now.second}\n==========================================================\n');
+        'Application started at ${_now.day}/${_now.month}/${_now.year} ${_now.hour}:${_now.minute}:${_now.second}|| || \n\n');
   }
 }
