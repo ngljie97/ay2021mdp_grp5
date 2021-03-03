@@ -13,7 +13,7 @@ class QueueSys {
   static int taskNo = 0;
 
   QueueSys() {
-    _timer = Timer.periodic(Duration(seconds: 1), (timer) => {checkQueue()});
+    _timer = Timer.periodic(Duration(milliseconds: 500), (timer) => {checkQueue()});
     prepareFile();
   }
 

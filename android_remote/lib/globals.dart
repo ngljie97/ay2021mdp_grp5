@@ -33,9 +33,9 @@ final String strFastestPath = 'PR|FP_START';
 final String strImgFind = 'PR|IF_START';
 
 // Move robot
-final String strForward = 'R|ROBOT_FW';
-final String strRotateLeft = 'R|ROBOT_RL';
-final String strRotateRight = 'R|ROBOT_RR';
+final String strForward = 'R|F:1';
+final String strRotateLeft = 'R|L';
+final String strRotateRight = 'R|R';
 
 // Waypoint operations
 const String strSetWayPoint = 'P|SET_WAYPOINT';

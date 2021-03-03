@@ -122,9 +122,10 @@ class BluetoothController {
 
     String sdataString = dataString.trim();
 
-    if (sdataString.contains(':')) QueueSys.queueTask(sdataString);
-
-    streamController.add('Message Received from [$name]: [$sdataString]');
+    if (sdataString.contains(':'))
+      QueueSys.queueTask(sdataString);
+    else
+      streamController.add('Message Received from [$name]: [$sdataString]');
   }
 
   Future sendMessage(String text) async {

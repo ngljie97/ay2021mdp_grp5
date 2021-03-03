@@ -95,7 +95,7 @@ class Arena {
 
   void resetRobotPos() {
     streamController.add('Reset Robot to Start Location.');
-    this._robot = Robot(18, 1, 18, 1, 0);
+    this._robot = Robot(1, 1, 1, 1, 0);
   }
 
   bool setRobotPos(int x, int y, int dir) {
