@@ -111,20 +111,17 @@ void autoForwardPID() {
   PIDController(KP, KD, KI, Constants::INF, true);
 }
 
-void rotatePID(float degree) {
-  if (degree == 0)
-    return;
-  short offset = 0;
-  if (degree == -90)
-    offset = -2;
-  float dist = degreeToDist(abs(degree - offset));
-  float travel_ticks = distToTick(dist);
+//void rotatePID(float degree) {
+void rotatePid(int ticksToTurn, int Direction){
+  //float dist = degreeToDist(abs(degree));
+  //float travel_ticks = distToTick(dist);
+  float travel_ticks = ticksToTurn;
   float KP = 0.4;
   float KD = 0.03;
   float KI = 0.01;
 
   short M1_mul, M2_mul;
-  if (degree > 0) {  // Rotate right
+  if (Direction > 0) {  // Rotate right
     M1_mul = -1;
     M2_mul = 1;
   } else {           // Rotate left
@@ -142,11 +139,13 @@ void rotatePID(float degree) {
 }
 
 void rotateRightPID(float degree) {
-  rotatePID(degree);
+  rotatePID(399,1);
+  //rotatePID(degree);
 }
 
 void rotateLeftPID(float degree) {
-  rotatePID(-1 * degree);
+  rotatePID(402,-1);
+  //rotatePID(-1 * degree);
 }
 
 /**
