@@ -61,8 +61,7 @@ class QueueSys {
   }
 
   static void queueTask(String task) {
-    LineSplitter ls = new LineSplitter();
-    List<String> taskList = ls.convert(task);
+    List<String> taskList = task.split('\n');
 
     _queue.addAll(taskList);
   }

@@ -182,77 +182,15 @@ class Arena {
     String item = isRobot(x, y);
 
     if (item == '0') {
-      // item = _inSpecialZone(x, y);
-      item = '0';
+      item = _inSpecialZone(x, y);
       if (item == '0') {
         if (obstaclesRecords[x][y] >= 1) {
-          int first = (obstaclesRecords[x][y] / 10).floor();
-          int second = (obstaclesRecords[x][y] % 10);
-          switch (first) {
-            case 101:
-              item = 'n1';
-              this._imagedirection = second;
-              break;
-            case 102:
-              item = 'n2';
-              this._imagedirection = second;
-              break;
-            case 103:
-              item = 'n3';
-              this._imagedirection = second;
-              break;
-            case 104:
-              item = 'n4';
-              this._imagedirection = second;
-              break;
-            case 105:
-              item = 'n5';
-              this._imagedirection = second;
-              break;
-            case 106:
-              item = 'n6';
-              this._imagedirection = second;
-              break;
-            case 107:
-              item = 'n7';
-              this._imagedirection = second;
-              break;
-            case 108:
-              item = 'n8';
-              this._imagedirection = second;
-              break;
-            case 109:
-              item = 'n9';
-              this._imagedirection = second;
-              break;
-            case 110:
-              item = 'n10';
-              this._imagedirection = second;
-              break;
-            case 111:
-              item = 'n11';
-              this._imagedirection = second;
-              break;
-            case 112:
-              item = 'n12';
-              this._imagedirection = second;
-              break;
-            case 113:
-              item = 'n13';
-              this._imagedirection = second;
-              break;
-            case 114:
-              item = 'n14';
-              this._imagedirection = second;
-              break;
-            case 115:
-              item = 'n15';
-              this._imagedirection = second;
-              break;
-            default:
-              item = 'O';
-              break;
+          if (obstaclesRecords[x][y] == 1) {
+            item = 'O';
           }
+          int id = (obstaclesRecords[x][y] / 10).floor() - 100;
+          this._imagedirection = (obstaclesRecords[x][y] % 10);
+          item = 'n$id';
         } else {
           switch (explorationStatus[x][y] + WayPoint.isWayPoint(x, y)) {
             case 0:
