@@ -8,6 +8,7 @@ void PIDController(float KP, float KD, float KI, float travel_ticks, bool forwar
   long ticks_diff_prev_error = 0;
   long ticks_diff_sum_error = 0;
 
+  bool ticker = false;
   E1_ticks = 0;
   E2_ticks = 0;
   E1_ticks_moved = 0;
@@ -49,11 +50,20 @@ void PIDController(float KP, float KD, float KI, float travel_ticks, bool forwar
 
     M2_speed = mul * M2_PID_speed;
 
-//    printSpeeds(M1_speed, M2_speed);
+    printSpeeds(M1_speed, M2_speed);
     md.setSpeeds(M1_speed, M2_speed);
 
-    E1_ticks_tracked += E1_ticks;
-    E2_ticks_tracked += E2_ticks;
+    if(ticker){
+      E1_ticks_tracked += E1_ticks;
+      E2_ticks_tracked += E2_ticks;
+      ticker = false;
+    }
+    else{
+      E2_ticks_tracked += E2_ticks;
+      E1_ticks_tracked += E1_ticks;
+      ticker = true;
+    }
+    
 
     // When moved a block, send sensor data and reset ticks tracked
     if (forward && (E1_ticks_tracked + E2_ticks_tracked) / 2.0 >= ticks_per_block) {
@@ -114,28 +124,28 @@ void PIDController(float KP, float KD, float KI, float travel_ticks, bool forwar
 void forwardPID(float dist) {
   float travel_ticks = distToTick(dist);
   if (dist == 10)
-    travel_ticks = 278;
+    travel_ticks = 280;
   else if (dist == 20)
-    travel_ticks = 565;
+    travel_ticks = 580;
   else if (dist == 30)
     travel_ticks = 860;
   else if (dist == 40)
     travel_ticks = 1165;
   else if (dist == 50)
     travel_ticks = 1470;
-  float KP = 0.4;
+  float KP = 0.8;
   float KD = 0.01;
   float KI = 0.001;
 
   M1_speed = 350;
-  M2_speed = 345;
+  M2_speed = 348;
   md.setSpeeds(M1_speed, M2_speed);
   
   PIDController(KP, KD, KI, travel_ticks, true);
 }
 
 void autoForwardPID() {
-  float KP = 0.4;
+  float KP = 0.8;
   float KD = 0.01;
   float KI = 0.005;
 
@@ -158,7 +168,7 @@ void rotatePID(float degree) {
     travel_ticks = 390;
   else if (degree == -90)
     travel_ticks = 383;
-  float KP = 0.4;
+  float KP = 0.8;
   float KD = 0.03;
   float KI = 0.01;
 
@@ -183,9 +193,9 @@ void rotatePID(float degree) {
 }
 
 void rightPID() {
-  float travel_ticks = 391;
-  float KP = 0.4;
-  float KD = 0.03;
+  float travel_ticks = 397;
+  float KP = 0.6;
+  float KD = 0.01;
   float KI = 0.01;
 
   short M1_mul, M2_mul;
@@ -193,8 +203,8 @@ void rightPID() {
   M1_mul = -1;
   M2_mul = 1;
     
-  M1_speed = M1_mul * 350;
-  M2_speed = M2_mul * 355;
+  M1_speed = M1_mul * 300;
+  M2_speed = M2_mul * 308;
   md.setSpeeds(M1_speed, M2_speed);
 
   PIDController(KP, KD, KI, travel_ticks, false);
@@ -202,8 +212,8 @@ void rightPID() {
 
 
 void leftPID() {
-  float travel_ticks = 396;
-  float KP = 0.5;
+  float travel_ticks = 398;
+  float KP = 0.6;
   float KD = 0.01;
   float KI = 0.01;
 
