@@ -174,7 +174,7 @@ void rotatePID(float degree) {
 //  M1_speed = M1_mul * Constants::SPEED;
 //  M2_speed = M2_mul * computeSpeedM2(Constants::SPEED);
   M1_speed = M1_mul * 350;
-  M2_speed = M2_mul * 345;
+  M2_speed = M2_mul * 355;
 //  M1_speed = M1_mul * 100;
 //  M2_speed = M2_mul * 102;
   md.setSpeeds(M1_speed, M2_speed);
@@ -183,7 +183,7 @@ void rotatePID(float degree) {
 }
 
 void rightPID() {
-  float travel_ticks = 383;
+  float travel_ticks = 391;
   float KP = 0.4;
   float KD = 0.03;
   float KI = 0.01;
@@ -194,7 +194,7 @@ void rightPID() {
   M2_mul = 1;
     
   M1_speed = M1_mul * 350;
-  M2_speed = M2_mul * 345;
+  M2_speed = M2_mul * 355;
   md.setSpeeds(M1_speed, M2_speed);
 
   PIDController(KP, KD, KI, travel_ticks, false);
@@ -202,7 +202,7 @@ void rightPID() {
 
 
 void leftPID() {
-  float travel_ticks = 388;
+  float travel_ticks = 396;
   float KP = 0.5;
   float KD = 0.01;
   float KI = 0.01;
@@ -213,7 +213,7 @@ void leftPID() {
   M2_mul = -1;
     
   M1_speed = M1_mul * 350;
-  M2_speed = M2_mul * 365;
+  M2_speed = M2_mul * 358;
   md.setSpeeds(M1_speed, M2_speed);
 
   PIDController(KP, KD, KI, travel_ticks, false);
