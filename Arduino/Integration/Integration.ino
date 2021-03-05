@@ -21,8 +21,8 @@ volatile long E1_ticks = 0;
 volatile long E2_ticks = 0;
 
 /*-----Check Ticks Variables-----*/
-volatile long E1_ticks_moved = 0;
-volatile long E2_ticks_moved = 0;
+//volatile long E1_ticks_moved = 0;
+//volatile long E2_ticks_moved = 0;
 
 /*-----Motor Speed Variables-----*/
 float M1_speed;
@@ -78,6 +78,7 @@ void setup() {
 void loop() {
   // put your main code here, to run repeatedly:  
 //  delay(500);
+//Serial.println("MAINLOOP");
   if (Serial.available() > 0) {
     char c = (char)Serial.read();
     if (c == '\n') {
@@ -134,13 +135,13 @@ void executeCmd(String cmd) {
 void E1_ticks_increment()
 {
   E1_ticks++;
-  E1_ticks_moved++;
+  //E1_ticks_moved++;
 }
 
 void E2_ticks_increment()
 {
   E2_ticks++;
-  E2_ticks_moved++;
+  //E2_ticks_moved++;
 }
 
 /**

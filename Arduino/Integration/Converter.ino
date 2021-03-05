@@ -33,7 +33,7 @@ float tickToDist(long tick) {
 }
 
 float distToTick(float dist) {
-  return dist / (PI * Constants::WHEEL_DIAMETER) * Constants::TPR;
+  return (dist / (PI * Constants::WHEEL_DIAMETER)) * Constants::TPR;
 }
 
 short tickToBlock(float tick) {

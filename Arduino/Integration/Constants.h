@@ -14,7 +14,7 @@ class Constants
 
     static const short SENSOR_SAMPLING = 30;
 
-    static constexpr float MIN_DIST = 5;
+    static constexpr float MIN_DIST = 6;
 
     static constexpr float BLOCK_SIZE = 10;
     static const short SR_UPPER_RANGE = 3;
@@ -29,7 +29,7 @@ class Constants
     static const short MAX_TRIAL = 5;
 
     /******* Motor *******/
-    static const short SPEED = 500;
+    static const short SPEED = 350;
     static const short WHEEL_DIAMETER = 6;
     static constexpr float TPR = 562.25;   //Tick per revolution
 

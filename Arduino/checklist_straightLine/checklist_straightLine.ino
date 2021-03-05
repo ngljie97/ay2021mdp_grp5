@@ -22,7 +22,7 @@ double E1_ticks_moved = 0;
 double E2_ticks_moved = 0;
 
 /*-----Motor Speed Variables-----*/
-const double SPEED = 200;
+const double SPEED = 300;
 double M1_speed;
 double M2_speed;
 double M2_PID_speed;
@@ -43,7 +43,7 @@ double distanceTravelled = 0;
 double travel_degrees = 0;
 double travel_distance = 0;
 long travel_ticks = (long)(433);
-long distance_to_travel = 50;
+long distance_to_travel = 150;
 bool done = false;
 double m_PI = 3.14159265;
 void setup() {
@@ -72,19 +72,21 @@ void loop() {
 void moveInitialize(){
   
   ticks_reset();
-  M1_speed = 100;
-  M2_speed = 102.7;
+  M1_speed = 300;
+  M2_speed = 302.7;
   M2_PID_speed;
   KP = 0.4;
   KD = 0.01;
-  KI = 0.005;
+  KI = 0.001;
   done = false;
 }
 void moveStraight(int amount){
   moveInitialize();
   distance_to_travel = amount;
-  M1_speed = SPEED;
-  M2_speed = computeSpeedM2(SPEED);
+//  M1_speed = SPEED;
+//  M2_speed = computeSpeedM2(SPEED);
+  M1_speed = 350;
+  M2_speed = 345;
   md.setSpeeds(M1_speed, M2_speed);
 };
 

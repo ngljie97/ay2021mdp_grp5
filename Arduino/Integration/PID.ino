@@ -7,11 +7,11 @@ void PIDController(float KP, float KD, float KI, float travel_ticks, bool forwar
   long ticks_diff_error = 0;
   long ticks_diff_prev_error = 0;
   long ticks_diff_sum_error = 0;
-
+  
   E1_ticks = 0;
   E2_ticks = 0;
-  E1_ticks_moved = 0;
-  E2_ticks_moved = 0;
+  long E1_ticks_moved = 0;
+  long E2_ticks_moved = 0;
 
   long E1_ticks_tracked = 0;
   long E2_ticks_tracked = 0;
@@ -19,8 +19,9 @@ void PIDController(float KP, float KD, float KI, float travel_ticks, bool forwar
   short blocks_moved = 0;
   short num_of_blocks = tickToBlock(travel_ticks);
   
-  float avg_sticks_moved = computeAvgSticksMoved();
+  float avg_sticks_moved = computeAvgSticksMoved(E1_ticks_moved, E2_ticks_moved);
   while (avg_sticks_moved < travel_ticks) {
+//  Serial.println("WHILELOOP");
     // For auto forward: travel_ticks is INF
     if (travel_ticks == Constants::INF && (obstacleInFront() || noWallLeft())) {
       md.setBrakes(400, 400);
@@ -35,7 +36,15 @@ void PIDController(float KP, float KD, float KI, float travel_ticks, bool forwar
 
     M2_speed = M2_PID_speed;
 
-//    printSpeeds(M1_speed, M2_speed);
+    printSpeeds(M1_speed, M2_speed);
+//  Serial.print("M1 Ticks");
+//  Serial.println(E1_ticks);
+//  Serial.print("M2 Ticks");
+//  Serial.println(E2_ticks);
+//  Serial.print("M1 Ticks Moved");
+//  Serial.println(E1_ticks_moved);
+//  Serial.print("M2 Ticks Moved");
+//  Serial.println(E2_ticks_moved);
     md.setSpeeds(M1_speed, M2_speed);
 
     E1_ticks_tracked += E1_ticks;
@@ -60,6 +69,19 @@ void PIDController(float KP, float KD, float KI, float travel_ticks, bool forwar
   
     //Sum error
     ticks_diff_sum_error += ticks_diff_error;
+
+    Serial.print("M1 Ticks");
+  Serial.println(E1_ticks);
+  Serial.print("M2 Ticks");
+  Serial.println(E2_ticks);
+  
+    E1_ticks_moved += E1_ticks;
+    E2_ticks_moved += E2_ticks;
+
+  Serial.print("M1 Ticks Moved");
+  Serial.println(E1_ticks_moved);
+  Serial.print("M2 Ticks Moved");
+  Serial.println(E2_ticks_moved);
   
     //Reset ticks
     E1_ticks = 0;
@@ -67,7 +89,12 @@ void PIDController(float KP, float KD, float KI, float travel_ticks, bool forwar
 
     delay(Constants::PID_DELAY);
 
-    avg_sticks_moved = computeAvgSticksMoved();
+    if(E1_ticks_moved  > E2_ticks_moved)
+      avg_sticks_moved = E1_ticks_moved;
+    else
+      avg_sticks_moved = E2_ticks_moved;
+    
+    //avg_sticks_moved = computeAvgSticksMoved(E1_ticks_moved, E2_ticks_moved);
   }
   md.setSpeeds(0, 0);
   md.setBrakes(400, 400);
@@ -82,18 +109,21 @@ void PIDController(float KP, float KD, float KI, float travel_ticks, bool forwar
   }
 }
 
-float computeAvgSticksMoved() {
+float computeAvgSticksMoved(long E1_ticks_moved, long E2_ticks_moved) {
   return (E1_ticks_moved + E2_ticks_moved) / 2.0;
 }
 
 void forwardPID(float dist) {
-  float travel_ticks = distToTick(dist);
+  long offset = 0;
+//  if (dist == 20)
+//    offset = 2;
+  float travel_ticks = distToTick(dist + offset);
   float KP = 0.4;
   float KD = 0.01;
-  float KI = 0.001;
+  float KI = 0.005;
 
   M1_speed = Constants::SPEED;
-  M2_speed = Constants::SPEED;
+  M2_speed = Constants::SPEED*0.96;
   md.setSpeeds(M1_speed, M2_speed);
   
   PIDController(KP, KD, KI, travel_ticks, true);
@@ -139,12 +169,14 @@ void rotatePID(int ticksToTurn, int Direction){
 }
 
 void rotateRightPID(float degree) {
-  rotatePID(399,1);
+//  rotatePID(399,1);
+  rotatePID(410,1);
   //rotatePID(degree);
 }
 
 void rotateLeftPID(float degree) {
-  rotatePID(402,-1);
+//  rotatePID(402,-1);
+  rotatePID(420,-1);
   //rotatePID(-1 * degree);
 }
 

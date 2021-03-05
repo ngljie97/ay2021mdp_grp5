@@ -11,8 +11,8 @@ void rotateShort(char dir, float arc) {
   float travel_ticks = distToTick(abs(arc * offset));
   E1_ticks = 0;
   E2_ticks = 0;
-  E1_ticks_moved = 0;
-  E2_ticks_moved = 0;
+  long E1_ticks_moved = 0;
+  long E2_ticks_moved = 0;
 
   short M1_mul, M2_mul;
   if (dir == 'L') {
@@ -39,8 +39,8 @@ void moveShort(char dir, float dist) {
   float travel_ticks = distToTick(dist);
   E1_ticks = 0;
   E2_ticks = 0;
-  E1_ticks_moved = 0;
-  E2_ticks_moved = 0;
+  long E1_ticks_moved = 0;
+  long E2_ticks_moved = 0;
 
   short M1_mul, M2_mul;
   if (dir == 'F') {
