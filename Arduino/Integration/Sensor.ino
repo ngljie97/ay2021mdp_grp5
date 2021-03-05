@@ -1,16 +1,19 @@
 #include "Constants.h"
 #include "KickSort.h"
 
-short readSensor(short sensorPin) {
+float readSensor(short sensorPin) {
   short analogReadings[Constants::SENSOR_SAMPLING];
+  float sum = 0;
   for (short i = 0 ; i < Constants::SENSOR_SAMPLING ; i++) {
     analogReadings[i] = analogRead(sensorPin);
+    sum += analogReadings[i];
     delay(1);
   }
   KickSort<short>::quickSort(analogReadings, Constants::SENSOR_SAMPLING);
   
   // Return median
-  return analogReadings[Constants::SENSOR_SAMPLING / 2];
+//  return analogReadings[Constants::SENSOR_SAMPLING / 2]; 
+   return sum * 1.0 / Constants::SENSOR_SAMPLING;
 }
 
 short readSensorInstant(short sensorPin) {
@@ -240,12 +243,12 @@ float calculatePS1(short y){
 
 // Long range PS2
 float calculatePS2(short y){
-  float a = 104.95390732865984;
-  float b = -0.7628434838429381;
-  float c = 0.0024951951507336785;
-  float d = -0.000003833539767108626;
-  float e = 2.220941122720654e-9;
-  float distFromTip = 3.5;
+  float a = 180.23964327874648 - 1;
+  float b = -1.1830011646189995;
+  float c = 0.0036512408771051776;
+  float d = -0.000005423756552094324;
+  float e = 3.003927201398369e-9;
+  float distFromTip = 0;
   return ((e*y*y*y*y)+(d*y*y*y)+(c*y*y)+(b*y)+(a));
 }
 
@@ -257,7 +260,8 @@ float calculatePS3(short y){
   float d = -9.232483512802136e-7;
   float e = 3.1403547504425725e-10;
   float distFromTip = 3.5;
-  return ((e*y*y*y*y)+(d*y*y*y)+(c*y*y)+(b*y)+(a));
+//  return ((e*y*y*y*y)+(d*y*y*y)+(c*y*y)+(b*y)+(a)) - 0.39;
+  return ((e*y*y*y*y)+(d*y*y*y)+(c*y*y)+(b*y)+(a)) + 0.1;
 }
 
 // Short range PS4
@@ -268,7 +272,7 @@ float calculatePS4(short y){
   float d = -2.067876969195102e-7;
   float e = -2.480214809028296e-11;
   float distFromTip = 2.8;
-  return ((e*y*y*y*y)+(d*y*y*y)+(c*y*y)+(b*y)+(a));
+  return ((e*y*y*y*y)+(d*y*y*y)+(c*y*y)+(b*y)+(a)) - 0.35;
 }
 
 // Short range PS5

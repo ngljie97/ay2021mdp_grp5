@@ -21,8 +21,8 @@ volatile long E1_ticks = 0;
 volatile long E2_ticks = 0;
 
 /*-----Check Ticks Variables-----*/
-//volatile long E1_ticks_moved = 0;
-//volatile long E2_ticks_moved = 0;
+volatile long E1_ticks_moved = 0;
+volatile long E2_ticks_moved = 0;
 
 /*-----Motor Speed Variables-----*/
 float M1_speed;
@@ -77,8 +77,7 @@ void setup() {
 
 void loop() {
   // put your main code here, to run repeatedly:  
-//  delay(500);
-//Serial.println("MAINLOOP");
+  //delay(500);
   if (Serial.available() > 0) {
     char c = (char)Serial.read();
     if (c == '\n') {
@@ -90,14 +89,23 @@ void loop() {
   }
   if (!q.isEmpty()) {
     String cmd = q.dequeue();
-//    Serial.print("cmd: ");
+//    Serial.print("P|cmd:");
 //    Serial.println(cmd);
     executeCmd(cmd);
   }
 }
 
 void executeCmd(String cmd) {
-  if (cmd.startsWith(FP_START_CMD)) {
+  if (cmd.startsWith("FAC")) {
+    frontAngleCalibrate();
+    sendActionComplete();
+  } else if (cmd.startsWith("FDC")) {
+    frontDistanceCalibrate();
+    sendActionComplete(); 
+  } else if (cmd.startsWith("LAC")) {
+    leftAngleCalibrate();
+    sendActionComplete();
+  } else if (cmd.startsWith(FP_START_CMD)) {
     mode = 0;
   } else if (cmd.startsWith(EX_START_CMD) || cmd.startsWith(IF_START_CMD)) {
     mode = 1;
@@ -118,28 +126,32 @@ void executeCmd(String cmd) {
     sendActionComplete();
   } else if (cmd.startsWith(TURN_LEFT_CMD)) {
 //    frontCalibrate();
-    rotateLeftPID(90);
-//    leftAngleCalibrate();
+    fullCalibrate();
+    leftPID();
+    leftAngleCalibrate();
     sendMsg();
   } else if (cmd.startsWith(TURN_RIGHT_CMD)) {
 //    frontCalibrate();
-    rotateRightPID(90);
-//    leftAngleCalibrate();
+    fullCalibrate();
+    rightPID();
+    leftAngleCalibrate();
     sendMsg();
   } else if (cmd.startsWith(CALIBRATE_CMD)) {
-//    fullCalibrate();
+    fullCalibrate();
     sendActionComplete();
   }
 }
 
 void E1_ticks_increment()
 {
+  E1_ticks_moved++;
   E1_ticks++;
   //E1_ticks_moved++;
 }
 
 void E2_ticks_increment()
 {
+  E2_ticks_moved++;
   E2_ticks++;
   //E2_ticks_moved++;
 }
@@ -166,6 +178,20 @@ void sendMsg() {
     Serial.print(SRLH); Serial.print(SPLITTER);
     Serial.print(SRLT); Serial.print(SPLITTER);
     Serial.println(LRR);
+    
+//    Serial.print("getSRFLdist: ");
+//    Serial.println(getSRFLdist());
+//    Serial.print("getSRFCdist: ");
+//    Serial.println(getSRFCdist());
+//    Serial.print("getSRFRdist: ");
+//    Serial.println(getSRFRdist());
+//    Serial.print("getSRLHdist: ");
+//    Serial.println(getSRLHdist());
+//    Serial.print("getSRLTdist: ");
+//    Serial.println(getSRLTdist());
+//    Serial.print("getLRRdist: ");
+//    Serial.println(getLRRdist());
+//    Serial.println(readSensor(Constants::LRR_PIN));
   }
 }
 

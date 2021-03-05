@@ -29,7 +29,7 @@ class Constants
     static const short MAX_TRIAL = 5;
 
     /******* Motor *******/
-    static const short SPEED = 350;
+    static const short SPEED = 500;
     static const short WHEEL_DIAMETER = 6;
     static constexpr float TPR = 562.25;   //Tick per revolution
 
