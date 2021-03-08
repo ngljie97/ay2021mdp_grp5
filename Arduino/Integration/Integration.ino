@@ -53,6 +53,8 @@ String SENSOR_DATA = "P|SENSOR_DATA";
 String ACTION_COMPLETE = "P|ACTION_COMPLETE";
 String SPLITTER = ":";
 
+short delayTime = 50;
+
 void setup() {
   // put your setup code here, to run once:
   Serial.begin(115200);
@@ -93,6 +95,48 @@ void loop() {
 //    Serial.println(cmd);
     executeCmd(cmd);
   }
+
+//  forwardPID(40);
+//  delay(delayTime);
+//  rightPID();
+//  delay(delayTime);
+//  forwardPID(40);
+//  delay(delayTime);
+//  leftPID();
+//  delay(delayTime);
+//  forwardPID(40);
+//  delay(delayTime);
+//  leftPID();
+//  delay(delayTime);
+//  forwardPID(40);
+//  delay(delayTime);
+//  leftPID();
+//  delay(delayTime);
+//  forwardPID(40);
+//  delay(delayTime);
+//  leftPID();
+//  delay(delayTime);
+//  forwardPID(40);
+//  delay(delayTime);
+//  rightPID();
+//  delay(delayTime);
+//  forwardPID(40);
+//  delay(delayTime);
+//  rightPID();
+//  delay(delayTime);
+//  forwardPID(40);
+//  delay(delayTime);
+//  rightPID();
+//  delay(delayTime);
+
+//  forwardPID(10);
+//  rightPID();
+//  forwardPID(10);
+//  leftPID();
+//  forwardPID(10);
+//  leftPID();`
+//  forwardPID(10);
+//  rightPID();
 }
 
 void executeCmd(String cmd) {
@@ -126,15 +170,15 @@ void executeCmd(String cmd) {
     sendActionComplete();
   } else if (cmd.startsWith(TURN_LEFT_CMD)) {
 //    frontCalibrate();
-    fullCalibrate();
+//    fullCalibrate();
     leftPID();
-    leftAngleCalibrate();
+//    leftAngleCalibrate();
     sendMsg();
   } else if (cmd.startsWith(TURN_RIGHT_CMD)) {
 //    frontCalibrate();
-    fullCalibrate();
+//    fullCalibrate();
     rightPID();
-    leftAngleCalibrate();
+//    leftAngleCalibrate();
     sendMsg();
   } else if (cmd.startsWith(CALIBRATE_CMD)) {
     fullCalibrate();

@@ -50,7 +50,7 @@ void PIDController(float KP, float KD, float KI, float travel_ticks, bool forwar
 
     M2_speed = mul * M2_PID_speed;
 
-    printSpeeds(M1_speed, M2_speed);
+//    printSpeeds(M1_speed, M2_speed);
     md.setSpeeds(M1_speed, M2_speed);
 
     if(ticker){
@@ -130,7 +130,7 @@ void forwardPID(float dist) {
   else if (dist == 30)
     travel_ticks = 860;
   else if (dist == 40)
-    travel_ticks = 1165;
+    travel_ticks = 1200;
   else if (dist == 50)
     travel_ticks = 1470;
   float KP = 0.8;
@@ -212,7 +212,7 @@ void rightPID() {
 
 
 void leftPID() {
-  float travel_ticks = 398;
+  float travel_ticks = 396;
   float KP = 0.6;
   float KD = 0.01;
   float KI = 0.01;

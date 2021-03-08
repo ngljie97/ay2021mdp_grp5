@@ -261,7 +261,8 @@ float calculatePS3(short y){
   float e = 3.1403547504425725e-10;
   float distFromTip = 3.5;
 //  return ((e*y*y*y*y)+(d*y*y*y)+(c*y*y)+(b*y)+(a)) - 0.39;
-  return ((e*y*y*y*y)+(d*y*y*y)+(c*y*y)+(b*y)+(a)) + 0.1;
+//  return ((e*y*y*y*y)+(d*y*y*y)+(c*y*y)+(b*y)+(a)) + 0.1;
+  return ((e*y*y*y*y)+(d*y*y*y)+(c*y*y)+(b*y)+(a)) - 0.1;
 }
 
 // Short range PS4
@@ -294,7 +295,7 @@ float calculatePS6(short y){
   float d = -0.0000029237996346267947;
   float e = 1.482334995624426e-9;
   float distFromTip = 0;
-  return ((e*y*y*y*y)+(d*y*y*y)+(c*y*y)+(b*y)+(a));
+  return ((e*y*y*y*y)+(d*y*y*y)+(c*y*y)+(b*y)+(a)) - 0.3;
 }
 
 // Short range PS4 and PS6
