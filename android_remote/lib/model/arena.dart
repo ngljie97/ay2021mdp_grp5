@@ -302,167 +302,11 @@ class Arena {
         break;
 
       // Image Recognition
-      case 'A':
-        return Container(
-          decoration: BoxDecoration(
-            image: DecorationImage(
-              image: AssetImage('assets/letter_a.PNG'),
-              fit: BoxFit.fill,
-            ),
-            shape: BoxShape.rectangle,
-          ),
-        );
-        break;
-
-      case 'B':
-        return Container(
-          decoration: BoxDecoration(
-            image: DecorationImage(
-              image: AssetImage('assets/letter_b.PNG'),
-              fit: BoxFit.fill,
-            ),
-            shape: BoxShape.rectangle,
-          ),
-        );
-        break;
-      case 'C':
-        return Container(
-          decoration: BoxDecoration(
-            image: DecorationImage(
-              image: AssetImage('assets/letter_c.PNG'),
-              fit: BoxFit.fill,
-            ),
-            shape: BoxShape.rectangle,
-          ),
-        );
-        break;
-      case 'D':
-        return Container(
-          decoration: BoxDecoration(
-            image: DecorationImage(
-              image: AssetImage('assets/letter_d.PNG'),
-              fit: BoxFit.fill,
-            ),
-            shape: BoxShape.rectangle,
-          ),
-        );
-        break;
-      case 'aB':
-        return Container(
-          decoration: BoxDecoration(
-            image: DecorationImage(
-              image: AssetImage('assets/arrow_blue.PNG'),
-              fit: BoxFit.fill,
-            ),
-            shape: BoxShape.rectangle,
-          ),
-        );
-        break;
-      case 'aG':
-        return Container(
-          decoration: BoxDecoration(
-            image: DecorationImage(
-              image: AssetImage('assets/arrow_green.PNG'),
-              fit: BoxFit.fill,
-            ),
-            shape: BoxShape.rectangle,
-          ),
-        );
-        break;
-      case 'aR':
-        return Container(
-          decoration: BoxDecoration(
-            image: DecorationImage(
-              image: AssetImage('assets/arrow_red.PNG'),
-              fit: BoxFit.fill,
-            ),
-            shape: BoxShape.rectangle,
-          ),
-        );
-        break;
-      case 'aW':
-        return Container(
-          decoration: BoxDecoration(
-            image: DecorationImage(
-              image: AssetImage('assets/arrow_white.PNG'),
-              fit: BoxFit.fill,
-            ),
-            shape: BoxShape.rectangle,
-          ),
-        );
-        break;
-      case 'cY':
-        return Container(
-          decoration: BoxDecoration(
-            image: DecorationImage(
-              image: AssetImage('assets/circle_yellow.PNG'),
-              fit: BoxFit.fill,
-            ),
-            shape: BoxShape.rectangle,
-          ),
-        );
       case 'n1':
-        return RotatedBox(
-            quarterTurns: this._imagedirection,
-            child: Container(
-              decoration: BoxDecoration(
-                image: DecorationImage(
-                  image: AssetImage('assets/number_one.PNG'),
-                  fit: BoxFit.fill,
-                ),
-                shape: BoxShape.rectangle,
-              ),
-            ));
       case 'n2':
-        return RotatedBox(
-            quarterTurns: this._imagedirection,
-            child: Container(
-              decoration: BoxDecoration(
-                image: DecorationImage(
-                  image: AssetImage('assets/number_two.PNG'),
-                  fit: BoxFit.fill,
-                ),
-                shape: BoxShape.rectangle,
-              ),
-            ));
       case 'n3':
-        return RotatedBox(
-            quarterTurns: this._imagedirection,
-            child: Container(
-              decoration: BoxDecoration(
-                image: DecorationImage(
-                  image: AssetImage('assets/number_three.PNG'),
-                  fit: BoxFit.fill,
-                ),
-                shape: BoxShape.rectangle,
-              ),
-            ));
       case 'n4':
-        return RotatedBox(
-            quarterTurns: this._imagedirection,
-            child: Container(
-              decoration: BoxDecoration(
-                image: DecorationImage(
-                  image: AssetImage('assets/number_four.PNG'),
-                  fit: BoxFit.fill,
-                ),
-                shape: BoxShape.rectangle,
-              ),
-            ));
       case 'n5':
-        return RotatedBox(
-            quarterTurns: this._imagedirection,
-            child: Container(
-              decoration: BoxDecoration(
-                image: DecorationImage(
-                  image: AssetImage('assets/number_five.PNG'),
-                  fit: BoxFit.fill,
-                ),
-                shape: BoxShape.rectangle,
-              ),
-            ));
-        break;
-      // End of Image Recognition
       case 'n6':
       case 'n7':
       case 'n8':
@@ -475,24 +319,14 @@ class Arena {
       case 'n15':
         return Padding(
           padding: const EdgeInsets.all(1),
-          child: RotatedBox(
-            quarterTurns: this._imagedirection,
-            child: Container(
-              color: Colors.black,
-              child: Text(item.substring(1),
-                  textAlign: TextAlign.center,
-                  style:
-                      TextStyle(fontSize: 30.0, fontWeight: FontWeight.w500)),
+          child: Container(
+            decoration: BoxDecoration(
+              image: DecorationImage(
+                image: AssetImage('assets/${item.substring(1)}.png'),
+                fit: BoxFit.fill,
+              ),
+              shape: BoxShape.rectangle,
             ),
-            /*child: Container(
-                decoration: BoxDecoration(
-                  image: DecorationImage(
-                    image: AssetImage('assets/${item.substring(1)}.PNG'),
-                    fit: BoxFit.fill,
-                  ),
-                  shape: BoxShape.rectangle,
-                ),
-              )*/
           ),
         );
         break;
