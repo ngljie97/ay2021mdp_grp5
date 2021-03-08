@@ -1,7 +1,7 @@
 import 'package:android_remote/main.dart';
 import 'package:android_remote/model/robot.dart';
 import 'package:android_remote/model/waypoint.dart';
-import 'package:android_remote/modules/descriptor_decoder.dart';
+import 'package:android_remote/modules/descriptor_manager.dart';
 import 'package:flutter/material.dart';
 
 import '../globals.dart';
@@ -484,20 +484,17 @@ class Arena {
                   style:
                       TextStyle(fontSize: 30.0, fontWeight: FontWeight.w500)),
             ),
+            /*child: Container(
+                decoration: BoxDecoration(
+                  image: DecorationImage(
+                    image: AssetImage('assets/${item.substring(1)}.PNG'),
+                    fit: BoxFit.fill,
+                  ),
+                  shape: BoxShape.rectangle,
+                ),
+              )*/
           ),
         );
-        break;
-        return RotatedBox(
-            quarterTurns: this._imagedirection,
-            child: Container(
-              decoration: BoxDecoration(
-                image: DecorationImage(
-                  image: AssetImage('assets/number_five.PNG'),
-                  fit: BoxFit.fill,
-                ),
-                shape: BoxShape.rectangle,
-              ),
-            ));
         break;
       case 'S':
         return Icon(Icons.play_arrow);
@@ -511,7 +508,6 @@ class Arena {
       case 'EM':
         return Text('');
         break;
-
       default:
         return Text(item);
         break;

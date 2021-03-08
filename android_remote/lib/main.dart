@@ -476,7 +476,7 @@ class _MyHomePageState extends State<MyHomePage> {
 
         if (globals.arena.setWayPoint(x, y)) {
           addConsoleAndScroll('WayPoint set at [$x,$y].');
-          globals.btController.sendMessage('${globals.strWayPoint}:$x:$y');
+          globals.btController.sendMessage('${globals.strSetWayPoint}:$x:$y');
         } else {
           addConsoleAndScroll('WayPoint[$x,$y] removed.');
           globals.btController
