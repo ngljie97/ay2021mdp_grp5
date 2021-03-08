@@ -525,13 +525,13 @@ String _inSpecialZone(int x, int y) {
     case 1:
     case 2:
       switch (y) {
-        case 13:
-          if (x == 1) return 'E';
-          continue case14;
-        case 12:
-        case14:
-        case 14:
-          return 'EM';
+        case 1:
+          if (x == 1) return 'S';
+          continue case2;
+        case 0:
+        case2:
+        case 2:
+          return 'SM';
           break;
       }
       break;
@@ -539,13 +539,13 @@ String _inSpecialZone(int x, int y) {
     case 18:
     case 19:
       switch (y) {
-        case 1:
-          if (x == 18) return 'S';
-          continue case2;
-        case 0:
-        case2:
-        case 2:
-          return 'SM';
+        case 13:
+          if (x == 18) return 'E';
+          continue case14;
+        case 12:
+        case14:
+        case 14:
+          return 'EM';
           break;
       }
       break;
