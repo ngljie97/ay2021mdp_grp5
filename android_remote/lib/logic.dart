@@ -8,7 +8,9 @@ String cleanCommand(String command) {
         return '';
       })
       .trim()
-      .toUpperCase();
+      .toUpperCase()
+      .replaceAll('\N', '')
+      ;
 }
 
 Future<bool> executeCommand(String command, [List<String> args]) async {

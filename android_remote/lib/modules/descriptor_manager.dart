@@ -9,7 +9,7 @@ class DescriptorDecoder {
     if (descriptor.replaceAll('F', '').length == 0) {
       arena.explorationStatus = List.generate(
         20,
-        (index) => List.generate(15, (index) => 1, growable: false),
+            (index) => List.generate(15, (index) => 1, growable: false),
         growable: false,
       );
       return null;
@@ -21,7 +21,7 @@ class DescriptorDecoder {
       hexCharacter = '';
       List<String> _obstaclesCord = [];
 
-      for (int i = 0; i <= 300; i++) {
+      for (int i = 0; i < 300; i++) {
         x = (i / 15).floor();
         y = (i % 15);
 
@@ -29,11 +29,12 @@ class DescriptorDecoder {
           x = 19 - x;
         }
 
-        if (x == 0 && y == 0) {
-          bitCount += 2;
-        }
-
         int bit = readDescriptor(descriptor);
+
+        if (x == 0 && y == 0) {
+          bitCount = 2;
+          bit = readDescriptor(descriptor);
+        }
 
         if (bit == 1) {
           arena.explorationStatus[x][y] = 1;
@@ -53,7 +54,7 @@ class DescriptorDecoder {
     hexCharacter = '';
 
     if (obstaclesCords == null) {
-      for (int i = 0; i <= 300; i++) {
+      for (int i = 0; i < 300; i++) {
         x = (i / 15).floor();
         y = (i % 15);
 

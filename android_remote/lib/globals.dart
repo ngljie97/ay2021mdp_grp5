@@ -31,6 +31,7 @@ Arena backupArena;
 final String strStartExplore = 'PR|EX_START';
 final String strFastestPath = 'PR|FP_START';
 final String strImgFind = 'PR|IF_START';
+final String strCalibrate = 'R|IC';
 
 // Move robot
 final String strForward = 'R|F:1';
@@ -59,9 +60,12 @@ const String strFinishedEx = 'FINISH_EX';
 const String strFinishedFP = 'FINISH_FP';
 const String strWayPoint = 'WAYPOINT';
 
+
 // Command list (from AMDTOOLS)
 const String amdRobotPos = 'ROBOTPOSITION';
 const String amdUpdateObs = 'GRID';
+
+
 
 // Command prefixes (receive)
 final String strCommand1 = '';

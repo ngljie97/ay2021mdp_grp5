@@ -187,10 +187,11 @@ class Arena {
         if (obstaclesRecords[x][y] >= 1) {
           if (obstaclesRecords[x][y] == 1) {
             item = 'O';
+          }else {
+            int id = (obstaclesRecords[x][y] / 10).floor() - 100;
+            this._imagedirection = (obstaclesRecords[x][y] % 10);
+            item = 'n$id';
           }
-          int id = (obstaclesRecords[x][y] / 10).floor() - 100;
-          this._imagedirection = (obstaclesRecords[x][y] % 10);
-          item = 'n$id';
         } else {
           switch (explorationStatus[x][y] + WayPoint.isWayPoint(x, y)) {
             case 0:

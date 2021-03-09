@@ -774,6 +774,7 @@ class _MyHomePageState extends State<MyHomePage> {
                                 child: IconButton(
                                   onPressed: () {
                                     if (globals.btController.isConnected) {
+                                      globals.arena = Arena('1110');
                                       globals.btController
                                           .sendMessage(globals.strStartExplore);
                                       setState(() {
@@ -821,6 +822,25 @@ class _MyHomePageState extends State<MyHomePage> {
                                   },
                                   icon: Icon(Icons.camera_alt),
                                   tooltip: 'Start Image Recognition',
+                                ),
+                              ),
+                            ),
+                            Expanded(
+                              flex: 1,
+                              child: Container(
+                                color: Colors.indigo[700],
+                                child: IconButton(
+                                  onPressed: () {
+                                    if (globals.btController.isConnected) {
+                                      globals.btController
+                                          .sendMessage(globals.strCalibrate);
+                                      setState(() {
+                                        globals.robotStatus = 'Calibrating...';
+                                      });
+                                    }
+                                  },
+                                  icon: Icon(Icons.swap_calls),
+                                  tooltip: 'Start Fastest Path',
                                 ),
                               ),
                             ),
