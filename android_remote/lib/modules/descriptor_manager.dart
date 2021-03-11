@@ -1,6 +1,7 @@
 import 'package:android_remote/globals.dart';
 
 class DescriptorDecoder {
+  static const int GRID_COUNT = 300;
   static int x = 0, y = 0;
   static int bitCount = 0, hexCount = 0;
   static String hexCharacter = '';
@@ -9,19 +10,15 @@ class DescriptorDecoder {
     if (descriptor.replaceAll('F', '').length == 0) {
       arena.explorationStatus = List.generate(
         20,
-            (index) => List.generate(15, (index) => 1, growable: false),
+        (index) => List.generate(15, (index) => 1, growable: false),
         growable: false,
       );
       return null;
     } else {
-      x = 0;
-      y = 0;
-      bitCount = 0;
-      hexCount = 0;
-      hexCharacter = '';
+      clear();
       List<String> _obstaclesCord = [];
 
-      for (int i = 0; i < 300; i++) {
+      for (int i = 0; i < GRID_COUNT; i++) {
         x = (i / 15).floor();
         y = (i % 15);
 
@@ -47,14 +44,10 @@ class DescriptorDecoder {
 
   static void decodeDescriptor2(
       bool isAMDTool, List<String> obstaclesCords, String descriptor) {
-    x = 0;
-    y = 0;
-    bitCount = 0;
-    hexCount = 0;
-    hexCharacter = '';
+    clear();
 
     if (obstaclesCords == null) {
-      for (int i = 0; i < 300; i++) {
+      for (int i = 0; i < GRID_COUNT; i++) {
         x = (i / 15).floor();
         y = (i % 15);
 
@@ -89,5 +82,11 @@ class DescriptorDecoder {
     return int.parse(hexCharacter[bitCount++]);
   }
 
-
+  static void clear() {
+    x = 0;
+    y = 0;
+    bitCount = 0;
+    hexCount = 0;
+    hexCharacter = '';
+  }
 }

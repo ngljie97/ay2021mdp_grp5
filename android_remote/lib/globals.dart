@@ -42,8 +42,6 @@ final String strRotateRight = 'R|R';
 const String strSetWayPoint = 'P|SET_WAYPOINT';
 const String strRemoveWayPoint = 'P|RM_WAYPOINT';
 
-const String strRefreshArena = 'P|SEND_ARENA';
-
 // Command list (receiving)
 const String strRobotPos = 'ROBOT_POS';
 const String strAddObs = 'ADD_OBSTACLE';
@@ -64,7 +62,7 @@ const String strWayPoint = 'WAYPOINT';
 // Command list (from AMDTOOLS)
 const String amdRobotPos = 'ROBOTPOSITION';
 const String amdUpdateObs = 'GRID';
-
+const String strRefreshArena = 'SEND_ARENA';
 
 
 // Command prefixes (receive)

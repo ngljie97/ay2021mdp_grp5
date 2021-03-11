@@ -5,6 +5,7 @@ import 'package:android_remote/modules/bluetooth_manager.dart';
 import 'package:android_remote/pages/about.dart';
 import 'package:android_remote/pages/bluetooth_connection.dart';
 import 'package:android_remote/pages/consoleBackupPage.dart';
+import 'package:android_remote/pages/ssh_client.dart';
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
 import 'package:scrollable_positioned_list/scrollable_positioned_list.dart';
@@ -416,6 +417,15 @@ class _MyHomePageState extends State<MyHomePage> {
                   setState(() => globals.arena = new Arena('1110'));
                 },
               ),
+              ListTile(
+                leading: Icon(Icons.subject_sharp),
+                title: Text('SSH Client'),
+                onTap: () => Navigator.of(context)
+                    .push(MaterialPageRoute(builder: (context) {
+                  return new SshTerminalPage();
+                })),
+              ),
+              Divider(),
               ListTile(
                 leading: Icon(Icons.info_outline),
                 title: Text('About'),
@@ -840,7 +850,7 @@ class _MyHomePageState extends State<MyHomePage> {
                                     }
                                   },
                                   icon: Icon(Icons.swap_calls),
-                                  tooltip: 'Start Fastest Path',
+                                  tooltip: 'Calibrate',
                                 ),
                               ),
                             ),
@@ -953,11 +963,11 @@ class _MyHomePageState extends State<MyHomePage> {
             title: new Text('Are you sure?'),
             content: new Text('Do you want to exit an App'),
             actions: <Widget>[
-              new FlatButton(
+              new TextButton(
                 onPressed: () => Navigator.of(context).pop(false),
                 child: new Text('No'),
               ),
-              new FlatButton(
+              new TextButton(
                 onPressed: () => Navigator.of(context).pop(true),
                 child: new Text('Yes'),
               ),
