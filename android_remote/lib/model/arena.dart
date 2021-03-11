@@ -187,7 +187,7 @@ class Arena {
         if (obstaclesRecords[x][y] >= 1) {
           if (obstaclesRecords[x][y] == 1) {
             item = 'O';
-          }else {
+          } else {
             int id = (obstaclesRecords[x][y] / 10).floor() - 100;
             this._imagedirection = (obstaclesRecords[x][y] % 10);
             item = 'n$id';
@@ -320,13 +320,16 @@ class Arena {
       case 'n15':
         return Padding(
           padding: const EdgeInsets.all(1),
-          child: Container(
-            decoration: BoxDecoration(
-              image: DecorationImage(
-                image: AssetImage('assets/${item.substring(1)}.png'),
-                fit: BoxFit.fill,
+          child: RotatedBox(
+            quarterTurns: _imagedirection,
+            child: Container(
+              decoration: BoxDecoration(
+                image: DecorationImage(
+                  image: AssetImage('assets/${item.substring(1)}.png'),
+                  fit: BoxFit.fill,
+                ),
+                shape: BoxShape.rectangle,
               ),
-              shape: BoxShape.rectangle,
             ),
           ),
         );

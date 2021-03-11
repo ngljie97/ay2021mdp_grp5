@@ -18,7 +18,7 @@ class DiscoveryPage extends StatefulWidget {
 
 class _DiscoveryPage extends State<DiscoveryPage> {
   StreamSubscription<BluetoothDiscoveryResult> _streamSubscription;
-  List<BluetoothDiscoveryResult> results = List<BluetoothDiscoveryResult>();
+  List<BluetoothDiscoveryResult> results = [];
   bool isDiscovering;
 
   _DiscoveryPage();
@@ -154,7 +154,7 @@ class _DiscoveryPage extends State<DiscoveryPage> {
                       title: const Text('Error occured while bonding'),
                       content: Text("${ex.toString()}"),
                       actions: <Widget>[
-                        new FlatButton(
+                        new TextButton(
                           child: new Text("Close"),
                           onPressed: () {
                             Navigator.of(context).pop();

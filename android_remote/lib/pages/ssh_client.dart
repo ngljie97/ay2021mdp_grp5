@@ -4,6 +4,8 @@ import 'package:scrollable_positioned_list/scrollable_positioned_list.dart';
 import 'package:ssh/ssh.dart';
 
 bool isConnected = false;
+final terminateChar = 'CTRL-C';
+int lock = 0;
 
 class SshTerminalPage extends StatefulWidget {
   const SshTerminalPage();
@@ -66,7 +68,6 @@ class _SshTerminal extends State<SshTerminalPage> {
 
         if (result == "shell_started") {
           isConnected = true;
-          await client.writeToShell("\n");
           /*print(await client.writeToShell("echo hello > world\n"));
           print(await client.writeToShell("cat world\n"));*/
         }
@@ -140,6 +141,20 @@ class _SshTerminal extends State<SshTerminalPage> {
                 ],
               ),
             ),
+            Expanded(
+              child: Row(
+                children: [
+                  TextButton(
+                    onPressed: () => startRpiServer(1),
+                    child: Text('Start RPi Server'),
+                  ),
+                  TextButton(
+                    onPressed: () async => await _sendCommand(terminateChar),
+                    child: Text('CTRL-C'),
+                  ),
+                ],
+              ),
+            ),
           ],
         ),
       ),
@@ -148,7 +163,7 @@ class _SshTerminal extends State<SshTerminalPage> {
 
   Future<void> _sendCommand(String command) async {
     terminalController.clear();
-    print(await client.writeToShell(command + '\n'));
+    await client.writeToShell(command + '\n');
     // printLog('${this.client.username}@${this.client.host}~ $command');
     if (command.toUpperCase().trim() == 'EXIT') _disconnectRpi();
   }
@@ -157,5 +172,22 @@ class _SshTerminal extends State<SshTerminalPage> {
     client.closeShell();
     client.disconnect();
     isConnected = false;
+  }
+
+  void startRpiServer(int flag) async {
+    List<String> commandList = [
+      'cd ~/',
+      'cd comm',
+      'workon cv',
+      'python3 nocam_noIR.py'
+    ];
+
+    Iterator it = commandList.iterator;
+
+    while (it.moveNext()) {
+      Future.delayed(const Duration(seconds: 1), () async {
+        await _sendCommand(it.current);
+      });
+    }
   }
 }

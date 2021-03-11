@@ -49,7 +49,7 @@ class _ConnectionPage extends State<ConnectionPage> {
   // ignore: unused_field
   int _discoverableTimeoutSecondsLeft = 0;
 
-  List<_DeviceWithAvailability> devices = List<_DeviceWithAvailability>();
+  List<_DeviceWithAvailability> devices = [];
 
   // Availability
   StreamSubscription<BluetoothDiscoveryResult> _discoveryStreamSubscription;

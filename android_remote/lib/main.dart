@@ -60,7 +60,7 @@ class _MyHomePageState extends State<MyHomePage> {
   bool _setRobotStart = false;
 
   Future<void> mySetState(String message) async {
-    await addConsoleAndScroll(message);
+    addConsoleAndScroll(message);
     if (message.contains('Disconnected remotely!')) {
       globals.backupArena = globals.arena;
       globals.arena = Arena('1110');
@@ -1015,7 +1015,7 @@ class _MyHomePageState extends State<MyHomePage> {
         builder: (BuildContext context) {
           return AlertDialog(
             content: Stack(
-              overflow: Overflow.visible,
+              clipBehavior: Clip.none,
               children: <Widget>[
                 Positioned(
                   right: -40.0,
@@ -1066,26 +1066,4 @@ class _MyHomePageState extends State<MyHomePage> {
           );
         });
   }
-}
-
-List<Widget> _getLabels(int i, bool isX) {
-  List<Widget> labels = new List<Widget>();
-
-  if (isX)
-    labels.add(Container(
-      child: Text(''),
-    ));
-
-  while (i >= 0) {
-    labels.add(Container(
-      child: (isX)
-          ? Text(
-              '$i',
-            )
-          : Text('${14 - i}'),
-    ));
-    i--;
-  }
-
-  return labels;
 }

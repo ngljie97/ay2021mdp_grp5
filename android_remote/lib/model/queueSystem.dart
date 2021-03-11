@@ -6,13 +6,14 @@ import 'package:android_remote/main.dart';
 import 'package:path_provider/path_provider.dart';
 
 class QueueSys {
-  static List<String> _queue = new List<String>();
+  static List<String> _queue = [];
   static Timer _timer;
   static bool running = false;
   static int taskNo = 0;
 
   QueueSys() {
-    _timer = Timer.periodic(Duration(milliseconds: 500), (timer) => {checkQueue()});
+    _timer =
+        Timer.periodic(Duration(milliseconds: 500), (timer) => {checkQueue()});
     prepareFile();
   }
 
