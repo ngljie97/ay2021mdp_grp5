@@ -12,8 +12,8 @@ float readSensor(short sensorPin) {
   KickSort<short>::quickSort(analogReadings, Constants::SENSOR_SAMPLING);
   
   // Return median
-//  return analogReadings[Constants::SENSOR_SAMPLING / 2]; 
-   return sum * 1.0 / Constants::SENSOR_SAMPLING;
+  return analogReadings[Constants::SENSOR_SAMPLING / 2]; 
+//   return sum * 1.0 / Constants::SENSOR_SAMPLING;
 }
 
 short readSensorInstant(short sensorPin) {
@@ -173,7 +173,7 @@ short getSRLHblockAway() {
 /************* SRLT - PS6 *************/
 float getSRLTdist() {
   short analogSignal = readSensor(Constants::SRLT_PIN);
-  return calculatePS5(analogSignal);
+  return calculatePS6(analogSignal);
 //  short analogSignal = readSensor(Constants::SRLT_PIN);
 //  float volt = analogSignal * (5.0 / 1023.0);
 //  return calculateSRDistance(volt);
@@ -181,7 +181,7 @@ float getSRLTdist() {
 
 float getSRLTdistInstant() {
   short analogSignal = readSensorInstant(Constants::SRLT_PIN);
-  return calculatePS5(analogSignal);
+  return calculatePS6(analogSignal);
 //  short analogSignal = readSensorInstant(Constants::SRLT_PIN);
 //  float volt = analogSignal * (5.0 / 1023.0);
 //  return calculateSRDistance(volt);
@@ -243,13 +243,13 @@ float calculatePS1(short y){
 
 // Long range PS2
 float calculatePS2(short y){
-  float a = 180.23964327874648 - 1;
+  float a = 180.23964327874648;
   float b = -1.1830011646189995;
   float c = 0.0036512408771051776;
   float d = -0.000005423756552094324;
   float e = 3.003927201398369e-9;
   float distFromTip = 0;
-  return ((e*y*y*y*y)+(d*y*y*y)+(c*y*y)+(b*y)+(a));
+  return ((e*y*y*y*y)+(d*y*y*y)+(c*y*y)+(b*y)+(a)) - 5;
 }
 
 // Short range PS3
@@ -262,7 +262,7 @@ float calculatePS3(short y){
   float distFromTip = 3.5;
 //  return ((e*y*y*y*y)+(d*y*y*y)+(c*y*y)+(b*y)+(a)) - 0.39;
 //  return ((e*y*y*y*y)+(d*y*y*y)+(c*y*y)+(b*y)+(a)) + 0.1;
-  return ((e*y*y*y*y)+(d*y*y*y)+(c*y*y)+(b*y)+(a)) - 0.1;
+  return ((e*y*y*y*y)+(d*y*y*y)+(c*y*y)+(b*y)+(a));
 }
 
 // Short range PS4
@@ -273,7 +273,7 @@ float calculatePS4(short y){
   float d = -2.067876969195102e-7;
   float e = -2.480214809028296e-11;
   float distFromTip = 2.8;
-  return ((e*y*y*y*y)+(d*y*y*y)+(c*y*y)+(b*y)+(a)) - 0.35;
+  return ((e*y*y*y*y)+(d*y*y*y)+(c*y*y)+(b*y)+(a)) - 0.25;
 }
 
 // Short range PS5
@@ -295,7 +295,7 @@ float calculatePS6(short y){
   float d = -0.0000029237996346267947;
   float e = 1.482334995624426e-9;
   float distFromTip = 0;
-  return ((e*y*y*y*y)+(d*y*y*y)+(c*y*y)+(b*y)+(a)) - 0.3;
+  return ((e*y*y*y*y)+(d*y*y*y)+(c*y*y)+(b*y)+(a)) + 0.35;
 }
 
 // Short range PS4 and PS6

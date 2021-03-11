@@ -39,6 +39,7 @@ short mode = 0;
 String receivedMsg  = "";
 ArduinoQueue<String> q(Constants::QUEUE_MAX_SIZE);
 String FORWARD_CMD = "F";
+String FORWARD_OBSTACLE_AVOID_CMD = "FOA";
 String TURN_LEFT_CMD = "L";
 String TURN_RIGHT_CMD = "R";
 String CALIBRATE_CMD = "C";
@@ -53,7 +54,7 @@ String SENSOR_DATA = "P|SENSOR_DATA";
 String ACTION_COMPLETE = "P|ACTION_COMPLETE";
 String SPLITTER = ":";
 
-short delayTime = 50;
+short delayTime = 100;
 
 void setup() {
   // put your setup code here, to run once:
@@ -70,11 +71,28 @@ void setup() {
 
   enableInterrupt(encoder1A, E1_ticks_increment, RISING);
   enableInterrupt(encoder2A, E2_ticks_increment, RISING);
-//  forwardPID(10);
+//  forwardPID(40, false);
+//  forwardPID(40, false);
+//  forwardPID(40, false);
 //  rotateRightPID(90);
 //  rotateLeftPID(90);
 //  fullCalibrate();
 //  frontAngleCalibrate();
+
+/************* Test straight **************/
+//forwardPID(40, false);
+//delay(100);
+//forwardPID(40, false);
+//delay(200);
+//rightPID();
+//delay(100);
+//rightPID();
+//delay(100);
+//forwardPID(40, false);
+//delay(100);
+//forwardPID(40, false);
+
+  
 }
 
 void loop() {
@@ -96,47 +114,76 @@ void loop() {
     executeCmd(cmd);
   }
 
-//  forwardPID(40);
-//  delay(delayTime);
-//  rightPID();
-//  delay(delayTime);
-//  forwardPID(40);
-//  delay(delayTime);
-//  leftPID();
-//  delay(delayTime);
-//  forwardPID(40);
-//  delay(delayTime);
-//  leftPID();
-//  delay(delayTime);
-//  forwardPID(40);
-//  delay(delayTime);
-//  leftPID();
-//  delay(delayTime);
-//  forwardPID(40);
-//  delay(delayTime);
-//  leftPID();
-//  delay(delayTime);
-//  forwardPID(40);
-//  delay(delayTime);
-//  rightPID();
-//  delay(delayTime);
-//  forwardPID(40);
-//  delay(delayTime);
-//  rightPID();
-//  delay(delayTime);
-//  forwardPID(40);
+ 
+
+
+  /************* Test right turn **************/
+//  forwardPID(40, false);
 //  delay(delayTime);
 //  rightPID();
 //  delay(delayTime);
 
-//  forwardPID(10);
+  /************* Keep turning right **************/
 //  rightPID();
-//  forwardPID(10);
+//  delay(delayTime);
+
+  /************* Test left turn **************/
+//  forwardPID(40, false);
+//  delay(delayTime);
 //  leftPID();
-//  forwardPID(10);
-//  leftPID();`
-//  forwardPID(10);
+//  delay(delayTime);
+
+  /************* Keep turning left **************/
+//  leftPID();
+//  delay(delayTime);
+
+//  forwardPID(40, false);
+//  delay(delayTime);
 //  rightPID();
+//  delay(delayTime);
+//  forwardPID(40, false);
+//  delay(delayTime);
+//  leftPID();
+//  delay(delayTime);
+//  forwardPID(40, false);
+//  delay(delayTime);
+//  leftPID();
+//  delay(delayTime);
+//  forwardPID(40, false);
+//  delay(delayTime);
+//  leftPID();
+//  delay(delayTime);
+//  forwardPID(40, false);
+//  delay(delayTime);
+//  leftPID();
+//  delay(delayTime);
+//  forwardPID(40, false);
+//  delay(delayTime);
+//  rightPID();
+//  delay(delayTime);
+//  forwardPID(40, false);
+//  delay(delayTime);
+//  rightPID();
+//  delay(delayTime);
+//  forwardPID(40, false);
+//  delay(delayTime);
+//  rightPID();
+//  delay(delayTime);
+
+//  forwardPID(10, false);
+//  rightPID();
+//  forwardPID(10, false);
+//  leftPID();
+//  forwardPID(10, false);
+//  leftPID();`
+//  forwardPID(10, false);
+//  rightPID();
+
+//  fullCalibrate();
+//  leftPID();
+//  delay(delayTime);
+//  rightPID();
+//  delay(delayTime);
 }
 
 void executeCmd(String cmd) {
@@ -154,6 +201,16 @@ void executeCmd(String cmd) {
   } else if (cmd.startsWith(EX_START_CMD) || cmd.startsWith(IF_START_CMD)) {
     mode = 1;
     sendMsg();
+  } else if (cmd.startsWith(FORWARD_OBSTACLE_AVOID_CMD)) {
+    String temp = "";
+    for (short i = 4 ; i < cmd.length() ; i++) {
+      temp += cmd.charAt(i);
+    }
+    int dist = temp.toInt() * Constants::BLOCK_SIZE;
+    bool obstacleAvoid = true;
+    forwardPID(dist, obstacleAvoid);
+    if (mode == 0)
+      sendActionComplete();
   } else if (cmd.startsWith(FORWARD_CMD) && cmd.length() == 1) {
     autoForwardPID();
   } else if (cmd.startsWith(FORWARD_CMD) && cmd.length() > 1) {
@@ -162,23 +219,37 @@ void executeCmd(String cmd) {
       temp += cmd.charAt(i);
     }
     int dist = temp.toInt() * Constants::BLOCK_SIZE;
-    forwardPID(dist);
+    bool obstacleAvoid = true;
+    forwardPID(dist, obstacleAvoid);
     if (mode == 0)
       sendActionComplete();
   } else if (cmd.startsWith(RIGHT_CALIBRATE_CMD)) {
 //    rightCalibrate();
     sendActionComplete();
+  } else if (cmd.startsWith(INITIAL_CALIBRATE_CMD)) {
+      initialCalibrate();
   } else if (cmd.startsWith(TURN_LEFT_CMD)) {
+    if (mode == 1) {
+      rightCalibrate();
+      frontCalibrate();
+      leftAngleCalibrate();
+    }
+//    rightCalibrate();
 //    frontCalibrate();
-//    fullCalibrate();
     leftPID();
-//    leftAngleCalibrate();
     sendMsg();
   } else if (cmd.startsWith(TURN_RIGHT_CMD)) {
+    if (mode == 1) {
+      leftDistanceCalibrate();
+      frontCalibrate();
+    }
+//    leftDistanceCalibrate();
 //    frontCalibrate();
 //    fullCalibrate();
     rightPID();
-//    leftAngleCalibrate();
+//    if (mode == 1) {
+//      leftAngleCalibrate();
+//    }
     sendMsg();
   } else if (cmd.startsWith(CALIBRATE_CMD)) {
     fullCalibrate();
@@ -188,6 +259,7 @@ void executeCmd(String cmd) {
 
 void E1_ticks_increment()
 {
+//  Serial.println("in E1_ticks_increment");
   E1_ticks_moved++;
   E1_ticks++;
   //E1_ticks_moved++;
@@ -195,6 +267,7 @@ void E1_ticks_increment()
 
 void E2_ticks_increment()
 {
+//  Serial.println("in E2_ticks_increment");
   E2_ticks_moved++;
   E2_ticks++;
   //E2_ticks_moved++;
@@ -223,18 +296,18 @@ void sendMsg() {
     Serial.print(SRLT); Serial.print(SPLITTER);
     Serial.println(LRR);
     
-//    Serial.print("getSRFLdist: ");
-//    Serial.println(getSRFLdist());
-//    Serial.print("getSRFCdist: ");
-//    Serial.println(getSRFCdist());
-//    Serial.print("getSRFRdist: ");
-//    Serial.println(getSRFRdist());
-//    Serial.print("getSRLHdist: ");
-//    Serial.println(getSRLHdist());
-//    Serial.print("getSRLTdist: ");
-//    Serial.println(getSRLTdist());
-//    Serial.print("getLRRdist: ");
-//    Serial.println(getLRRdist());
+    Serial.print("getSRFLdist: ");
+    Serial.println(getSRFLdist());
+    Serial.print("getSRFCdist: ");
+    Serial.println(getSRFCdist());
+    Serial.print("getSRFRdist: ");
+    Serial.println(getSRFRdist());
+    Serial.print("getSRLHdist: ");
+    Serial.println(getSRLHdist());
+    Serial.print("getSRLTdist: ");
+    Serial.println(getSRLTdist());
+    Serial.print("getLRRdist: ");
+    Serial.println(getLRRdist());
 //    Serial.println(readSensor(Constants::LRR_PIN));
   }
 }

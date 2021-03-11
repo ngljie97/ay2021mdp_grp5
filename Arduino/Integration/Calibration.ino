@@ -3,7 +3,7 @@
 void frontAngleCalibrate() {
 //  Serial.println("Enter frontAngleCalibrate");
   short leftSensorPin, rightSensorPin;
-  float offset, multiplier;
+  float multiplier;
 //  Serial.print("SRFL: ");
 //  Serial.println(getSRFLdist());
 //  Serial.print("SRFC: ");
@@ -13,31 +13,36 @@ void frontAngleCalibrate() {
   if (getSRFLdist() <= Constants::MAX_DIST_FOR_CALIBRATE && getSRFRdist() <= Constants::MAX_DIST_FOR_CALIBRATE) {
     leftSensorPin = Constants::SRFL_PIN;
     rightSensorPin = Constants::SRFR_PIN;
-//    offset = 0;
     multiplier = 1.0 / 2;
 //    multiplier = 1;
   } else if (getSRFCdist() <= Constants::MAX_DIST_FOR_CALIBRATE && getSRFRdist() <= Constants::MAX_DIST_FOR_CALIBRATE) {
     leftSensorPin = Constants::SRFC_PIN;
     rightSensorPin = Constants::SRFR_PIN;
-//    offset = Constants::SRFR_MIN_DIST - Constants::SRFC_MIN_DIST;
     multiplier = 1;
   } else if (getSRFLdist() <= Constants::MAX_DIST_FOR_CALIBRATE && getSRFCdist() <= Constants::MAX_DIST_FOR_CALIBRATE) {
     leftSensorPin = Constants::SRFL_PIN;
     rightSensorPin = Constants::SRFC_PIN;
-//    offset = Constants::SRFC_MIN_DIST - Constants::SRFL_MIN_DIST;
     multiplier = 1;
   } else {
     return; //No 2 obstacles in front to calibrate
   }
   // Difference of right sensor and left sensor
-//  float diff = getSensorDist(rightSensorPin) - getSensorDist(leftSensorPin) - offset;
   float diff = getSensorDist(rightSensorPin) - getSensorDist(leftSensorPin);
+  float offset = 0;// 0.36;
+  /*
+  if (diff > 0) {  // Head is further than tail
+    offset = 0.3;
+  } else {
+    offset = 0.3;
+  }
+  */
+  diff += offset;
   float prev_diff;
 //  Serial.print("diff: ");
 //  Serial.println(diff);
   
   short cnt = 0;
-  while (cnt < Constants::MAX_TRIAL && abs(diff) > Constants::THRESHOLD) {
+  while (cnt < Constants::MAX_TRIAL && abs(diff) > 0.05) {
     prev_diff = diff;
     // As distance is small, it is nearly equal to the arc to rotate
     // Rotate (abs(diff) * multiplier)
@@ -47,8 +52,13 @@ void frontAngleCalibrate() {
       rotateLeftShort(abs(diff) * multiplier);
     }
     delay(80);
-//    diff = getSensorDist(rightSensorPin) - getSensorDist(leftSensorPin) - offset;
     diff = getSensorDist(rightSensorPin) - getSensorDist(leftSensorPin);
+//    if (diff > 0) {  // Head is further than tail
+//      offset = 0;
+//    } else {
+//      offset = 0;
+//    }
+    diff += offset;
     cnt++;
     
 //    Serial.print("diff: ");
@@ -100,25 +110,40 @@ void leftAngleCalibrate() {
   // Not enough obstacles to calibrate
   if (getSRLHdist() > Constants::MAX_DIST_FOR_CALIBRATE || getSRLTdist() > Constants::MAX_DIST_FOR_CALIBRATE)
     return;
-    
+
   // Difference of right sensor and left sensor
   float diff = getSRLHdist()- getSRLTdist();
+  float offset;
+  if (diff > 0) {  // Head is further than tail
+    offset = 0;
+  } else {
+    offset = 0;
+  }
+  diff += offset;
   float prev_diff;
 //  Serial.print("diff: ");
 //  Serial.println(diff);
   
   short cnt = 0;
-  while (cnt < Constants::MAX_TRIAL && abs(diff) > 0.05) {
+  while (cnt < Constants::MAX_TRIAL && abs(diff) > 0.02) {
     prev_diff = diff;
     // As distance is small, it is nearly equal to the arc to rotate
-    // Rotate (abs(diff) / 2)
+    // Rotate (abs(diff) / 2)I
     if (diff < 0) {  // Right is closer to the wall -> Turn right
-      rotateRightShort(abs(diff) / 2);
+//      rotateRightShort(abs(diff) / 2);
+      rotateRightShort(abs(diff) * 0.6);
     } else {        // Left is closer to the wall -> Turn left
-      rotateLeftShort(abs(diff) / 2);
+//      rotateLeftShort(abs(diff) / 2);
+      rotateLeftShort(abs(diff) * 0.6);
     }
     delay(80);
     diff = getSRLHdist()- getSRLTdist();
+    if (diff > 0) {  // Head is further than tail
+      offset = 0;
+    } else {
+      offset = 0;
+    }
+    diff += offset;
     cnt++;
 
 //    Serial.print("diff: ");
@@ -138,20 +163,36 @@ void fullCalibrate() {
   bool calibrateLeft = false;
   // Calibrate left distance
   if (avgLeftDist() != Constants::INF && abs(avgLeftDist() - Constants::MIN_DIST) > Constants::THRESHOLD) {
-    rotateLeftPID(90);
+    leftPID();
+    delay(200);
     frontCalibrate();
-    rotateRightPID(90);
+    rightPID();
+    delay(200);
     calibrateLeft = true;
   }
-  leftAngleCalibrate();
+//  leftAngleCalibrate();
   frontCalibrate();
 //  leftAngleCalibrate();
   // Calibrate right only when not calibrate left and have obstacle on the right
-  if (!calibrateLeft && getSRLTdist() < Constants::MAX_DIST_FOR_CALIBRATE && abs(getSRLTdist() - Constants::MIN_DIST) > Constants::THRESHOLD) {
-    rotateRightPID(90);
+  if (!calibrateLeft && getLRRdist() < Constants::MAX_DIST_FOR_CALIBRATE && abs(getLRRdist() - Constants::MIN_DIST) > Constants::THRESHOLD) {
+    rightPID();
+    delay(200);
     frontCalibrate();
-    rotateLeftPID(90);
+    
+    leftPID();
+    delay(200);
     frontCalibrate();
+  }
+}
+
+void leftDistanceCalibrate() {
+  // Calibrate left distance
+  if (avgLeftDist() != Constants::INF && abs(avgLeftDist() - Constants::MIN_DIST) > Constants::THRESHOLD) {
+    leftPID();
+    delay(200);
+    frontCalibrate();
+    rightPID();
+    delay(200);
   }
 }
 
@@ -161,8 +202,29 @@ void frontCalibrate() {
 }
 
 void rightCalibrate() {
-  rotateRightPID(90);
+  if (getLRRdist() < Constants::MAX_DIST_FOR_CALIBRATE && abs(getLRRdist() - Constants::MIN_DIST) > Constants::THRESHOLD) {
+    rightPID();
+    delay(200);
+    frontCalibrate();
+    
+    leftPID();
+    delay(200);
+    frontCalibrate();
+  }
+}
+
+void initialCalibrate() {
+  leftPID();
+  delay(200);
+  leftPID();
+  delay(200);
   frontCalibrate();
-  rotateLeftPID(90);
+  
+  rightPID();
+  delay(200);
   frontCalibrate();
+  
+  rightPID();
+  delay(200);
+  leftAngleCalibrate();
 }

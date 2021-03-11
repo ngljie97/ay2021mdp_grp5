@@ -1,7 +1,7 @@
 #include "Constants.h"
 
 
-void PIDController(float KP, float KD, float KI, float travel_ticks, bool forward) {  
+void PIDController(float KP, float KD, float KI, float travel_ticks, bool forward, bool obstacleAvoid) {  
   /*-----PID Variables-----*/
   long ticks_diff_setpoint = 0;
   long ticks_diff_error = 0;
@@ -19,19 +19,30 @@ void PIDController(float KP, float KD, float KI, float travel_ticks, bool forwar
   long ticks_per_block = distToTick(Constants::BLOCK_SIZE);
   short blocks_moved = 0;
   short num_of_blocks = tickToBlock(travel_ticks);
+
+//  Serial.print("E1_ticks: ");
+//  Serial.println(E1_ticks);
+//  Serial.print("E2_ticks: ");
+//  Serial.println(E2_ticks);
   
 //  float avg_sticks_moved = computeAvgSticksMoved();
 //  while (avg_sticks_moved < travel_ticks) {
   while ((E1_ticks_moved + E2_ticks_moved) / 2.0 < travel_ticks) {
+//    Serial.print("average ticks: ");
+//    Serial.println((E1_ticks_moved + E2_ticks_moved) / 2.0);
+
+    // Avoid to hit wall at the goal
+    if (obstacleAvoid && obstacleInFront()) {
+//      Serial.println("Detect obstacle");
+      md.setBrakes(400, 400);
+      break;
+    }
+
     // For auto forward: travel_ticks is INF
     if (travel_ticks == Constants::INF && (obstacleInFront() || noWallLeft())) {
       md.setBrakes(400, 400);
       break;
     }
-//    Serial.print("E1_ticks: ");
-//    Serial.println(E1_ticks);
-//    Serial.print("E2_ticks: ");
-//    Serial.println(E2_ticks);
     //ticks diff error
     ticks_diff_error = (E1_ticks - E2_ticks) - ticks_diff_setpoint;
 
@@ -84,11 +95,6 @@ void PIDController(float KP, float KD, float KI, float travel_ticks, bool forwar
   
     //Sum error
     ticks_diff_sum_error += ticks_diff_error;
-
-//    Serial.print("E1_ticks: ");
-//    Serial.println(E1_ticks);
-//    Serial.print("E2_ticks: ");
-//    Serial.println(E2_ticks);
     
 //    Serial.print("E1_ticks_moved: ");
 //    Serial.println(E1_ticks_moved);
@@ -121,27 +127,28 @@ void PIDController(float KP, float KD, float KI, float travel_ticks, bool forwar
 //  return (E1_ticks_moved + E2_ticks_moved) / 2.0;
 //}
 
-void forwardPID(float dist) {
+void forwardPID(float dist, bool obstacleAvoid) {
   float travel_ticks = distToTick(dist);
   if (dist == 10)
-    travel_ticks = 280;
+    travel_ticks = 270;//276;
   else if (dist == 20)
-    travel_ticks = 580;
+    travel_ticks = 582;
   else if (dist == 30)
-    travel_ticks = 860;
+    travel_ticks = 885;
   else if (dist == 40)
-    travel_ticks = 1200;
+    travel_ticks = 1170;
   else if (dist == 50)
     travel_ticks = 1470;
   float KP = 0.8;
   float KD = 0.01;
   float KI = 0.001;
 
-  M1_speed = 350;
-  M2_speed = 348;
+  M1_speed = 350; //right
+//  M2_speed = 348;
+  M2_speed = 350;//lèft: 354
   md.setSpeeds(M1_speed, M2_speed);
   
-  PIDController(KP, KD, KI, travel_ticks, true);
+  PIDController(KP, KD, KI, travel_ticks, true, obstacleAvoid);
 }
 
 void autoForwardPID() {
@@ -153,7 +160,7 @@ void autoForwardPID() {
   M2_speed = 345;
   md.setSpeeds(M1_speed, M2_speed);
   
-  PIDController(KP, KD, KI, Constants::INF, true);
+  PIDController(KP, KD, KI, Constants::INF, true, true);
 }
 
 void rotatePID(float degree) {
@@ -189,11 +196,12 @@ void rotatePID(float degree) {
 //  M2_speed = M2_mul * 102;
   md.setSpeeds(M1_speed, M2_speed);
 
-  PIDController(KP, KD, KI, travel_ticks, false);
+  PIDController(KP, KD, KI, travel_ticks, false, false);
 }
 
 void rightPID() {
-  float travel_ticks = 397;
+//  float travel_ticks = 399;
+  float travel_ticks = 394;//397;
   float KP = 0.6;
   float KD = 0.01;
   float KI = 0.01;
@@ -207,12 +215,12 @@ void rightPID() {
   M2_speed = M2_mul * 308;
   md.setSpeeds(M1_speed, M2_speed);
 
-  PIDController(KP, KD, KI, travel_ticks, false);
+  PIDController(KP, KD, KI, travel_ticks, false, false);
 }
 
 
 void leftPID() {
-  float travel_ticks = 396;
+  float travel_ticks = 383.5;
   float KP = 0.6;
   float KD = 0.01;
   float KI = 0.01;
@@ -226,7 +234,7 @@ void leftPID() {
   M2_speed = M2_mul * 358;
   md.setSpeeds(M1_speed, M2_speed);
 
-  PIDController(KP, KD, KI, travel_ticks, false);
+  PIDController(KP, KD, KI, travel_ticks, false, false);
 }
 
 void rotateRightPID(float degree) {
@@ -247,7 +255,7 @@ bool obstacleInFront() {
 //  Serial.println(getSRFCdist());
 //  Serial.print("getSRFRdist: ");
 //  Serial.println(getSRFRdist());
-  if (getSRFLdist() <= Constants::STOP_DIST || getSRFRdist() <= Constants::STOP_DIST)
+  if (getSRFLdistInstant() <= Constants::STOP_DIST || getSRFCdistInstant() <= Constants::STOP_DIST || getSRFRdistInstant() <= Constants::STOP_DIST)
     return true;
   return false;
 }
