@@ -2,10 +2,10 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:scrollable_positioned_list/scrollable_positioned_list.dart';
 import 'package:ssh/ssh.dart';
+import 'package:synchronized/synchronized.dart';
 
 bool isConnected = false;
-final terminateChar = 'CTRL-C';
-int lock = 0;
+final terminateChar = '\x03';
 
 class SshTerminalPage extends StatefulWidget {
   const SshTerminalPage();
@@ -18,6 +18,7 @@ class _SshTerminal extends State<SshTerminalPage> {
   SSHClient client;
   final _scrollController = ItemScrollController();
   final terminalController = TextEditingController();
+  final _lock = new Lock();
   List<String> historyLog = [
     '==========================================================='
   ];
@@ -35,6 +36,7 @@ class _SshTerminal extends State<SshTerminalPage> {
   void dispose() {
     // Clean up the controller when the widget is disposed.
     terminalController.dispose();
+    client.disconnect();
     super.dispose();
   }
 
@@ -50,11 +52,18 @@ class _SshTerminal extends State<SshTerminalPage> {
   }
 
   Future<void> connectRpi() async {
-    client = new SSHClient(
+    /*client = new SSHClient(
       host: "192.168.5.5",
       port: 22,
       username: "pi",
       passwordOrKey: "MdpGroup5",
+    );*/
+
+    client = new SSHClient(
+      host: "192.168.66.66",
+      port: 22,
+      username: "pi",
+      passwordOrKey: "@dmin123",
     );
 
     try {
@@ -62,14 +71,10 @@ class _SshTerminal extends State<SshTerminalPage> {
       if (result == "session_connected") {
         result = await client.startShell(
             ptyType: "vanilla",
-            callback: (dynamic res) {
-              printLog(res);
-            });
+            callback: (dynamic res) async => await _callbackHandler(res));
 
         if (result == "shell_started") {
           isConnected = true;
-          /*print(await client.writeToShell("echo hello > world\n"));
-          print(await client.writeToShell("cat world\n"));*/
         }
       }
     } on PlatformException catch (e) {
@@ -122,6 +127,7 @@ class _SshTerminal extends State<SshTerminalPage> {
             Expanded(
               child: Row(
                 children: [
+                  (isConnected)? Text('${client.username}@${client.host}:~\$ '): Text('Not connected...'),
                   Expanded(
                     flex: 9,
                     child: TextField(
@@ -131,9 +137,10 @@ class _SshTerminal extends State<SshTerminalPage> {
                   ),
                   Expanded(
                     child: IconButton(
-                      onPressed: () => (isConnected)
-                          ? _sendCommand(terminalController.text)
-                          : null,
+                      onPressed: () =>
+                          (isConnected && terminalController.text.isNotEmpty)
+                              ? _sendCommand(terminalController.text)
+                              : null,
                       icon: Icon(Icons.send),
                       enableFeedback: isConnected,
                     ),
@@ -163,8 +170,7 @@ class _SshTerminal extends State<SshTerminalPage> {
 
   Future<void> _sendCommand(String command) async {
     terminalController.clear();
-    await client.writeToShell(command + '\n');
-    // printLog('${this.client.username}@${this.client.host}~ $command');
+    await client.writeToShell(command + '\r\n');
     if (command.toUpperCase().trim() == 'EXIT') _disconnectRpi();
   }
 
@@ -172,22 +178,22 @@ class _SshTerminal extends State<SshTerminalPage> {
     client.closeShell();
     client.disconnect();
     isConnected = false;
+    printLog('Successfully disconnected from RPi SSH.');
+  }
+
+  Future<void> _callbackHandler(String res) async {
+    printLog(res + '\r\n');
   }
 
   void startRpiServer(int flag) async {
     List<String> commandList = [
-      'cd ~/',
-      'cd comm',
+      'cd ~/comm',
       'workon cv',
       'python3 nocam_noIR.py'
     ];
 
-    Iterator it = commandList.iterator;
-
-    while (it.moveNext()) {
-      Future.delayed(const Duration(seconds: 1), () async {
-        await _sendCommand(it.current);
-      });
+    for (int i = 0; i < commandList.length; i++) {
+      await _lock.synchronized(() async => await _sendCommand(commandList[i]));
     }
   }
 }

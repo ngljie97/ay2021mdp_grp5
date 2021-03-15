@@ -34,6 +34,7 @@ dependencies:
   path_provider: ^1.6.27
   ssh: ^0.0.7
   intl: ^0.17.0
+  synchronized: ^3.0.0
 
   flutter_bluetooth_serial:
     git:
