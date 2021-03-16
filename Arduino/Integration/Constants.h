@@ -34,6 +34,7 @@ class Constants
     static constexpr float TPR = 562.25;   //Tick per revolution
 
     static constexpr float DELAY = 20;
+    static constexpr float TURN_DELAY = 50;
     static constexpr float PID_DELAY = 0.05;
     static const long INF = (long)1e9;
 

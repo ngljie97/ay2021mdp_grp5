@@ -159,10 +159,10 @@ void fullCalibrate() {
   // Calibrate left distance
   if (avgLeftDist() != Constants::INF && abs(avgLeftDist() - Constants::MIN_DIST) > Constants::THRESHOLD) {
     leftPID();
-    delay(200);
+    delay(Constants::TURN_DELAY);
     frontCalibrate();
     rightPID();
-    delay(200);
+    delay(Constants::TURN_DELAY);
     calibrateLeft = true;
   }
 //  leftAngleCalibrate();
@@ -171,11 +171,11 @@ void fullCalibrate() {
   // Calibrate right only when not calibrate left and have obstacle on the right
   if (!calibrateLeft && getLRRdist() < Constants::MAX_DIST_FOR_CALIBRATE && abs(getLRRdist() - Constants::MIN_DIST) > Constants::THRESHOLD) {
     rightPID();
-    delay(200);
+    delay(Constants::TURN_DELAY);
     frontCalibrate();
     
     leftPID();
-    delay(200);
+    delay(Constants::TURN_DELAY);
     frontCalibrate();
   }
 }
@@ -184,10 +184,10 @@ void leftDistanceCalibrate() {
   // Calibrate left distance
   if (avgLeftDist() != Constants::INF && abs(avgLeftDist() - Constants::MIN_DIST) > Constants::THRESHOLD) {
     leftPID();
-    delay(200);
+    delay(Constants::TURN_DELAY);
     frontCalibrate();
     rightPID();
-    delay(200);
+    delay(Constants::TURN_DELAY);
   }
 }
 
@@ -199,27 +199,27 @@ void frontCalibrate() {
 void rightCalibrate() {
   if (getLRRdist() < Constants::MAX_DIST_FOR_CALIBRATE && abs(getLRRdist() - Constants::MIN_DIST) > Constants::THRESHOLD) {
     rightPID();
-    delay(200);
+    delay(Constants::TURN_DELAY);
     frontCalibrate();
     
     leftPID();
-    delay(200);
+    delay(Constants::TURN_DELAY);
     frontCalibrate();
   }
 }
 
 void initialCalibrate() {
   leftPID();
-  delay(200);
+  delay(Constants::TURN_DELAY);
   leftPID();
-  delay(200);
+  delay(Constants::TURN_DELAY);
   frontCalibrate();
   
   rightPID();
-  delay(200);
+  delay(Constants::TURN_DELAY);
   frontCalibrate();
   
   rightPID();
-  delay(200);
+  delay(Constants::TURN_DELAY);
   leftAngleCalibrate();
 }

@@ -1,4 +1,4 @@
-u#include "DualVNH5019MotorShield.h"
+#include "DualVNH5019MotorShield.h"
 #include "EnableInterrupt.h"
 #include <ArduinoQueue.h>
 #include "Constants.h"
@@ -42,6 +42,8 @@ String FORWARD_CMD = "F";
 String FORWARD_OBSTACLE_AVOID_CMD = "FOA";
 String TURN_LEFT_CMD = "L";
 String TURN_RIGHT_CMD = "R";
+String TURN_LEFT_NO_CALIBRATE_CMD = "LNC";
+String TURN_RIGHT_NO_CALIBRATE_CMD = "RNC";
 String CALIBRATE_CMD = "C";
 String RIGHT_CALIBRATE_CMD = "RC";
 String INITIAL_CALIBRATE_CMD = "IC";
@@ -213,6 +215,12 @@ void executeCmd(String cmd) {
   } else if (cmd.startsWith(EX_START_CMD) || cmd.startsWith(IF_START_CMD)) {
     mode = 1;
     sendMsg();
+  } else if (cmd.startsWith(TURN_LEFT_NO_CALIBRATE_CMD)) {
+    leftPID();
+    sendMsg();
+  } else if (cmd.startsWith(TURN_RIGHT_NO_CALIBRATE_CMD)) {
+    rightPID();
+    sendMsg();
   } else if (cmd.startsWith(FORWARD_OBSTACLE_AVOID_CMD)) {
     String temp = "";
     for (short i = 4 ; i < cmd.length() ; i++) {
@@ -244,10 +252,7 @@ void executeCmd(String cmd) {
     if (mode == 1) {
       rightCalibrate();
       frontCalibrate();
-      leftAngleCalibrate();
     }
-//    rightCalibrate();
-//    frontCalibrate();
     leftPID();
     sendMsg();
   } else if (cmd.startsWith(TURN_RIGHT_CMD)) {
@@ -255,9 +260,6 @@ void executeCmd(String cmd) {
       leftDistanceCalibrate();
       frontCalibrate();
     }
-//    leftDistanceCalibrate();
-//    frontCalibrate();
-//    fullCalibrate();
     rightPID();
     if (mode == 1) {
       leftAngleCalibrate();
