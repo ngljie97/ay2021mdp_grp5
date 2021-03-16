@@ -59,7 +59,8 @@ void rotateLeftShort(float arc) {
  * Forward: 'F', Backwards: 'B'
  */
 void moveShort(char dir, float dist) {
-  float travel_ticks = distToTick(dist);
+  float offset = 0.5;
+  float travel_ticks = distToTick(dist * offset);
   E1_ticks = 0;
   E2_ticks = 0;
   E1_ticks_moved = 0;

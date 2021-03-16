@@ -33,6 +33,7 @@ void PIDController(float KP, float KD, float KI, float travel_ticks, bool forwar
 
     // Avoid to hit wall at the goal
     if (obstacleAvoid && obstacleInFront()) {
+//      Serial.println(getSRFLdistInstant());
 //      Serial.println("Detect obstacle");
       md.setBrakes(400, 400);
       break;
@@ -130,7 +131,7 @@ void PIDController(float KP, float KD, float KI, float travel_ticks, bool forwar
 void forwardPID(float dist, bool obstacleAvoid) {
   float travel_ticks = distToTick(dist);
   if (dist == 10)
-    travel_ticks = 270;//276;
+    travel_ticks = 275;//276;
   else if (dist == 20)
     travel_ticks = 582;
   else if (dist == 30)
@@ -145,7 +146,7 @@ void forwardPID(float dist, bool obstacleAvoid) {
 
   M1_speed = 350; //right
 //  M2_speed = 348;
-  M2_speed = 350;//lèft: 354
+  M2_speed = 348;//lèft: 354
   md.setSpeeds(M1_speed, M2_speed);
   
   PIDController(KP, KD, KI, travel_ticks, true, obstacleAvoid);
@@ -201,7 +202,7 @@ void rotatePID(float degree) {
 
 void rightPID() {
 //  float travel_ticks = 399;
-  float travel_ticks = 394;//397;
+  float travel_ticks = 390;//397;
   float KP = 0.6;
   float KD = 0.01;
   float KI = 0.01;
@@ -220,7 +221,7 @@ void rightPID() {
 
 
 void leftPID() {
-  float travel_ticks = 383.5;
+  float travel_ticks = 380;
   float KP = 0.6;
   float KD = 0.01;
   float KI = 0.01;
@@ -231,7 +232,7 @@ void leftPID() {
   M2_mul = -1;
     
   M1_speed = M1_mul * 350;
-  M2_speed = M2_mul * 358;
+  M2_speed = M2_mul * 354;
   md.setSpeeds(M1_speed, M2_speed);
 
   PIDController(KP, KD, KI, travel_ticks, false, false);

@@ -138,11 +138,6 @@ void leftAngleCalibrate() {
     }
     delay(80);
     diff = getSRLHdist()- getSRLTdist();
-    if (diff > 0) {  // Head is further than tail
-      offset = 0;
-    } else {
-      offset = 0;
-    }
     diff += offset;
     cnt++;
 

@@ -14,7 +14,7 @@ class Constants
 
     static const short SENSOR_SAMPLING = 30;
 
-    static constexpr float MIN_DIST = 6.3;
+    static constexpr float MIN_DIST = 5.6;
 
     static constexpr float BLOCK_SIZE = 10;
     static const short SR_UPPER_RANGE = 3;
@@ -22,7 +22,7 @@ class Constants
     static const short SR_MAX_DIST = 37; //Consider changing
 
     static constexpr float MAX_DIST_FOR_CALIBRATE = 10;
-    static constexpr float STOP_DIST = 10.5;
+    static constexpr float STOP_DIST = 3;
     
     static constexpr float THRESHOLD = 0.15;
 

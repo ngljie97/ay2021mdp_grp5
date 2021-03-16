@@ -1,4 +1,4 @@
-#include "DualVNH5019MotorShield.h"
+u#include "DualVNH5019MotorShield.h"
 #include "EnableInterrupt.h"
 #include <ArduinoQueue.h>
 #include "Constants.h"
@@ -54,7 +54,7 @@ String SENSOR_DATA = "P|SENSOR_DATA";
 String ACTION_COMPLETE = "P|ACTION_COMPLETE";
 String SPLITTER = ":";
 
-short delayTime = 100;
+short delayTime = 50;
 
 void setup() {
   // put your setup code here, to run once:
@@ -71,28 +71,43 @@ void setup() {
 
   enableInterrupt(encoder1A, E1_ticks_increment, RISING);
   enableInterrupt(encoder2A, E2_ticks_increment, RISING);
-//  forwardPID(40, false);
-//  forwardPID(40, false);
-//  forwardPID(40, false);
+
+  /****************** Test move forward ************************/
+//  forwardPID(40, true);
+//  delay(delayTime);
+//  forwardPID(40, true);
+//  delay(delayTime);
+//  forwardPID(40, true);
+//  delay(delayTime);
+
 //  rotateRightPID(90);
 //  rotateLeftPID(90);
 //  fullCalibrate();
 //  frontAngleCalibrate();
 
-/************* Test straight **************/
-//forwardPID(40, false);
-//delay(100);
-//forwardPID(40, false);
-//delay(200);
-//rightPID();
-//delay(100);
-//rightPID();
-//delay(100);
-//forwardPID(40, false);
-//delay(100);
-//forwardPID(40, false);
-
-  
+  /************* Test straight **************/
+//  forwardPID(40, true);
+//  delay(delayTime);
+//  forwardPID(40, true);
+//  delay(delayTime);
+//  rightPID();
+//  delay(delayTime);
+//  rightPID();
+//  delay(delayTime);
+//  forwardPID(40, true);
+//  delay(delayTime);
+//  forwardPID(40, true);
+//    forwardPID(40, true);
+//  delay(delayTime);
+//  forwardPID(40, true);
+//  delay(delayTime);
+//  leftPID();
+//  delay(delayTime);
+//  leftPID();
+//  delay(delayTime);
+//  forwardPID(40, true);
+//  delay(delayTime);
+//  forwardPID(40, true);
 }
 
 void loop() {
@@ -114,11 +129,8 @@ void loop() {
     executeCmd(cmd);
   }
 
- 
-
-
   /************* Test right turn **************/
-//  forwardPID(40, false);
+//  forwardPID(40, true);
 //  delay(delayTime);
 //  rightPID();
 //  delay(delayTime);
@@ -128,7 +140,7 @@ void loop() {
 //  delay(delayTime);
 
   /************* Test left turn **************/
-//  forwardPID(40, false);
+//  forwardPID(40, true);
 //  delay(delayTime);
 //  leftPID();
 //  delay(delayTime);
@@ -247,9 +259,9 @@ void executeCmd(String cmd) {
 //    frontCalibrate();
 //    fullCalibrate();
     rightPID();
-//    if (mode == 1) {
-//      leftAngleCalibrate();
-//    }
+    if (mode == 1) {
+      leftAngleCalibrate();
+    }
     sendMsg();
   } else if (cmd.startsWith(CALIBRATE_CMD)) {
     fullCalibrate();
@@ -296,18 +308,18 @@ void sendMsg() {
     Serial.print(SRLT); Serial.print(SPLITTER);
     Serial.println(LRR);
     
-    Serial.print("getSRFLdist: ");
-    Serial.println(getSRFLdist());
-    Serial.print("getSRFCdist: ");
-    Serial.println(getSRFCdist());
-    Serial.print("getSRFRdist: ");
-    Serial.println(getSRFRdist());
-    Serial.print("getSRLHdist: ");
-    Serial.println(getSRLHdist());
-    Serial.print("getSRLTdist: ");
-    Serial.println(getSRLTdist());
-    Serial.print("getLRRdist: ");
-    Serial.println(getLRRdist());
+//    Serial.print("getSRFLdist: ");
+//    Serial.println(getSRFLdist());
+//    Serial.print("getSRFCdist: ");
+//    Serial.println(getSRFCdist());
+//    Serial.print("getSRFRdist: ");
+//    Serial.println(getSRFRdist());
+//    Serial.print("getSRLHdist: ");
+//    Serial.println(getSRLHdist());
+//    Serial.print("getSRLTdist: ");
+//    Serial.println(getSRLTdist());
+//    Serial.print("getLRRdist: ");
+//    Serial.println(getLRRdist());
 //    Serial.println(readSensor(Constants::LRR_PIN));
   }
 }
