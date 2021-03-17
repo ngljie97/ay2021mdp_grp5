@@ -170,11 +170,11 @@ class Arena {
   }
 
   void setImage(int x, int y, int imageId, int dir) {
-    this.obstaclesRecords[x][y] = 2;
-    if ((x >= 0 && x < 20) && (y >= 0 && y < 15))
+    if ((x >= 0 && x < 20) && (y >= 0 && y < 15)) {
+      this.obstaclesRecords[x][y] = 2;
       _images[imageId - 1] = '$x,$y';
-    else
-      unresolvedImages.add(imageId - 1);
+    } else
+      unresolvedImages.add(imageId);
   }
 
   void setExplored(int x, int y) {
