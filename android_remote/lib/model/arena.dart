@@ -171,10 +171,11 @@ class Arena {
 
   void setImage(int x, int y, int imageId, int dir) {
     if ((x >= 0 && x < 20) && (y >= 0 && y < 15)) {
-      this.obstaclesRecords[x][y] = 1;
+      this.obstaclesRecords[x][y] = 0;
       _imagesCoord[imageId - 1] = '$x,$y';
       _imagesStatus[imageId - 1] = dir;
     } else {
+      this.obstaclesRecords[x][y] = 0;
       _imagesCoord[imageId - 1] = '-1,-1';
       _imagesStatus[imageId - 1] = -1;
     }
@@ -194,29 +195,29 @@ class Arena {
     if (item == '0') {
       item = _inSpecialZone(x, y);
       if (item == '0') {
-        if (obstaclesRecords[x][y] == 1) {
-          int id = _imagesCoord.indexOf('$x,$y');
-          if (id == -1) {
+        int id = _imagesCoord.indexOf('$x,$y');
+        if (id == -1) {
+          if (obstaclesRecords[x][y] == 1) {
             item = 'O';
           } else {
-            item = 'n${id + 1}';
-            _imageDirection = _imagesStatus[id];
+            switch (explorationStatus[x][y] + WayPoint.isWayPoint(x, y)) {
+              case 0:
+                item = '0';
+                break;
+              case 1:
+                item = '1';
+                break;
+              case 3:
+                item = 'WP0';
+                break;
+              case 4:
+                item = 'WP1';
+                break;
+            }
           }
         } else {
-          switch (explorationStatus[x][y] + WayPoint.isWayPoint(x, y)) {
-            case 0:
-              item = '0';
-              break;
-            case 1:
-              item = '1';
-              break;
-            case 3:
-              item = 'WP0';
-              break;
-            case 4:
-              item = 'WP1';
-              break;
-          }
+          item = 'n${id + 1}';
+          _imageDirection = _imagesStatus[id];
         }
       } else if (item == 'lblX') {
         if (_imagesStatus.contains(-1)) {
@@ -368,8 +369,10 @@ class Arena {
         break;
       case 'lbl':
         item = '$temp';
-        continue defCase;
-      defCase:
+        return Center(
+          child: Text(item),
+        );
+        break;
       default:
         return Center(
           child: Text(item),
