@@ -508,15 +508,6 @@ class _MyHomePageState extends State<MyHomePage> {
       }
     }
 
-    if (x == 20 && y == 15) return Text('');
-    if (x == 20)
-      return Center(
-        child: Text('$y'),
-      );
-    if (y == 15)
-      return Center(
-        child: Text('$x'),
-      );
     return globals.arena.getArenaState(x, y, onTapFunction);
   }
 

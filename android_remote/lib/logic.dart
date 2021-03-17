@@ -9,8 +9,7 @@ String cleanCommand(String command) {
       })
       .trim()
       .toUpperCase()
-      .replaceAll('\N', '')
-      ;
+      .replaceAll('\N', '');
 }
 
 Future<bool> executeCommand(String command, [List<String> args]) async {
@@ -88,17 +87,15 @@ Future<bool> executeCommand(String command, [List<String> args]) async {
       break;
 
     case globals.strAddImage:
-      int checker = int.parse(cleanCommand(args[0].trim()));
-      if (checker > 0 && checker < 16) {
-        int image = checker + 100;
+      int id = int.parse(cleanCommand(args[0].trim()));
+      if (id > 0 && id < 16) {
         int x = int.parse(cleanCommand(args[1].trim()));
         int y = int.parse(cleanCommand(args[2].trim()));
         int dir = int.parse(cleanCommand(args[3].trim()));
-        arena.setImage(x, y, image, dir);
+        arena.setImage(x, y, id, dir);
       } else {
-        streamController.add("Invalid id range. id = $checker");
+        streamController.add("Invalid id range. id = $id");
       }
-
       break;
 
     case globals.strDelImage:

@@ -52,19 +52,19 @@ class _SshTerminal extends State<SshTerminalPage> {
   }
 
   Future<void> connectRpi() async {
-    /*client = new SSHClient(
+    client = new SSHClient(
       host: "192.168.5.5",
       port: 22,
       username: "pi",
       passwordOrKey: "MdpGroup5",
-    );*/
+    );
 
-    client = new SSHClient(
+    /*client = new SSHClient(
       host: "192.168.66.66",
       port: 22,
       username: "pi",
       passwordOrKey: "@dmin123",
-    );
+    );*/
 
     try {
       String result = await client.connect();

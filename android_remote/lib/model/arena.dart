@@ -10,7 +10,10 @@ class Arena {
   List<List<int>> explorationStatus, obstaclesRecords;
   WayPoint _wayPoint;
   Robot _robot;
-  int _imagedirection = 0;
+  int _imageDirection = 0;
+  List<int> unresolvedImages = [];
+  List<String> _images = List.generate(15, (index) => '-1,-1');
+  int temp = 0;
 
   Arena(String selector) {
     if (selector[0] == '1') {
@@ -166,8 +169,12 @@ class Arena {
     this.obstaclesRecords[x][y] = 0;
   }
 
-  void setImage(int x, int y, int imageid, int dir) {
-    this.obstaclesRecords[x][y] = imageid * 10 + dir;
+  void setImage(int x, int y, int imageId, int dir) {
+    this.obstaclesRecords[x][y] = 2;
+    if ((x >= 0 && x < 20) && (y >= 0 && y < 15))
+      _images[imageId - 1] = '$x,$y';
+    else
+      unresolvedImages.add(imageId - 1);
   }
 
   void setExplored(int x, int y) {
@@ -184,14 +191,11 @@ class Arena {
     if (item == '0') {
       item = _inSpecialZone(x, y);
       if (item == '0') {
-        if (obstaclesRecords[x][y] >= 1) {
-          if (obstaclesRecords[x][y] == 1) {
-            item = 'O';
-          } else {
-            int id = (obstaclesRecords[x][y] / 10).floor() - 100;
-            this._imagedirection = (obstaclesRecords[x][y] % 10);
-            item = 'n$id';
-          }
+        if (obstaclesRecords[x][y] == 1) {
+          item = 'O';
+        } else if (obstaclesRecords[x][y] == 2) {
+          int id = _images.indexOf('$x,$y') + 1;
+          item = 'n$id';
         } else {
           switch (explorationStatus[x][y] + WayPoint.isWayPoint(x, y)) {
             case 0:
@@ -208,6 +212,16 @@ class Arena {
               break;
           }
         }
+      } else if (item == 'lblX') {
+        if (y < unresolvedImages.length) {
+          item = 'n$y';
+        } else {
+          temp = y;
+          item = 'lbl';
+        }
+      } else if (item == 'lblY') {
+        temp = x;
+        item = 'lbl';
       }
     }
 
@@ -321,7 +335,7 @@ class Arena {
         return Padding(
           padding: const EdgeInsets.all(1),
           child: RotatedBox(
-            quarterTurns: _imagedirection,
+            quarterTurns: _imageDirection,
             child: Container(
               decoration: BoxDecoration(
                 image: DecorationImage(
@@ -341,19 +355,27 @@ class Arena {
         return Icon(Icons.golf_course);
         break;
       case 'SM':
-        return Text('');
-        break;
       case 'EM':
         return Text('');
         break;
+      case 'lbl':
+        item = '$temp';
+        continue defCase;
+      defCase:
       default:
-        return Text(item);
+        return Center(
+          child: Text(item),
+        );
         break;
     }
   }
 }
 
 String _inSpecialZone(int x, int y) {
+  if (x == 20 && y == 15) return 'SM';
+  if (x == 20) return 'lblX';
+  if (y == 15) return 'lblY';
+
   switch (x) {
     case 0:
     case 1:
