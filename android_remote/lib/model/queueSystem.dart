@@ -62,7 +62,7 @@ class QueueSys {
 
   static void queueTask(String task) {
     List<String> taskList = task.split('\n');
-
+    taskList.forEach((element) {if(element.contains('\n')) element.replaceAll('\n', '');});
     _queue.addAll(taskList);
   }
 
@@ -86,7 +86,7 @@ class QueueSys {
 
   static Future<File> logToFile(String cmd, List params, bool status) async {
     // Write the file
-    return _writeToFile('${_timer.tick}||$cmd||$params\n');
+    return _writeToFile('${_timer.tick},$cmd,${params.join(',')}\n');
   }
 
   static Future<void> prepareFile() async {
