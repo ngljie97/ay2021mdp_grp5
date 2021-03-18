@@ -1,4 +1,5 @@
 import 'package:android_remote/main.dart';
+
 class Robot {
   int prevX;
   int x;
@@ -16,56 +17,43 @@ class Robot {
     switch (this.direction) {
       case 0:
         newPos = this.x + 1;
-        if(newPos > 0 && newPos < 19) {
+        if (newPos > 0 && newPos < 19) {
           this.x = newPos;
-          unityWidgetController.postMessage(
-            'Player_Isometric_Witch',
-            'setUnityRobot',
-            '$x:$y:$direction',
-          );
-        }
-        else
+          continue unityPostCall;
+        } else
           this.x = x;
         break;
       case 2:
         newPos = this.x - 1;
-        if(newPos > 0 && newPos < 19) {
+        if (newPos > 0 && newPos < 19) {
           this.x = newPos;
-          unityWidgetController.postMessage(
-            'Player_Isometric_Witch',
-            'setUnityRobot',
-            '$x:$y:$direction',
-          );
-        }
-        else
+          continue unityPostCall;
+        } else
           this.x = x;
         break;
       case 1:
         newPos = this.y + 1;
-        if(newPos > 0 && newPos < 14) {
+        if (newPos > 0 && newPos < 14) {
           this.y = newPos;
-          unityWidgetController.postMessage(
-            'Player_Isometric_Witch',
-            'setUnityRobot',
-            '$x:$y:$direction',
-          );
-        }
-        else
+          continue unityPostCall;
+        } else
           this.y = y;
         break;
       case 3:
         newPos = this.y - 1;
-        if(newPos > 0 && newPos < 14) {
+        if (newPos > 0 && newPos < 14) {
           this.y = newPos;
-          unityWidgetController.postMessage(
-            'Player_Isometric_Witch',
-            'setUnityRobot',
-            '$x:$y:$direction',
-          );
-        }
-        else
+          continue unityPostCall;
+        } else
           this.y = y;
-
+        break;
+      unityPostCall:
+      case 99:
+        unityWidgetController.postMessage(
+          'Player_Isometric_Witch',
+          'setUnityRobot',
+          '$x:$y:$direction',
+        );
         break;
     }
   }

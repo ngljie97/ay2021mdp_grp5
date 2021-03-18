@@ -49,7 +49,7 @@ class _ConnectionPage extends State<ConnectionPage> {
   // ignore: unused_field
   int _discoverableTimeoutSecondsLeft = 0;
 
-  List<_DeviceWithAvailability> devices = List<_DeviceWithAvailability>();
+  List<_DeviceWithAvailability> devices = [];
 
   // Availability
   StreamSubscription<BluetoothDiscoveryResult> _discoveryStreamSubscription;
@@ -264,7 +264,8 @@ class _ConnectionPage extends State<ConnectionPage> {
 
 void _startChat(BuildContext context, BluetoothDevice server) {
   globals.btController.server = server;
-  Navigator.of(context).push(
+  Navigator.pop(context);
+  Navigator.of(context).pushReplacement(
     MaterialPageRoute(
       builder: (context) {
         return MyHomePage(streamController.stream);

@@ -1,23 +1,34 @@
+import 'dart:math';
+
 import 'package:android_remote/main.dart';
 import 'package:android_remote/model/robot.dart';
 import 'package:android_remote/model/waypoint.dart';
 import 'package:flutter/material.dart';
-import 'package:android_remote/modules/descriptor_decoder.dart';
+import 'package:android_remote/modules/descriptor_manager.dart';
 import '../globals.dart';
 
 class Arena {
   List<List<int>> explorationStatus, obstaclesRecords;
   WayPoint _wayPoint;
   Robot _robot;
-  int _imagedirection = 0;
+  List<String> _imagesCoord;
+  List<int> _imagesStatus;
+  int temp = 0;
+  int _imageDirection = 0;
 
-  Arena(String selector) {
+  Arena(String selector, bool unity) {
+    _imagesCoord = List.generate(15, (index) => '-1,-1');
+    _imagesStatus = List.generate(15, (index) => 0);
     if (selector[0] == '1') {
       this.explorationStatus = List.generate(
         20,
-            (index) => List.generate(15, (index) => 0, growable: false),
+        (index) => List.generate(15, (index) => 0, growable: false),
         growable: false,
       );
+      if (unity) {
+        unityWidgetController.postMessage(
+            'Tilemap - Level 1 - Detail', 'ResetArena', '');
+      }
     } else if (backupArena != null) {
       this.explorationStatus = backupArena.explorationStatus;
     }
@@ -25,7 +36,7 @@ class Arena {
     if (selector[1] == '1') {
       this.obstaclesRecords = List.generate(
         20,
-            (index) => List.generate(15, (index) => 0, growable: false),
+        (index) => List.generate(15, (index) => 0, growable: false),
         growable: false,
       );
     } else if (backupArena != null) {
@@ -34,6 +45,13 @@ class Arena {
 
     if (selector[2] == '1') {
       this._robot = Robot(1, 1, 1, 1, 0);
+      if (unity) {
+        unityWidgetController.postMessage(
+          'Player_Isometric_Witch',
+          'setUnityRobot',
+          '1:1:0',
+        );
+      }
     } else if (backupArena != null) {
       this._robot = backupArena._robot;
     }
@@ -47,13 +65,26 @@ class Arena {
     backupArena = null;
   }
 
-  bool setWayPoint(int x, int y) {
+  bool setWayPoint(int x, int y, bool isUnity) {
+    int checker = explorationStatus[x][y] + WayPoint.isWayPoint(x, y);
     if (WayPoint.isWayPoint(x, y) == 0) {
       // Sets the waypoint if the tile is not already a waypoint;
+      if (!isUnity)
+        unityWidgetController.postMessage(
+          'Tilemap - Level 1 - Detail',
+          'SetWaypointByFlutter',
+          "$x:$y:$checker",
+        );
       this._wayPoint.update(x, y);
       return true;
     } else {
       // Remove the waypoint if is already there.
+      if (!isUnity)
+        unityWidgetController.postMessage(
+          'Tilemap - Level 1 - Detail',
+          'DisableWaypointByFlutter',
+          "$x:$y:$checker",
+        );
       this._wayPoint.update(-1, -1);
       return false;
     }
@@ -62,7 +93,7 @@ class Arena {
   Future<void> updateMapFromDescriptors(
       bool isAMDTool, String mapDescriptor1, String mapDescriptor2) async {
     List<String> obstaclesCoords =
-    DescriptorDecoder.decodeDescriptor1(isAMDTool, mapDescriptor1);
+        DescriptorDecoder.decodeDescriptor1(isAMDTool, mapDescriptor1);
 
     DescriptorDecoder.decodeDescriptor2(
         isAMDTool, obstaclesCoords, mapDescriptor2);
@@ -109,7 +140,11 @@ class Arena {
       _robot.x = x;
       _robot.y = y;
       _robot.direction = dir;
-
+      unityWidgetController.postMessage(
+        'Player_Isometric_Witch',
+        'setUnityRobot',
+        '$x:$y:$dir',
+      );
       return true;
     }
   }
@@ -175,8 +210,32 @@ class Arena {
     );
   }
 
-  void setImage(int x, int y, int imageid, int dir) {
-    this.obstaclesRecords[x][y] = imageid * 10 + dir;
+  void setImage(int x, int y, int imageId, int dir) {
+    if ((x >= 0 && x < 20) && (y >= 0 && y < 15)) {
+      this.obstaclesRecords[x][y] = 0;
+      String oldx = _imagesCoord[imageId - 1].split(',')[0];
+      String oldy = _imagesCoord[imageId - 1].split(',')[1];
+      _imagesCoord[imageId - 1] = '$x,$y';
+      _imagesStatus[imageId - 1] = dir;
+
+      // unityWidgetController.postMessage(
+      //   'Tilemap - Level 1 - Detail',
+      //   'SetImageRecTiles',
+      //   '$x:$y:$imageId:$dir:$oldx:$oldy',
+      // );
+    } else {
+      _imagesCoord[imageId - 1] = getRandomObstacle();
+      _imagesStatus[imageId - 1] = -1;
+    }
+  }
+
+  void rmvImage(int x, int y, int imageId, int dir) {
+    if ((x >= 0 && x < 20) && (y >= 0 && y < 15)) {
+      this.obstaclesRecords[x][y] = 0;
+
+      _imagesCoord[imageId - 1] = '';
+      _imagesStatus[imageId - 1] = 0;
+    } else {}
   }
 
   void setExplored(int x, int y) {
@@ -190,102 +249,48 @@ class Arena {
   void refreshArena() {}
 
   Widget getArenaState(int x, int y, Function onTapFunction) {
+    _imageDirection = 0;
     String item = isRobot(x, y);
 
     if (item == '0') {
-      // item = _inSpecialZone(x, y);
-      item = '0';
+      item = _inSpecialZone(x, y);
       if (item == '0') {
-        if (obstaclesRecords[x][y] >= 1) {
-          int first = (obstaclesRecords[x][y] / 10).floor();
-          int second = (obstaclesRecords[x][y] % 10);
-          switch (first) {
-            case 101:
-              item = 'n1';
-              this._imagedirection = second;
-              break;
-            case 102:
-              item = 'n2';
-              this._imagedirection = second;
-              break;
-            case 103:
-              item = 'n3';
-              this._imagedirection = second;
-              break;
-            case 104:
-              item = 'n4';
-              this._imagedirection = second;
-              break;
-            case 105:
-              item = 'n5';
-              this._imagedirection = second;
-              break;
-            case 106:
-              item = 'n6';
-              this._imagedirection = second;
-              break;
-            case 107:
-              item = 'n7';
-              this._imagedirection = second;
-              break;
-            case 108:
-              item = 'n8';
-              this._imagedirection = second;
-              break;
-            case 109:
-              item = 'n9';
-              this._imagedirection = second;
-              break;
-            case 110:
-              item = 'n10';
-              this._imagedirection = second;
-              break;
-            case 111:
-              item = 'n11';
-              this._imagedirection = second;
-              break;
-            case 112:
-              item = 'n12';
-              this._imagedirection = second;
-              break;
-            case 113:
-              item = 'n13';
-              this._imagedirection = second;
-              break;
-            case 114:
-              item = 'n14';
-              this._imagedirection = second;
-              break;
-            case 115:
-              item = 'n15';
-              this._imagedirection = second;
-              break;
-            default:
-              item = 'O';
-              break;
+        int id = _imagesCoord.indexOf('$x,$y');
+        if (id == -1) {
+          if (obstaclesRecords[x][y] == 1) {
+            item = 'O';
+          } else {
+            switch (explorationStatus[x][y] + WayPoint.isWayPoint(x, y)) {
+              case 0:
+                item = '0';
+                break;
+              case 1:
+                item = '1';
+                break;
+              case 3:
+                item = 'WP0';
+                break;
+              case 4:
+                item = 'WP1';
+                break;
+            }
           }
         } else {
-          switch (explorationStatus[x][y] + WayPoint.isWayPoint(x, y)) {
-            case 0:
-              item = '0';
-              break;
-            case 1:
-              item = '1';
-              break;
-            case 3:
-              item = 'WP0';
-              break;
-            case 4:
-              item = 'WP1';
-              break;
-          }
+          item = 'n${id + 1}';
+          _imageDirection = _imagesStatus[id];
         }
+      } else if (item == 'lblX') {
+        temp = y;
+        item = 'lbl';
+      } else if (item == 'lblY') {
+        temp = x;
+        item = 'lbl';
       }
     }
-
     return _resolveItem(item, onTapFunction);
   }
 
+  // ignore: missing_return
   Widget _resolveItem(String item, Function onTapFunction) {
     switch (item) {
       case 'RB':
@@ -318,7 +323,6 @@ class Arena {
           ),
         );
         break;
-
       case '1': // Explored
         return Padding(
           padding: const EdgeInsets.all(1),
@@ -374,168 +378,12 @@ class Arena {
         );
         break;
 
-    // Image Recognition
-      case 'A':
-        return Container(
-          decoration: BoxDecoration(
-            image: DecorationImage(
-              image: AssetImage('assets/letter_a.PNG'),
-              fit: BoxFit.fill,
-            ),
-            shape: BoxShape.rectangle,
-          ),
-        );
-        break;
-
-      case 'B':
-        return Container(
-          decoration: BoxDecoration(
-            image: DecorationImage(
-              image: AssetImage('assets/letter_b.PNG'),
-              fit: BoxFit.fill,
-            ),
-            shape: BoxShape.rectangle,
-          ),
-        );
-        break;
-      case 'C':
-        return Container(
-          decoration: BoxDecoration(
-            image: DecorationImage(
-              image: AssetImage('assets/letter_c.PNG'),
-              fit: BoxFit.fill,
-            ),
-            shape: BoxShape.rectangle,
-          ),
-        );
-        break;
-      case 'D':
-        return Container(
-          decoration: BoxDecoration(
-            image: DecorationImage(
-              image: AssetImage('assets/letter_d.PNG'),
-              fit: BoxFit.fill,
-            ),
-            shape: BoxShape.rectangle,
-          ),
-        );
-        break;
-      case 'aB':
-        return Container(
-          decoration: BoxDecoration(
-            image: DecorationImage(
-              image: AssetImage('assets/arrow_blue.PNG'),
-              fit: BoxFit.fill,
-            ),
-            shape: BoxShape.rectangle,
-          ),
-        );
-        break;
-      case 'aG':
-        return Container(
-          decoration: BoxDecoration(
-            image: DecorationImage(
-              image: AssetImage('assets/arrow_green.PNG'),
-              fit: BoxFit.fill,
-            ),
-            shape: BoxShape.rectangle,
-          ),
-        );
-        break;
-      case 'aR':
-        return Container(
-          decoration: BoxDecoration(
-            image: DecorationImage(
-              image: AssetImage('assets/arrow_red.PNG'),
-              fit: BoxFit.fill,
-            ),
-            shape: BoxShape.rectangle,
-          ),
-        );
-        break;
-      case 'aW':
-        return Container(
-          decoration: BoxDecoration(
-            image: DecorationImage(
-              image: AssetImage('assets/arrow_white.PNG'),
-              fit: BoxFit.fill,
-            ),
-            shape: BoxShape.rectangle,
-          ),
-        );
-        break;
-      case 'cY':
-        return Container(
-          decoration: BoxDecoration(
-            image: DecorationImage(
-              image: AssetImage('assets/circle_yellow.PNG'),
-              fit: BoxFit.fill,
-            ),
-            shape: BoxShape.rectangle,
-          ),
-        );
+      // Image Recognition
       case 'n1':
-        return RotatedBox(
-            quarterTurns: this._imagedirection,
-            child: Container(
-              decoration: BoxDecoration(
-                image: DecorationImage(
-                  image: AssetImage('assets/number_one.PNG'),
-                  fit: BoxFit.fill,
-                ),
-                shape: BoxShape.rectangle,
-              ),
-            ));
       case 'n2':
-        return RotatedBox(
-            quarterTurns: this._imagedirection,
-            child: Container(
-              decoration: BoxDecoration(
-                image: DecorationImage(
-                  image: AssetImage('assets/number_two.PNG'),
-                  fit: BoxFit.fill,
-                ),
-                shape: BoxShape.rectangle,
-              ),
-            ));
       case 'n3':
-        return RotatedBox(
-            quarterTurns: this._imagedirection,
-            child: Container(
-              decoration: BoxDecoration(
-                image: DecorationImage(
-                  image: AssetImage('assets/number_three.PNG'),
-                  fit: BoxFit.fill,
-                ),
-                shape: BoxShape.rectangle,
-              ),
-            ));
       case 'n4':
-        return RotatedBox(
-            quarterTurns: this._imagedirection,
-            child: Container(
-              decoration: BoxDecoration(
-                image: DecorationImage(
-                  image: AssetImage('assets/number_four.PNG'),
-                  fit: BoxFit.fill,
-                ),
-                shape: BoxShape.rectangle,
-              ),
-            ));
       case 'n5':
-        return RotatedBox(
-            quarterTurns: this._imagedirection,
-            child: Container(
-              decoration: BoxDecoration(
-                image: DecorationImage(
-                  image: AssetImage('assets/number_five.PNG'),
-                  fit: BoxFit.fill,
-                ),
-                shape: BoxShape.rectangle,
-              ),
-            ));
-        break;
-    // End of Image Recognition
       case 'n6':
       case 'n7':
       case 'n8':
@@ -549,28 +397,18 @@ class Arena {
         return Padding(
           padding: const EdgeInsets.all(1),
           child: RotatedBox(
-            quarterTurns: this._imagedirection,
-            child: Container(
-              color: Colors.black,
-              child: Text(item.substring(1),
-                  textAlign: TextAlign.center,
-                  style:
-                  TextStyle(fontSize: 30.0, fontWeight: FontWeight.w500)),
-            ),
-          ),
-        );
-        break;
-        return RotatedBox(
-            quarterTurns: this._imagedirection,
+            quarterTurns: _imageDirection,
             child: Container(
               decoration: BoxDecoration(
                 image: DecorationImage(
-                  image: AssetImage('assets/number_five.PNG'),
+                  image: AssetImage('assets/${item.substring(1)}.png'),
                   fit: BoxFit.fill,
                 ),
                 shape: BoxShape.rectangle,
               ),
-            ));
+            ),
+          ),
+        );
         break;
       case 'S':
         return Icon(Icons.play_arrow);
@@ -579,32 +417,69 @@ class Arena {
         return Icon(Icons.golf_course);
         break;
       case 'SM':
-        return Text('');
-        break;
       case 'EM':
         return Text('');
         break;
-
+      case 'lbl':
+        item = '$temp';
+        return Center(
+          child: Text(item),
+        );
+        break;
       default:
-        return Text(item);
+        return Center(
+          child: Text(item),
+        );
         break;
     }
+  }
+
+  String getRandomObstacle() {
+    int x, y, rep;
+    rep = 1;
+    while (true) {
+      x = 3 + Random().nextInt(13);
+      y = obstaclesRecords[x].indexOf(1, rep++);
+      if (y < 0 || y > 14) {
+        continue;
+      }
+      if (_imagesCoord.contains('$x,$y')) {
+        continue;
+      } else {
+        break;
+      }
+    }
+
+    return '$x,$y';
+  }
+
+  String getImageStrings() {
+    String result = '';
+    for (int i = 0; i < _imagesCoord.length; i++) {
+      if (_imagesCoord[i] != '-1,-1') {
+        result += '(${i + 1},${_imagesCoord[i]})\n';
+      }
+    }
+    return result;
   }
 }
 
 String _inSpecialZone(int x, int y) {
+  if (x == 20 && y == 15) return 'SM';
+  if (x == 20) return 'lblX';
+  if (y == 15) return 'lblY';
   switch (x) {
     case 0:
     case 1:
     case 2:
       switch (y) {
-        case 13:
-          if (x == 1) return 'E';
-          continue case14;
-        case 12:
-        case14:
-        case 14:
-          return 'EM';
+        case 1:
+          if (x == 1) return 'S';
+          continue case2;
+        case 0:
+        case2:
+        case 2:
+          return 'SM';
           break;
       }
       break;
@@ -612,13 +487,13 @@ String _inSpecialZone(int x, int y) {
     case 18:
     case 19:
       switch (y) {
-        case 1:
-          if (x == 18) return 'S';
-          continue case2;
-        case 0:
-        case2:
-        case 2:
-          return 'SM';
+        case 13:
+          if (x == 18) return 'E';
+          continue case14;
+        case 12:
+        case14:
+        case 14:
+          return 'EM';
           break;
       }
       break;

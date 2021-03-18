@@ -12,6 +12,7 @@ bool debugMode = false;
 bool controlMode = false;
 bool gyroMode = false;
 bool arena2d = false;
+double sidebarRight =0;
 String robotStatus = 'IDLE';
 String Datetimeformat = 'yyyy/MM/dd, kk:mm:ss';
 String formattedDate = DateFormat(Datetimeformat).format(DateTime.now()) +
@@ -32,7 +33,7 @@ Arena backupArena;
 final String strStartExplore = 'PR|EX_START';
 final String strFastestPath = 'PR|FP_START';
 final String strImgFind = 'PR|IF_START';
-
+final String strCalibrate = 'R|IC';
 // Move robot
 final String strForward = 'R|ROBOT_FW';
 final String strRotateLeft = 'R|ROBOT_RL';
@@ -41,8 +42,7 @@ final String strRotateRight = 'R|ROBOT_RR';
 // Waypoint operations
 const String strSetWayPoint = 'P|SET_WAYPOINT';
 const String strRemoveWayPoint = 'P|RM_WAYPOINT';
-
-const String strRefreshArena = 'P|SEND_ARENA';
+const String strRefreshArena = 'SEND_ARENA';
 
 // Command list (receiving)
 const String strRobotPos = 'ROBOT_POS';
@@ -55,9 +55,7 @@ const String strDelImage = 'DELETE_IMAGE';
 const String strUpdateMap = 'MAP';
 
 // Command list to indicate robot status
-const String strFinishedIR = 'FINISH_IR';
-const String strFinishedEx = 'FINISH_EX';
-const String strFinishedFP = 'FINISH_FP';
+const String strFinishedAlgo = 'FINISH';
 const String strWayPoint = 'WAYPOINT';
 
 // Command list (from AMDTOOLS)

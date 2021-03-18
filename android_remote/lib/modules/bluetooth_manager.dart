@@ -16,7 +16,7 @@ class BluetoothController {
   bool isReconnecting = false;
   BluetoothDevice server;
   bool isConnected = false;
-  List<_Message> messages = List<_Message>();
+  List<_Message> messages = [];
 
   // ignore: unused_field
   String _messageBuffer = '';

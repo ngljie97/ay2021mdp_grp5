@@ -6,13 +6,14 @@ import 'package:android_remote/main.dart';
 import 'package:path_provider/path_provider.dart';
 
 class QueueSys {
-  static List<String> _queue = new List<String>();
+  static List<String> _queue = [];
   static Timer _timer;
   static bool running = false;
   static int taskNo = 0;
 
   QueueSys() {
-    _timer = Timer.periodic(Duration(seconds: 1), (timer) => {checkQueue()});
+    _timer =
+        Timer.periodic(Duration(milliseconds: 500), (timer) => {checkQueue()});
     prepareFile();
   }
 
@@ -61,6 +62,7 @@ class QueueSys {
 
   static void queueTask(String task) {
     List<String> taskList = task.split('\n');
+    taskList.forEach((element) {if(element.contains('\n')) element.replaceAll('\n', '');});
     _queue.addAll(taskList);
   }
 
@@ -84,7 +86,7 @@ class QueueSys {
 
   static Future<File> logToFile(String cmd, List params, bool status) async {
     // Write the file
-    return _writeToFile('${_timer.tick}||$cmd||$params\n');
+    return _writeToFile('${_timer.tick},$cmd,${params.join(',')}\n');
   }
 
   static Future<void> prepareFile() async {
@@ -92,6 +94,6 @@ class QueueSys {
 
     // Write the file
     return _writeToFile(
-        'Application started at ${_now.day}/${_now.month}/${_now.year} ${_now.hour}:${_now.minute}:${_now.second}|| || \n\n');
+        'Application started at ${_now.day}/${_now.month}/${_now.year} ${_now.hour}:${_now.minute}:${_now.second}|| || \n');
   }
 }

@@ -5,7 +5,6 @@ import 'package:android_remote/modules/bluetooth_manager.dart';
 import 'package:android_remote/pages/about.dart';
 import 'package:android_remote/pages/bluetooth_connection.dart';
 import 'package:android_remote/pages/consoleBackupPage.dart';
-import 'package:android_remote/pages/unity.dart';
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
 import 'package:scrollable_positioned_list/scrollable_positioned_list.dart';
@@ -14,6 +13,9 @@ import 'package:shared_preferences/shared_preferences.dart';
 import 'globals.dart' as globals;
 import 'model/arena.dart';
 import 'model/queueSystem.dart';
+import 'package:android_remote/pages/ssh_client.dart';
+
+import 'modules/descriptor_manager.dart';
 
 StreamController<String> streamController =
     StreamController<String>.broadcast();
@@ -60,10 +62,10 @@ class _MyHomePageState extends State<MyHomePage> {
   bool _setRobotStart = false;
 
   Future<void> mySetState(String message) async {
-    await addConsoleAndScroll(message);
+    addConsoleAndScroll(message);
     if (message.contains('Disconnected remotely!')) {
       globals.backupArena = globals.arena;
-      globals.arena = Arena('1110');
+      //globals.arena = Arena('1110',false);
     }
   }
 
@@ -93,7 +95,7 @@ class _MyHomePageState extends State<MyHomePage> {
       mySetState(message);
     });
 
-    globals.arena = Arena('1111');
+    globals.arena = Arena('1111',false);
 
     if (globals.btController == null)
       globals.btController = BluetoothController();
@@ -193,7 +195,7 @@ class _MyHomePageState extends State<MyHomePage> {
               child: Container(
                 child: Positioned(
                   //Place it at the top, and not use the entire screen
-                  top: 12.0,
+                  top: 40.0,
                   left: 0.0,
                   right: 0.0,
                   child: AppBar(
@@ -209,7 +211,7 @@ class _MyHomePageState extends State<MyHomePage> {
               visible: !_setWayPoint && !_setRobotStart,
               child: Container(
                 padding: EdgeInsets.fromLTRB(
-                    MediaQuery.of(context).size.width - 55, 50, 0, 0),
+                    MediaQuery.of(context).size.width - 75, 75, 0, 0),
                 child: Icon(
                   Icons.bluetooth,
                   color: (globals.btController.isConnected)
@@ -223,7 +225,7 @@ class _MyHomePageState extends State<MyHomePage> {
               visible: !_setWayPoint && !_setRobotStart,
               child: Container(
                 padding: EdgeInsets.fromLTRB(
-                    MediaQuery.of(context).size.width - 115, 43, 0, 0),
+                    MediaQuery.of(context).size.width - 135, 65, 0, 0),
                 child: IconButton(
                     icon: Icon(
                       Icons.refresh,
@@ -246,7 +248,7 @@ class _MyHomePageState extends State<MyHomePage> {
               child: Center(
                 child: Container(
                   child: Align(
-                    alignment: Alignment(1, 0),
+                    alignment: Alignment(globals.sidebarRight, 0),
                     child: IconButton(
                       icon: Icon(Icons.stay_current_landscape),
                       color:
@@ -293,15 +295,14 @@ class _MyHomePageState extends State<MyHomePage> {
               child: Center(
                 child: Container(
                   child: Align(
-                    alignment: Alignment(1, 0.07),
+                    alignment: Alignment(globals.sidebarRight, 0.07),
                     child: IconButton(
                       icon: Icon(Icons.cached),
                       tooltip: 'Reset Robot',
                       color: Colors.blueAccent,
                       onPressed: () {
-                        setState(() {
-                          globals.arena.resetRobotPos();
-                        });
+                        globals.backupArena = globals.arena;
+                        setState(() => globals.arena = new Arena('1110',true));
                       },
                     ),
                   ),
@@ -313,10 +314,10 @@ class _MyHomePageState extends State<MyHomePage> {
               child: Center(
                 child: Container(
                   child: Align(
-                    alignment: Alignment(1, 0.15),
+                    alignment: Alignment(globals.sidebarRight, 0.15),
                     child: IconButton(
                       icon: Icon(Icons.view_in_ar),
-                      tooltip: 'Reset Robot',
+                      tooltip: 'Switch Map',
                       color: Colors.blueAccent,
                       onPressed: () {
                         setState(() {
@@ -364,7 +365,7 @@ class _MyHomePageState extends State<MyHomePage> {
                     globals.btController.isReconnecting = false;
                     addConsoleAndScroll('Disconnected locally!');
                     globals.backupArena = globals.arena;
-                    globals.arena = Arena('1110');
+                    //globals.arena = Arena('1110',true);
                   } else {
                     streamController.close();
                     globals.btController.selectedDevice =
@@ -437,9 +438,24 @@ class _MyHomePageState extends State<MyHomePage> {
                 title: Text('Clear state'),
                 onTap: () {
                   globals.backupArena = globals.arena;
-                  setState(() => globals.arena = new Arena('1110'));
+                  setState(() => globals.arena = new Arena('1110',true));
+
                 },
               ),
+              ListTile(
+                leading: Icon(Icons.subject_sharp),
+                title: Text('SSH Client'),
+                onTap: () => Navigator.of(context)
+                    .push(MaterialPageRoute(builder: (context) {
+                  return new SshTerminalPage();
+                })),
+              ),
+              ListTile(
+                leading: Icon(Icons.border_color),
+                title: Text('Image Strings'),
+                onTap: () => _showEditForm(context, 3),
+              ),
+              Divider(),
               ListTile(
                 leading: Icon(Icons.info_outline),
                 title: Text('About'),
@@ -450,11 +466,6 @@ class _MyHomePageState extends State<MyHomePage> {
                     },
                   ));
                 },
-              ),
-              ListTile(
-                leading: Icon(Icons.info_outline),
-                title: Text('Unity test'),
-                onTap: () {},
               ),
             ],
           ),
@@ -468,7 +479,33 @@ class _MyHomePageState extends State<MyHomePage> {
   }
 
   void onUnityMessage(message) {
-    print('Received message from unity: ${message.toString()}');
+    String type = message.toString().split(":")[0];
+    if(type.toUpperCase()=="ADDWAYPOINT")
+      {
+        String x = message.toString().split(":")[1];
+        String y = message.toString().split(":")[2];
+        globals.arena.setWayPoint(int.parse(x), int.parse(y),true);
+        addConsoleAndScroll('uWayPoint set at [$x,$y].');
+        globals.btController.sendMessage('${globals.strSetWayPoint}:$x:$y');
+        _setWayPoint=false;
+      }
+    else if(type.toUpperCase()=="REMOVEWAYPOINT")
+      {
+        String x = message.toString().split(":")[1];
+        String y = message.toString().split(":")[2];
+        globals.arena.setWayPoint(int.parse(x), int.parse(y),true);
+        addConsoleAndScroll('uWayPoint[$x,$y] removed.');
+        globals.btController
+            .sendMessage('${globals.strRemoveWayPoint}:$x:$y');
+        _setWayPoint=false;
+      }
+    else{
+      print(message);
+    }
+    setState(() {
+
+    });
+
   }
 
   void setRotationSpeed(String speed) {
@@ -486,7 +523,25 @@ class _MyHomePageState extends State<MyHomePage> {
       xyz,
     );
   }
+  void setUnityWaypoint(bool isSetting)
+  {
+    if(!isSetting)
+      {
+        unityWidgetController.postMessage(
+          '5',
+          'EnableWaypointByUnity',
+          "",
+        );
+      }
+    else{
+      unityWidgetController.postMessage(
+        'Tilemap - Level 1 - Detail',
+        'DisableWaypointByUnity',
+        "",
+      );
+    }
 
+  }
   void setUnityObstacle(String xyz) {
     //xyz = x:y
     unityWidgetController.postMessage(
@@ -498,8 +553,13 @@ class _MyHomePageState extends State<MyHomePage> {
 
   Widget _buildchecker() {
     if (globals.arena2d) {
+
+      globals.sidebarRight=0.87;
       return _buildArena();
-    } else {
+
+
+    } else{
+      globals.sidebarRight=1;
       return _buildUnity();
     }
   }
@@ -520,6 +580,7 @@ class _MyHomePageState extends State<MyHomePage> {
                   onUnityCreated: onUnityCreated,
                   isARScene: false,
                   fullscreen: false,
+                  onUnityMessage: onUnityMessage,
                 ),
                 Positioned(
                   bottom: 20,
@@ -567,14 +628,14 @@ class _MyHomePageState extends State<MyHomePage> {
             padding: EdgeInsets.fromLTRB(0, 0, 0, 0),
             child: GridView.builder(
                 gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
-                  crossAxisCount: 15,
+                  crossAxisCount: 16,
                   childAspectRatio: MediaQuery.of(context).size.width /
                       (MediaQuery.of(context).size.height / 1.8),
                   crossAxisSpacing: 0,
                   mainAxisSpacing: 0,
                 ),
                 shrinkWrap: true,
-                itemCount: 15 * 20,
+                itemCount: 16 * 21,
                 itemBuilder: (BuildContext context, int index) {
                   return _resolveGridItem(context, index);
                 }),
@@ -586,17 +647,17 @@ class _MyHomePageState extends State<MyHomePage> {
 
   Widget _resolveGridItem(BuildContext context, int index) {
     int x, y = 0;
-    x = 19 - (index / 15).floor();
-    y = (index % 15);
+    x = 20 - (index / 16).floor();
+    y = (index % 16);
 
     void onTapFunction() {
-      if (_setWayPoint) {
+      if (_setWayPoint&&globals.arena2d) {
         _setWayPoint = false;
         _setRobotStart = false;
 
-        if (globals.arena.setWayPoint(x, y)) {
+        if (globals.arena.setWayPoint(x, y,false)) {
           addConsoleAndScroll('WayPoint set at [$x,$y].');
-          globals.btController.sendMessage('${globals.strWayPoint}:$x:$y');
+          globals.btController.sendMessage('${globals.strSetWayPoint}:$x:$y');
         } else {
           addConsoleAndScroll('WayPoint[$x,$y] removed.');
           globals.btController
@@ -606,7 +667,7 @@ class _MyHomePageState extends State<MyHomePage> {
 
       if (_setRobotStart) {
         globals.backupArena = globals.arena;
-        globals.arena = Arena('1000');
+        //globals.arena = Arena('1000',true);
         _setWayPoint = false;
         _setRobotStart = false;
         if (globals.arena.setRobotPos(x, y, 0)) {
@@ -885,6 +946,7 @@ class _MyHomePageState extends State<MyHomePage> {
                                 child: IconButton(
                                   onPressed: () {
                                     if (globals.btController.isConnected) {
+                                      globals.arena = Arena('1110',true);
                                       globals.btController
                                           .sendMessage(globals.strStartExplore);
                                       setState(() {
@@ -935,6 +997,25 @@ class _MyHomePageState extends State<MyHomePage> {
                                 ),
                               ),
                             ),
+                            Expanded(
+                              flex: 1,
+                              child: Container(
+                                color: Colors.indigo[700],
+                                child: IconButton(
+                                  onPressed: () {
+                                    if (globals.btController.isConnected) {
+                                      globals.btController
+                                          .sendMessage(globals.strCalibrate);
+                                      setState(() {
+                                        globals.robotStatus = 'Calibrating...';
+                                      });
+                                    }
+                                  },
+                                  icon: Icon(Icons.swap_calls),
+                                  tooltip: 'Calibrate',
+                                ),
+                              ),
+                            ),
                           ],
                         ),
                       ),
@@ -952,11 +1033,13 @@ class _MyHomePageState extends State<MyHomePage> {
                                   onPressed: () {
                                     if (_setWayPoint) {
                                       _setWayPoint = false;
+                                      setUnityWaypoint(true);
                                       _setRobotStart = false;
                                       addConsoleAndScroll(
                                           'Stop setting WayPoint.');
                                     } else {
                                       _setWayPoint = true;
+                                      setUnityWaypoint(false);
                                       _setRobotStart = false;
                                       addConsoleAndScroll(
                                           'Tap on the map to set WayPoint.');
@@ -1044,11 +1127,11 @@ class _MyHomePageState extends State<MyHomePage> {
             title: new Text('Are you sure?'),
             content: new Text('Do you want to exit an App'),
             actions: <Widget>[
-              new FlatButton(
+              new TextButton(
                 onPressed: () => Navigator.of(context).pop(false),
                 child: new Text('No'),
               ),
-              new FlatButton(
+              new TextButton(
                 onPressed: () => Navigator.of(context).pop(true),
                 child: new Text('Yes'),
               ),
@@ -1072,6 +1155,10 @@ class _MyHomePageState extends State<MyHomePage> {
       case 2:
         key = 'function2';
         break;
+      case 3:
+        key = 'imagerec';
+        break;
+
     }
 
     final value = prefs.getString(key) ?? 0;
@@ -1086,65 +1173,120 @@ class _MyHomePageState extends State<MyHomePage> {
         case 2:
           key = 'function2';
           break;
+        case 3:
+          key = 'imagerec';
+          break;
       }
 
       if (key.length > 0) prefs.setString(key, functionStr);
     }
-
-    showDialog(
-        context: context,
-        builder: (BuildContext context) {
-          return AlertDialog(
-            content: Stack(
-              overflow: Overflow.visible,
-              children: <Widget>[
-                Positioned(
-                  right: -40.0,
-                  top: -40.0,
-                  child: InkResponse(
-                    onTap: () {
-                      Navigator.of(context).pop();
-                    },
-                    child: CircleAvatar(
-                      child: Icon(Icons.close),
-                      backgroundColor: Colors.red,
+    if(key=='function1'||key=='function2')
+      showDialog(
+          context: context,
+          builder: (BuildContext context) {
+            return AlertDialog(
+              content: Stack(
+                clipBehavior: Clip.none,
+                children: <Widget>[
+                  Positioned(
+                    right: -40.0,
+                    top: -40.0,
+                    child: InkResponse(
+                      onTap: () {
+                        Navigator.of(context).pop();
+                      },
+                      child: CircleAvatar(
+                        child: Icon(Icons.close),
+                        backgroundColor: Colors.red,
+                      ),
                     ),
                   ),
-                ),
-                Form(
-                  key: _formKey,
-                  child: Column(
-                    mainAxisSize: MainAxisSize.min,
-                    children: <Widget>[
-                      Padding(
-                        padding: EdgeInsets.all(8.0),
-                        child: Text('Edit function $i'),
-                      ),
-                      Padding(
-                        padding: EdgeInsets.all(8.0),
-                        child: TextFormField(
-                          controller: myController,
-                          decoration: InputDecoration(
-                            hintText: '$value',
+                  Form(
+                    key: _formKey,
+                    child: Column(
+                      mainAxisSize: MainAxisSize.min,
+                      children: <Widget>[
+                        Padding(
+                          padding: EdgeInsets.all(8.0),
+                          child: Text('Edit function $i'),
+                        ),
+                        Padding(
+                          padding: EdgeInsets.all(8.0),
+                          child: TextFormField(
+                            controller: myController,
+                            decoration: InputDecoration(
+                              hintText: '$value',
+                            ),
                           ),
                         ),
+                        Padding(
+                          padding: const EdgeInsets.all(8.0),
+                          child: RaisedButton(
+                            child: Text('Save'),
+                            onPressed: () {
+                              _save(i, myController.text);
+                              Navigator.of(context).pop();
+                            },
+                          ),
+                        )
+                      ],
+                    ),
+                  )
+                ],
+              ),
+            );
+          });
+    else{
+      showDialog(
+          context: context,
+          builder: (BuildContext context) {
+            return AlertDialog(
+              content: Stack(
+                clipBehavior: Clip.none,
+                children: <Widget>[
+                  Positioned(
+                    right: -40.0,
+                    top: -40.0,
+                    child: InkResponse(
+                      onTap: () {
+                        Navigator.of(context).pop();
+                      },
+                      child: CircleAvatar(
+                        child: Icon(Icons.close),
+                        backgroundColor: Colors.red,
                       ),
-                      Padding(
-                        padding: const EdgeInsets.all(8.0),
-                        child: RaisedButton(
-                          child: Text('Save'),
-                          onPressed: () {
-                            _save(i, myController.text);
-                            Navigator.of(context).pop();
-                          },
-                        ),
-                      )
-                    ],
+                    ),
                   ),
-                )
-              ],
-            ),
-          );
-        });
+                  Form(
+                    key: _formKey,
+                    child: Column(
+                      mainAxisSize: MainAxisSize.min,
+                      children: <Widget>[
+                        Padding(
+                          padding: EdgeInsets.all(8.0),
+                          child: Text('MAP Strings'),
+                        ),
+                        Padding(
+                          padding: EdgeInsets.all(8.0),
+                          child: Text('Map descriptors\n==========================\nP1:\n${DescriptorDecoder.descriptorP1}\nP2:\n${DescriptorDecoder.descriptorP2}\n\nImage Rec Strings\n==========================\n${globals.arena.getImageStrings()}'),
+                        ),
+                        Padding(
+                          padding: const EdgeInsets.all(8.0),
+                          child: RaisedButton(
+                            child: Text('close'),
+                            onPressed: () {
+                              _save(i, myController.text);
+                              Navigator.of(context).pop();
+                            },
+                          ),
+                        )
+                      ],
+                    ),
+                  )
+                ],
+              ),
+            );
+          });
+    }
   }
 }
