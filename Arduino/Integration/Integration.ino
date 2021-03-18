@@ -56,7 +56,7 @@ String SENSOR_DATA = "P|SENSOR_DATA";
 String ACTION_COMPLETE = "P|ACTION_COMPLETE";
 String SPLITTER = ":";
 
-short delayTime = 50;
+short delayTime = 100;
 
 void setup() {
   // put your setup code here, to run once:
@@ -108,8 +108,18 @@ void setup() {
 //  leftPID();
 //  delay(delayTime);
 //  forwardPID(40, true);
-//  delay(delayTime);
+//  delay(delayTime);b 
 //  forwardPID(40, true);
+
+  /************* Test 4 forward **************/
+//  forwardPID(10, false);
+//  delay(delayTime);
+//  forwardPID(10, false);
+//  delay(delayTime);
+//  forwardPID(10, false);
+//  delay(delayTime);
+//  forwardPID(10, false);
+//  delay(delayTime);
 }
 
 void loop() {
@@ -130,6 +140,7 @@ void loop() {
 //    Serial.println(cmd);
     executeCmd(cmd);
   }
+
 
   /************* Test right turn **************/
 //  forwardPID(40, true);
@@ -214,6 +225,7 @@ void executeCmd(String cmd) {
     mode = 0;
   } else if (cmd.startsWith(EX_START_CMD) || cmd.startsWith(IF_START_CMD)) {
     mode = 1;
+//    Serial.println("P|Something");
     sendMsg();
   } else if (cmd.startsWith(TURN_LEFT_NO_CALIBRATE_CMD)) {
     leftPID();
@@ -239,7 +251,7 @@ void executeCmd(String cmd) {
       temp += cmd.charAt(i);
     }
     int dist = temp.toInt() * Constants::BLOCK_SIZE;
-    bool obstacleAvoid = true;
+    bool obstacleAvoid = false;
     forwardPID(dist, obstacleAvoid);
     if (mode == 0)
       sendActionComplete();
@@ -249,21 +261,25 @@ void executeCmd(String cmd) {
   } else if (cmd.startsWith(INITIAL_CALIBRATE_CMD)) {
       initialCalibrate();
   } else if (cmd.startsWith(TURN_LEFT_CMD)) {
-    if (mode == 1) {
-      rightCalibrate();
-      frontCalibrate();
-    }
+//    if (mode == 1) {
+//      rightCalibrate();
+//      frontCalibrate();
+//    }
+    rightCalibrate();
+    frontCalibrate();
     leftPID();
     sendMsg();
   } else if (cmd.startsWith(TURN_RIGHT_CMD)) {
-    if (mode == 1) {
-      leftDistanceCalibrate();
-      frontCalibrate();
-    }
+//    if (mode == 1) {
+//      leftDistanceCalibrate();
+//      frontCalibrate();
+//    }
+    leftDistanceCalibrate();
+    frontCalibrate();
     rightPID();
-    if (mode == 1) {
-      leftAngleCalibrate();
-    }
+//    if (mode == 1) {
+//      leftAngleCalibrate();
+//    }
     sendMsg();
   } else if (cmd.startsWith(CALIBRATE_CMD)) {
     fullCalibrate();

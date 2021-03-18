@@ -28,6 +28,7 @@ void PIDController(float KP, float KD, float KI, float travel_ticks, bool forwar
 //  float avg_sticks_moved = computeAvgSticksMoved();
 //  while (avg_sticks_moved < travel_ticks) {
   while ((E1_ticks_moved + E2_ticks_moved) / 2.0 < travel_ticks) {
+//    while (E1_ticks_moved < travel_ticks || E2_ticks_moved < travel_ticks) {
 //    Serial.print("average ticks: ");
 //    Serial.println((E1_ticks_moved + E2_ticks_moved) / 2.0);
 
@@ -107,7 +108,7 @@ void PIDController(float KP, float KD, float KI, float travel_ticks, bool forwar
     E2_ticks = 0;
 
 //    delay(Constants::PID_DELAY);
-    delay(10);
+    delay(5);
 
 //    avg_sticks_moved = computeAvgSticksMoved();
   }
@@ -131,7 +132,7 @@ void PIDController(float KP, float KD, float KI, float travel_ticks, bool forwar
 void forwardPID(float dist, bool obstacleAvoid) {
   float travel_ticks = distToTick(dist);
   if (dist == 10)
-    travel_ticks = 275;//276;
+    travel_ticks = 274;//276;
   else if (dist == 20)
     travel_ticks = 582;
   else if (dist == 30)
@@ -146,7 +147,7 @@ void forwardPID(float dist, bool obstacleAvoid) {
 
   M1_speed = 350; //right
 //  M2_speed = 348;
-  M2_speed = 348;//lèft: 354
+  M2_speed = 355;//lèft: 354 380
   md.setSpeeds(M1_speed, M2_speed);
   
   PIDController(KP, KD, KI, travel_ticks, true, obstacleAvoid);
@@ -158,7 +159,7 @@ void autoForwardPID() {
   float KI = 0.005;
 
   M1_speed = 350;
-  M2_speed = 345;
+  M2_speed = 348;
   md.setSpeeds(M1_speed, M2_speed);
   
   PIDController(KP, KD, KI, Constants::INF, true, true);
@@ -212,8 +213,8 @@ void rightPID() {
   M1_mul = -1;
   M2_mul = 1;
     
-  M1_speed = M1_mul * 300;
-  M2_speed = M2_mul * 308;
+  M1_speed = M1_mul * 385;
+  M2_speed = M2_mul * 388;
   md.setSpeeds(M1_speed, M2_speed);
 
   PIDController(KP, KD, KI, travel_ticks, false, false);
@@ -221,7 +222,7 @@ void rightPID() {
 
 
 void leftPID() {
-  float travel_ticks = 380;
+  float travel_ticks = 378;
   float KP = 0.6;
   float KD = 0.01;
   float KI = 0.01;
@@ -231,8 +232,8 @@ void leftPID() {
   M1_mul = 1;
   M2_mul = -1;
     
-  M1_speed = M1_mul * 350;
-  M2_speed = M2_mul * 354;
+  M1_speed = M1_mul * 385;
+  M2_speed = M2_mul * 388;
   md.setSpeeds(M1_speed, M2_speed);
 
   PIDController(KP, KD, KI, travel_ticks, false, false);

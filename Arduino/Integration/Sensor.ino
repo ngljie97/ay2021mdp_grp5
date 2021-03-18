@@ -16,7 +16,7 @@ float readSensor(short sensorPin) {
 //   return sum * 1.0 / Constants::SENSOR_SAMPLING;
 }
 
-short readSensorInstant(short sensorPin) {
+float readSensorInstant(short sensorPin) {
   short analogReadings[Constants::SENSOR_SAMPLING];
   for (short i = 0 ; i < Constants::SENSOR_SAMPLING ; i++) {
     analogReadings[i] = analogRead(sensorPin);
@@ -48,7 +48,7 @@ float getSensorDist(short sensorPin) {
 
 /************* SRFL - PS1 *************/
 float getSRFLdist() {
-  short analogSignal = readSensor(Constants::SRFL_PIN);
+  float analogSignal = readSensor(Constants::SRFL_PIN);
   return calculatePS1(analogSignal);
 //  short analogSignal = readSensor(Constants::SRFL_PIN);
 //  float volt = analogSignal * (5.0 / 1023.0);
@@ -56,7 +56,7 @@ float getSRFLdist() {
 }
 
 float getSRFLdistInstant() {
-  short analogSignal = readSensorInstant(Constants::SRFL_PIN);
+  float analogSignal = readSensorInstant(Constants::SRFL_PIN);
   return calculatePS1(analogSignal);
 //  short analogSignal = readSensorInstant(Constants::SRFL_PIN);
 //  float volt = analogSignal * (5.0 / 1023.0);
@@ -79,7 +79,7 @@ short getSRFLblockAway() {
 
 /************* SRFC - PS4 *************/
 float getSRFCdist() {
-  short analogSignal = readSensor(Constants::SRFC_PIN);
+  float analogSignal = readSensor(Constants::SRFC_PIN);
   return calculatePS4(analogSignal);
 //  short analogSignal = readSensor(Constants::SRFC_PIN);
 //  float volt = analogSignal * (5.0 / 1023.0);
@@ -87,7 +87,7 @@ float getSRFCdist() {
 }
 
 float getSRFCdistInstant() {
-  short analogSignal = readSensorInstant(Constants::SRFC_PIN);
+  float analogSignal = readSensorInstant(Constants::SRFC_PIN);
   return calculatePS4(analogSignal);
 //  short analogSignal = readSensorInstant(Constants::SRFC_PIN);
 //  float volt = analogSignal * (5.0 / 1023.0);
@@ -110,7 +110,7 @@ short getSRFCblockAway() {
 
 /************* SRFR - PS3 *************/
 float getSRFRdist() {
-  short analogSignal = readSensor(Constants::SRFR_PIN);
+  float analogSignal = readSensor(Constants::SRFR_PIN);
   return calculatePS3(analogSignal);
 //  short analogSignal = readSensor(Constants::SRFR_PIN);
 //  float volt = analogSignal * (5.0 / 1023.0);
@@ -118,7 +118,7 @@ float getSRFRdist() {
 }
 
 float getSRFRdistInstant() {
-  short analogSignal = readSensorInstant(Constants::SRFR_PIN);
+  float analogSignal = readSensorInstant(Constants::SRFR_PIN);
   return calculatePS3(analogSignal);
 //  short analogSignal = readSensorInstant(Constants::SRFR_PIN);
 //  float volt = analogSignal * (5.0 / 1023.0);
@@ -141,7 +141,9 @@ short getSRFRblockAway() {
 
 /************* SRLH - PS5 *************/
 float getSRLHdist() {
-  short analogSignal = readSensor(Constants::SRLH_PIN);
+  float analogSignal = readSensor(Constants::SRLH_PIN);
+//  Serial.print("analogSignal SRLH: ");analogSignal
+//  Serial.println(analogSignal);
   return calculatePS5(analogSignal);
 //  short analogSignal = readSensor(Constants::SRLH_PIN);
 //  float volt = analogSignal * (5.0 / 1023.0);
@@ -149,7 +151,7 @@ float getSRLHdist() {
 }
 
 float getSRLHdistInstant() {
-  short analogSignal = readSensorInstant(Constants::SRLH_PIN);
+  float analogSignal = readSensorInstant(Constants::SRLH_PIN);
   return calculatePS5(analogSignal);
 //  short analogSignal = readSensorInstant(Constants::SRLH_PIN);
 //  float volt = analogSignal * (5.0 / 1023.0);
@@ -172,7 +174,7 @@ short getSRLHblockAway() {
 
 /************* SRLT - PS6 *************/
 float getSRLTdist() {
-  short analogSignal = readSensor(Constants::SRLT_PIN);
+  float analogSignal = readSensor(Constants::SRLT_PIN);
   return calculatePS6(analogSignal);
 //  short analogSignal = readSensor(Constants::SRLT_PIN);
 //  float volt = analogSignal * (5.0 / 1023.0);
@@ -180,7 +182,7 @@ float getSRLTdist() {
 }
 
 float getSRLTdistInstant() {
-  short analogSignal = readSensorInstant(Constants::SRLT_PIN);
+  float analogSignal = readSensorInstant(Constants::SRLT_PIN);
   return calculatePS6(analogSignal);
 //  short analogSignal = readSensorInstant(Constants::SRLT_PIN);
 //  float volt = analogSignal * (5.0 / 1023.0);
@@ -203,7 +205,7 @@ short getSRLTblockAway() {
 
 /************* LRR - PS2 *************/
 float getLRRdist() {
-  short analogSignal = readSensor(Constants::LRR_PIN);
+  float analogSignal = readSensor(Constants::LRR_PIN);
   return calculatePS2(analogSignal);
 //  short analogSignal = readSensor(Constants::LRR_PIN);
 //  float volt = analogSignal * (5.0 / 1023.0);
@@ -211,7 +213,7 @@ float getLRRdist() {
 }
 
 float getLRRdistInstant() {
-  short analogSignal = readSensorInstant(Constants::LRR_PIN);
+  float analogSignal = readSensorInstant(Constants::LRR_PIN);
   return calculatePS2(analogSignal);
 //  short analogSignal = readSensorInstant(Constants::LRR_PIN);
 //  float volt = analogSignal * (5.0 / 1023.0);
@@ -277,7 +279,7 @@ float calculatePS4(short y){
   float e = 9.12309123440423e-9;
   float f = -4.076440507795106e-12;
   float distFromTip = 2.8;
-  return ((f*y*y*y*y*y)+(e*y*y*y*y)+(d*y*y*y)+(c*y*y)+(b*y)+(a)) + 0.5;
+  return ((f*y*y*y*y*y)+(e*y*y*y*y)+(d*y*y*y)+(c*y*y)+(b*y)+(a)) + 0.6;
 }
 
 // Short range PS5
