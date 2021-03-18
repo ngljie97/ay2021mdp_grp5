@@ -10,10 +10,10 @@ class Arena {
   List<List<int>> explorationStatus, obstaclesRecords;
   WayPoint _wayPoint;
   Robot _robot;
-  int _imageDirection = 0;
-  List<int> unresolvedImages = [];
-  List<String> _images = List.generate(15, (index) => '-1,-1');
+  List<String> _imagesCoord = List.generate(15, (index) => '-1,-1');
+  List<int> _imagesStatus = List.generate(15, (index) => 0);
   int temp = 0;
+  int _imageDirection = 0;
 
   Arena(String selector) {
     if (selector[0] == '1') {
@@ -171,10 +171,14 @@ class Arena {
 
   void setImage(int x, int y, int imageId, int dir) {
     if ((x >= 0 && x < 20) && (y >= 0 && y < 15)) {
-      this.obstaclesRecords[x][y] = 2;
-      _images[imageId - 1] = '$x,$y';
-    } else
-      unresolvedImages.add(imageId);
+      this.obstaclesRecords[x][y] = 0;
+      _imagesCoord[imageId - 1] = '$x,$y';
+      _imagesStatus[imageId - 1] = dir;
+    } else {
+      this.obstaclesRecords[x][y] = 0;
+      _imagesCoord[imageId - 1] = '-1,-1';
+      _imagesStatus[imageId - 1] = -1;
+    }
   }
 
   void setExplored(int x, int y) {
@@ -191,30 +195,34 @@ class Arena {
     if (item == '0') {
       item = _inSpecialZone(x, y);
       if (item == '0') {
-        if (obstaclesRecords[x][y] == 1) {
-          item = 'O';
-        } else if (obstaclesRecords[x][y] == 2) {
-          int id = _images.indexOf('$x,$y') + 1;
-          item = 'n$id';
-        } else {
-          switch (explorationStatus[x][y] + WayPoint.isWayPoint(x, y)) {
-            case 0:
-              item = '0';
-              break;
-            case 1:
-              item = '1';
-              break;
-            case 3:
-              item = 'WP0';
-              break;
-            case 4:
-              item = 'WP1';
-              break;
+        int id = _imagesCoord.indexOf('$x,$y');
+        if (id == -1) {
+          if (obstaclesRecords[x][y] == 1) {
+            item = 'O';
+          } else {
+            switch (explorationStatus[x][y] + WayPoint.isWayPoint(x, y)) {
+              case 0:
+                item = '0';
+                break;
+              case 1:
+                item = '1';
+                break;
+              case 3:
+                item = 'WP0';
+                break;
+              case 4:
+                item = 'WP1';
+                break;
+            }
           }
+        } else {
+          item = 'n${id + 1}';
+          _imageDirection = _imagesStatus[id];
         }
       } else if (item == 'lblX') {
-        if (y < unresolvedImages.length) {
-          item = 'n$y';
+        if (_imagesStatus.contains(-1)) {
+          List<int> tmpList = _imagesStatus.where((element) => element == -1);
+          if (y < tmpList.length) item = 'n${tmpList[y]}';
         } else {
           temp = y;
           item = 'lbl';
@@ -228,6 +236,7 @@ class Arena {
     return _resolveItem(item, onTapFunction);
   }
 
+  // ignore: missing_return
   Widget _resolveItem(String item, Function onTapFunction) {
     switch (item) {
       case 'RB':
@@ -360,8 +369,10 @@ class Arena {
         break;
       case 'lbl':
         item = '$temp';
-        continue defCase;
-      defCase:
+        return Center(
+          child: Text(item),
+        );
+        break;
       default:
         return Center(
           child: Text(item),
