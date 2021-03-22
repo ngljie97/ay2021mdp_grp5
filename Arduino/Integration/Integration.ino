@@ -277,6 +277,7 @@ void executeCmd(String cmd) {
     leftDistanceCalibrate();
     frontCalibrate();
     rightPID();
+    leftAngleCalibrate();
 //    if (mode == 1) {
 //      leftAngleCalibrate();
 //    }
@@ -326,18 +327,18 @@ void sendMsg() {
     Serial.print(SRLT); Serial.print(SPLITTER);
     Serial.println(LRR);
     
-//    Serial.print("getSRFLdist: ");
-//    Serial.println(getSRFLdist());
-//    Serial.print("getSRFCdist: ");
-//    Serial.println(getSRFCdist());
-//    Serial.print("getSRFRdist: ");
-//    Serial.println(getSRFRdist());
-//    Serial.print("getSRLHdist: ");
-//    Serial.println(getSRLHdist());
-//    Serial.print("getSRLTdist: ");
-//    Serial.println(getSRLTdist());
-//    Serial.print("getLRRdist: ");
-//    Serial.println(getLRRdist());
+//    Serial.print("getSRFLdistInstant: ");
+//    Serial.println(getSRFLdistInstant());
+//    Serial.print("getSRFCdistInstant: ");
+//    Serial.println(getSRFCdistInstant());
+//    Serial.print("getSRFRdistInstant: ");
+//    Serial.println(getSRFRdistInstant());
+//    Serial.print("getSRLHdistInstant: ");
+//    Serial.println(getSRLHdistInstant());
+//    Serial.print("getSRLTdistInstant: ");
+//    Serial.println(getSRLTdistInstant());
+//    Serial.print("getLRRdistInstant: ");
+//    Serial.println(getLRRdistInstant());
 //    Serial.println(readSensor(Constants::LRR_PIN));
   }
 }

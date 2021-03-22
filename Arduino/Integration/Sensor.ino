@@ -18,7 +18,7 @@ float readSensor(short sensorPin) {
 
 float readSensorInstant(short sensorPin) {
   short analogReadings[Constants::SENSOR_SAMPLING];
-  for (short i = 0 ; i < Constants::SENSOR_SAMPLING ; i++) {
+  for (short i = 0 ; i < 30 ; i++) {
     analogReadings[i] = analogRead(sensorPin);
   }
   KickSort<short>::quickSort(analogReadings, Constants::SENSOR_SAMPLING);
@@ -246,12 +246,12 @@ float calculatePS1(short y){
 
 // Long range PS2
 float calculatePS2(short y){
-  float a = 185.39685702902833;
-  float b = -1.31407182754776;
-  float c = 0.0046768421686289785;
-  float d = -0.000009204401180578819;
-  float e = 9.477166023465428e-9;
-  float f = -4.159924086258258e-12;
+  float a = 164.21852538532852;
+  float b = -0.6797873399998431;
+  float c = -0.0001332245814380544;
+  float d = 0.000006437952906946337;
+  float e = -1.385845751308227e-8;
+  float f = 8.964007284085486e-12;
   float distFromTip = 0;
   return ((f*y*y*y*y*y)+(e*y*y*y*y)+(d*y*y*y)+(c*y*y)+(b*y)+(a));
 }
@@ -279,31 +279,31 @@ float calculatePS4(short y){
   float e = 9.12309123440423e-9;
   float f = -4.076440507795106e-12;
   float distFromTip = 2.8;
-  return ((f*y*y*y*y*y)+(e*y*y*y*y)+(d*y*y*y)+(c*y*y)+(b*y)+(a)) + 0.6;
+  return ((f*y*y*y*y*y)+(e*y*y*y*y)+(d*y*y*y)+(c*y*y)+(b*y)+(a)) + 0.7;
 }
 
 // Short range PS5
 float calculatePS5(short y){
-  float a = 188.2390703396376;
-  float b = -2.0537807522294935;
-  float c = 0.010183656049174988;
-  float d = -0.000025686868564936968;
-  float e = 3.1953027429160956e-8;
-  float f = -1.5537101143924537e-11;
+  float a = 181.64137803366788;
+  float b = -2.0326282547565193;
+  float c = 0.01016993751141173;
+  float d = -0.000025941192237791838;
+  float e = 3.266190199630939e-8;
+  float f = -1.6077974802143495e-11;
   float distFromTip = 1;
   return ((f*y*y*y*y*y)+(e*y*y*y*y)+(d*y*y*y)+(c*y*y)+(b*y)+(a));
 }
 
 // Short range PS6
 float calculatePS6(short y){
-  float a = 181.01423766058878;
-  float b = -1.924959541090625;
-  float c = 0.009368244881953107;
-  float d = -0.000023345164239810758;
-  float e = 2.8827346481713677e-8;
-  float f = -1.3962504470476649e-11;
+  float a = 209.85098991548384;
+  float b = -2.5135322721415925;
+  float c = 0.013134002937813262;
+  float d = -0.00003454033333407248;
+  float e = 4.4567343634925413e-8;
+  float f = -2.241725538698334e-11;
   float distFromTip = 0;
-  return ((f*y*y*y*y*y)+(e*y*y*y*y)+(d*y*y*y)+(c*y*y)+(b*y)+(a)) - 0.05; //0.25
+  return ((f*y*y*y*y*y)+(e*y*y*y*y)+(d*y*y*y)+(c*y*y)+(b*y)+(a)) + 0.1; //0.25
 }
 
 // Short range PS4 and PS6

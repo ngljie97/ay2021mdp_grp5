@@ -132,9 +132,9 @@ void PIDController(float KP, float KD, float KI, float travel_ticks, bool forwar
 void forwardPID(float dist, bool obstacleAvoid) {
   float travel_ticks = distToTick(dist);
   if (dist == 10)
-    travel_ticks = 274;//276;
+    travel_ticks = 272;//276;
   else if (dist == 20)
-    travel_ticks = 582;
+    travel_ticks = 578;
   else if (dist == 30)
     travel_ticks = 885;
   else if (dist == 40)
@@ -147,7 +147,7 @@ void forwardPID(float dist, bool obstacleAvoid) {
 
   M1_speed = 350; //right
 //  M2_speed = 348;
-  M2_speed = 355;//lèft: 354 380
+  M2_speed = 353;//lèft: 354 380
   md.setSpeeds(M1_speed, M2_speed);
   
   PIDController(KP, KD, KI, travel_ticks, true, obstacleAvoid);
@@ -203,7 +203,7 @@ void rotatePID(float degree) {
 
 void rightPID() {
 //  float travel_ticks = 399;
-  float travel_ticks = 390;//397;
+  float travel_ticks = 388;//397;
   float KP = 0.6;
   float KD = 0.01;
   float KI = 0.01;
