@@ -56,7 +56,7 @@ String SENSOR_DATA = "P|SENSOR_DATA";
 String ACTION_COMPLETE = "P|ACTION_COMPLETE";
 String SPLITTER = ":";
 
-short delayTime = 100;
+short delayTime = 150;
 
 void setup() {
   // put your setup code here, to run once:
@@ -74,44 +74,44 @@ void setup() {
   enableInterrupt(encoder1A, E1_ticks_increment, RISING);
   enableInterrupt(encoder2A, E2_ticks_increment, RISING);
 
-  /****************** Test move forward ************************/
-//  forwardPID(40, true);
-//  delay(delayTime);
-//  forwardPID(40, true);
-//  delay(delayTime);
-//  forwardPID(40, true);
-//  delay(delayTime);
-
-//  rotateRightPID(90);
-//  rotateLeftPID(90);
-//  fullCalibrate();
-//  frontAngleCalibrate();
-
-  /************* Test straight **************/
-//  forwardPID(40, true);
-//  delay(delayTime);
-//  forwardPID(40, true);
-//  delay(delayTime);
-//  rightPID();
-//  delay(delayTime);
-//  rightPID();
-//  delay(delayTime);
-//  forwardPID(40, true);
-//  delay(delayTime);
-//  forwardPID(40, true);
-//    forwardPID(40, true);
-//  delay(delayTime);
-//  forwardPID(40, true);
-//  delay(delayTime);
-//  leftPID();
-//  delay(delayTime);
-//  leftPID();
-//  delay(delayTime);
-//  forwardPID(40, true);
-//  delay(delayTime);b 
-//  forwardPID(40, true);
-
   /************* Test 4 forward **************/
+//  forwardPID(10, false);
+//  delay(delayTime);
+//  forwardPID(10, false);
+//  delay(delayTime);
+//  forwardPID(10, false);
+//  delay(delayTime);
+//  forwardPID(10, false);
+//  delay(delayTime);
+
+  /************* Test staircase **************/
+//  rightPID();
+//  delay(delayTime);
+//  forwardPID(10, false);
+//  delay(delayTime);
+//  leftPID();
+//  delay(delayTime);
+//  forwardPID(10, false);
+//  delay(delayTime);
+//  rightPID();
+//  delay(delayTime);
+//  forwardPID(10, false);
+//  delay(delayTime);
+//  leftPID();
+//  delay(delayTime);
+//  forwardPID(10, false);
+//  delay(delayTime);
+//  forwardPID(10, false);
+//  delay(delayTime);
+//  forwardPID(10, false);
+//  delay(delayTime);
+
+  /************* Test calibrate, turn and move forward **************/
+//  leftDistanceCalibrate();
+//  frontCalibrate();
+//  rightPID();
+//  leftAngleCalibrate();
+//  delay(delayTime);
 //  forwardPID(10, false);
 //  delay(delayTime);
 //  forwardPID(10, false);
@@ -161,54 +161,6 @@ void loop() {
   /************* Keep turning left **************/
 //  leftPID();
 //  delay(delayTime);
-
-//  forwardPID(40, false);
-//  delay(delayTime);
-//  rightPID();
-//  delay(delayTime);
-//  forwardPID(40, false);
-//  delay(delayTime);
-//  leftPID();
-//  delay(delayTime);
-//  forwardPID(40, false);
-//  delay(delayTime);
-//  leftPID();
-//  delay(delayTime);
-//  forwardPID(40, false);
-//  delay(delayTime);
-//  leftPID();
-//  delay(delayTime);
-//  forwardPID(40, false);
-//  delay(delayTime);
-//  leftPID();
-//  delay(delayTime);
-//  forwardPID(40, false);
-//  delay(delayTime);
-//  rightPID();
-//  delay(delayTime);
-//  forwardPID(40, false);
-//  delay(delayTime);
-//  rightPID();
-//  delay(delayTime);
-//  forwardPID(40, false);
-//  delay(delayTime);
-//  rightPID();
-//  delay(delayTime);
-
-//  forwardPID(10, false);
-//  rightPID();
-//  forwardPID(10, false);
-//  leftPID();
-//  forwardPID(10, false);
-//  leftPID();`
-//  forwardPID(10, false);
-//  rightPID();
-
-//  fullCalibrate();
-//  leftPID();
-//  delay(delayTime);
-//  rightPID();
-//  delay(delayTime);
 }
 
 void executeCmd(String cmd) {
@@ -220,6 +172,9 @@ void executeCmd(String cmd) {
     sendActionComplete(); 
   } else if (cmd.startsWith("LAC")) {
     leftAngleCalibrate();
+    sendActionComplete();
+  } else if (cmd.startsWith("LDC")) {
+    leftDistanceCalibrate();
     sendActionComplete();
   } else if (cmd.startsWith(FP_START_CMD)) {
     mode = 0;
@@ -252,6 +207,10 @@ void executeCmd(String cmd) {
     }
     int dist = temp.toInt() * Constants::BLOCK_SIZE;
     bool obstacleAvoid = false;
+    leftDistanceCalibrate();
+    bool cal = leftAngleCalibrate();
+    if (!cal)
+      delay(150);
     forwardPID(dist, obstacleAvoid);
     if (mode == 0)
       sendActionComplete();
@@ -261,26 +220,17 @@ void executeCmd(String cmd) {
   } else if (cmd.startsWith(INITIAL_CALIBRATE_CMD)) {
       initialCalibrate();
   } else if (cmd.startsWith(TURN_LEFT_CMD)) {
-//    if (mode == 1) {
-//      rightCalibrate();
-//      frontCalibrate();
-//    }
-    rightCalibrate();
+//    rightCalibrate();
     frontCalibrate();
     leftPID();
     sendMsg();
   } else if (cmd.startsWith(TURN_RIGHT_CMD)) {
-//    if (mode == 1) {
-//      leftDistanceCalibrate();
-//      frontCalibrate();
-//    }
     leftDistanceCalibrate();
     frontCalibrate();
+    leftAngleCalibrate();
+    delay(50);
     rightPID();
     leftAngleCalibrate();
-//    if (mode == 1) {
-//      leftAngleCalibrate();
-//    }
     sendMsg();
   } else if (cmd.startsWith(CALIBRATE_CMD)) {
     fullCalibrate();

@@ -79,18 +79,15 @@ void PIDController(float KP, float KD, float KI, float travel_ticks, bool forwar
     
 
     // When moved a block, send sensor data and reset ticks tracked
-    if (forward && (E1_ticks_tracked + E2_ticks_tracked) / 2.0 >= ticks_per_block) {
-//      Serial.print("Dist: ");
-//      Serial.println(tickToDist((E1_ticks_tracked + E2_ticks_tracked) / 2.0));
-      E1_ticks_tracked = 0;
-      E2_ticks_tracked = 0;
-      blocks_moved++;
-      if (mode == 1)
-//        Serial.println("Send in while loop");
-//        Serial.print("blocks_moved: ");
-//        Serial.println(blocks_moved);
-        sendMsg();  //Send sensor data
-    }
+//    if (forward && (E1_ticks_tracked + E2_ticks_tracked) / 2.0 >= ticks_per_block) {
+////      Serial.print("Dist: ");
+////      Serial.println(tickToDist((E1_ticks_tracked + E2_ticks_tracked) / 2.0));
+//      E1_ticks_tracked = 0;
+//      E2_ticks_tracked = 0;
+//      blocks_moved++;
+////      if (mode == 1)
+////        sendMsg();  //Send sensor data
+//    }
 
     //Previous error
     ticks_diff_prev_error = ticks_diff_error;
@@ -112,15 +109,22 @@ void PIDController(float KP, float KD, float KI, float travel_ticks, bool forwar
 
 //    avg_sticks_moved = computeAvgSticksMoved();
   }
+  //  Serial.print("E1_ticks_moved: ");
+  //  Serial.println(E1_ticks_moved);
+  //  Serial.print("E2_ticks_moved: ");
+  //  Serial.println(E2_ticks_moved);
   md.setSpeeds(0, 0);
   md.setBrakes(400, 400);
   delay(80);
 //  Serial.print("blocks_moved: ");
 //  Serial.println(blocks_moved);
-  if (forward && blocks_moved < num_of_blocks && mode == 1) {
-//    Serial.print("Dist: ");
-//    Serial.println(tickToDist((E1_ticks_tracked + E2_ticks_tracked) / 2.0));
-//    Serial.print("Send outside");
+//  if (forward && blocks_moved < num_of_blocks && mode == 1) {
+////    Serial.print("Dist: ");
+////    Serial.println(tickToDist((E1_ticks_tracked + E2_ticks_tracked) / 2.0));
+////    Serial.print("Send outside");
+//    sendMsg();  //Send sensor data of the last block
+//  }
+  if (forward && mode == 1) {
     sendMsg();  //Send sensor data of the last block
   }
 }
@@ -132,22 +136,22 @@ void PIDController(float KP, float KD, float KI, float travel_ticks, bool forwar
 void forwardPID(float dist, bool obstacleAvoid) {
   float travel_ticks = distToTick(dist);
   if (dist == 10)
-    travel_ticks = 272;//276;
+    travel_ticks = 270;//276;
   else if (dist == 20)
-    travel_ticks = 578;
+    travel_ticks = 574;
   else if (dist == 30)
-    travel_ticks = 885;
+    travel_ticks = 870;
   else if (dist == 40)
-    travel_ticks = 1170;
+    travel_ticks = 1190;
   else if (dist == 50)
     travel_ticks = 1470;
-  float KP = 0.8;
+  float KP = 0.4;
   float KD = 0.01;
   float KI = 0.001;
 
-  M1_speed = 350; //right
+  M1_speed = 375; //right
 //  M2_speed = 348;
-  M2_speed = 353;//lèft: 354 380
+  M2_speed = 368;//lèft: 354 380
   md.setSpeeds(M1_speed, M2_speed);
   
   PIDController(KP, KD, KI, travel_ticks, true, obstacleAvoid);
@@ -203,18 +207,20 @@ void rotatePID(float degree) {
 
 void rightPID() {
 //  float travel_ticks = 399;
-  float travel_ticks = 388;//397;
-  float KP = 0.6;
+  float travel_ticks = 380;//397;
+  float KP = 0.4;
   float KD = 0.01;
-  float KI = 0.01;
+  float KI = 0.001;
 
   short M1_mul, M2_mul;
 
   M1_mul = -1;
   M2_mul = 1;
     
-  M1_speed = M1_mul * 385;
-  M2_speed = M2_mul * 388;
+//  M1_speed = M1_mul * 380;
+//  M2_speed = M2_mul * 370;
+  M1_speed = M1_mul * 360;
+  M2_speed = M2_mul * 365;
   md.setSpeeds(M1_speed, M2_speed);
 
   PIDController(KP, KD, KI, travel_ticks, false, false);
@@ -222,18 +228,18 @@ void rightPID() {
 
 
 void leftPID() {
-  float travel_ticks = 378;
-  float KP = 0.6;
+  float travel_ticks = 383;
+  float KP = 0.5;
   float KD = 0.01;
-  float KI = 0.01;
+  float KI = 0.001;
 
   short M1_mul, M2_mul;
 
   M1_mul = 1;
   M2_mul = -1;
     
-  M1_speed = M1_mul * 385;
-  M2_speed = M2_mul * 388;
+  M1_speed = M1_mul * 350;
+  M2_speed = M2_mul * 350;
   md.setSpeeds(M1_speed, M2_speed);
 
   PIDController(KP, KD, KI, travel_ticks, false, false);
