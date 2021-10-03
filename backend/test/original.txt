@@ -1,0 +1,1 @@
+This is a test file to see if the text file can be reconstructed back after breaking down into byte array.
